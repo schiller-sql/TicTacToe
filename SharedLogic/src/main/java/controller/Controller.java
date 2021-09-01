@@ -4,7 +4,12 @@ import domain.Point;
 import opponent.Opponent;
 
 /**
- *
+ * Controls a 3 by 3 tic-tac-toe field,
+ * if someone calls setPoint,
+ * the field will be updated,
+ * via the players input, the opponents response and
+ * it will be checked if everything if the game has ended or
+ * if someone has won
  */
 public class Controller {
   private final Opponent opponent;
