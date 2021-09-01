@@ -38,6 +38,7 @@ public class Controller {
    * with the winning, losing, or tie information
    */
   public Move setPoint(Point point) {
+    // TODO: Do the checks if the game has been won, lost, or there has been a tie
     field.setMarkSelf(point);
     final Point opponentPoint = opponent.move(field);
     field.setMarkOpponent(opponentPoint);
