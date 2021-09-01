@@ -1,8 +1,8 @@
-package com.tictactoe.logic.controller;
+package controller;
 
-import com.tictactoe.logic.domain.Point;
-import com.tictactoe.logic.domain.Field;
-import com.tictactoe.logic.domain.Mark;
+import domain.Field;
+import domain.Mark;
+import domain.Point;
 
 /**
  * Mutable version of the Field class,

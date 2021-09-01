@@ -1,7 +1,7 @@
-package com.tictactoe.logic.controller;
+package controller;
 
-import com.tictactoe.logic.domain.Point;
-import com.tictactoe.logic.opponents.Opponent;
+import domain.Point;
+import opponent.Opponent;
 
 /**
  *

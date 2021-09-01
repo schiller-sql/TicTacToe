@@ -1,1 +1,0 @@
-Here should be the file/project structure of the javafx part of the project

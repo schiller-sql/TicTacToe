@@ -1,4 +1,4 @@
-package com.tictactoe.logic.domain;
+package domain;
 
 
 /**

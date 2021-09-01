@@ -1,7 +1,7 @@
-package com.tictactoe.logic.opponents;
+package opponent;
 
-import com.tictactoe.logic.domain.Point;
-import com.tictactoe.logic.domain.Field;
+import domain.Field;
+import domain.Point;
 
 /**
  * Represents an Opponent to the player in tic-tac-toe,

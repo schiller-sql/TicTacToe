@@ -1,4 +1,4 @@
-package com.tictactoe.logic.domain;
+package domain;
 
 /**
  * Represents a point in a 3 by 3 tic-tac-toe field

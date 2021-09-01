@@ -1,6 +1,6 @@
-package com.tictactoe.logic.controller;
+package controller;
 
-import com.tictactoe.logic.domain.Mark;
+import domain.Mark;
 
 enum EndGameState {
     won, lost, tie

@@ -1,7 +1,7 @@
-package com.tictactoe.logic.opponents;
+package opponent;
 
-import com.tictactoe.logic.domain.Point;
-import com.tictactoe.logic.domain.Field;
+import domain.Point;
+import domain.Field;
 
 /**
  * Implements the Opponent interface in a random based way,
