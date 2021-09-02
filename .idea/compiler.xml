@@ -6,9 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="SharedLogic" />
+        <module name="GameLogic" />
         <module name="DesktopApp" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="GameLogic" target="16" />
+    </bytecodeTargetLevel>
   </component>
 </project>

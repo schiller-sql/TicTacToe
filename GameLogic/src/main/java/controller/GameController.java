@@ -7,33 +7,39 @@ import opponent.Opponent;
 /**
  * Controls a 3 by 3 tic-tac-toe field,
  * if someone calls setPoint,
- * the field will be updated,
  * via the players input, the opponents response and
  * it will be checked if everything if the game has ended or
+ * it will be checked if everything is the game has ended or
  * if someone has won
  */
 public class Controller {
   private final Opponent opponent;
   private final MutableField field;
+  private final MutableGrid grid;
+  private GameState state;
 
   /**
-   * @param opponent The opponent (from the opponent interface)
    *                 that the player should face.
-   *                 It is reasonable for the the countermove,
+   *                 It is responsible for the countermove,
    *                 against the player
    */
   public Controller(Opponent opponent) {
     this.opponent = opponent;
     this.field = new MutableField();
+    state = GameState.running;
   }
 
   /**
    * @param opponent The opponent responsible for the countermove
-   * @param field The starting field
+   * @param startingGrid The starting grid data, the grid should have
    */
-  public Controller(Opponent opponent, Mark[][] field) {
+  public GameController(Opponent opponent, Mark[][] startingGrid) {
+    assert(startingGrid[0].length == 3);
+    assert(startingGrid[1].length == 3);
     this.opponent = opponent;
     this.field = new MutableField();
+    this.grid = new MutableGrid(startingGrid);
+    state = calculateGameState();
   }
 
   /**

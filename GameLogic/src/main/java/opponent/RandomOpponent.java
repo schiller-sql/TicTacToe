@@ -1,7 +1,7 @@
 package opponent;
 
 import domain.Point;
-import domain.Field;
+import domain.Grid;
 
 /**
  * Implements the Opponent interface in a random based way,
@@ -9,11 +9,11 @@ import domain.Field;
  */
 public class RandomOpponent implements Opponent {
     @Override
-    public Point move(Field field) {
+    public Point move(Grid grid) {
         Point randomPoint;
         do {
             randomPoint = new Point(getRandomPosition(), getRandomPosition());
-        } while(!field.markIsEmpty(randomPoint));
+        } while(!grid.markIsEmpty(randomPoint));
         return randomPoint;
     }
 
