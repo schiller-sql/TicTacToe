@@ -12,7 +12,17 @@ import domain.Point;
  * as in the opponent for example,
  * it returns the point to be set
  */
-class MutableField extends Field {
+class MutableField implements Field {
+
+    private final Mark[][] field;
+
+    MutableField() {
+        field = new Mark[3][3];
+    }
+
+    MutableField(Mark[][] field) {
+        this.field = field;
+    }
 
     public void setMarkOpponent(Point point) {
         assert(markIsEmpty(point));
@@ -22,5 +32,10 @@ class MutableField extends Field {
     public void setMarkSelf(Point point) {
         assert(markIsEmpty(point));
         field[point.x()][point.y()] = Mark.self;
+    }
+
+    @Override
+    public Mark[][] getField() {
+        return field;
     }
 }

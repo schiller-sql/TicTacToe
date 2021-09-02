@@ -2,9 +2,6 @@ package controller;
 
 import domain.Mark;
 
-enum EndGameState {
-    won, lost, tie
-}
 
 /**
  * Contains the data for the updated field,

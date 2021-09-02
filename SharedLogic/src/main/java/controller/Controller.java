@@ -1,5 +1,6 @@
 package controller;
 
+import domain.Mark;
 import domain.Point;
 import opponent.Opponent;
 
@@ -27,6 +28,15 @@ public class Controller {
   }
 
   /**
+   * @param opponent The opponent responsible for the countermove
+   * @param field The starting field
+   */
+  public Controller(Opponent opponent, Mark[][] field) {
+    this.opponent = opponent;
+    this.field = new MutableField();
+  }
+
+  /**
    * Updates the state of the field with the players cross
    * and the opponents response
    *
@@ -40,8 +50,17 @@ public class Controller {
   public Move setPoint(Point point) {
     // TODO: Do the checks if the game has been won, lost, or there has been a tie
     field.setMarkSelf(point);
+    final EndGameState endGameState = checkForEndOfGame();
     final Point opponentPoint = opponent.move(field);
     field.setMarkOpponent(opponentPoint);
     return new Move(null, field.getField());
+  }
+
+  /**
+   * @return The EndGameState if the game ended,
+   * is null if the game hasn't ended
+   */
+  public EndGameState checkForEndOfGame() {
+    return null;
   }
 }
