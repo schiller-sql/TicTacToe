@@ -41,7 +41,7 @@ class ControllerTest {
                 X | X | ∙
                 """);
         final GameController controller = new GameController(opponent, grid);
-        final Point placePoint = new Point(2, 0);
+        final Point placePoint = new Point(2, 2);
 
         controller.setPoint(placePoint);
         final GameState gameState = controller.getState();
