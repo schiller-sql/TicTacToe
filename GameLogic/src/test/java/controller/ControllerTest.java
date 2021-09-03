@@ -23,7 +23,7 @@ class ControllerTest {
                 X | ∙ | X
                 X | X | ∙
                 """);
-        final GameController controller = new GameController(new FakeOpponent());
+        final GameController controller = new GameController(new FakeOpponent(), grid);
         final Point placePoint = new Point(1, 1);
 
         controller.setPoint(placePoint);
@@ -40,7 +40,7 @@ class ControllerTest {
                 X | O | X
                 X | X | ∙
                 """);
-        final GameController controller = new GameController(opponent);
+        final GameController controller = new GameController(opponent, grid);
         final Point placePoint = new Point(2, 0);
 
         controller.setPoint(placePoint);
