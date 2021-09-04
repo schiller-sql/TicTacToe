@@ -10,8 +10,5 @@
         <module name="DesktopApp" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="GameLogic" target="16" />
-    </bytecodeTargetLevel>
   </component>
 </project>

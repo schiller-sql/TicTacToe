@@ -90,7 +90,51 @@ public class GameController {
    * @return The current GameState
    */
   private GameState calculateGameState() {
-    // TODO: Do the checks if the game has been won, lost, or there has been a tie
+    if(checkWonOrLost(Mark.self)) {
+      return GameState.won;
+    } else if (checkWonOrLost(Mark.opponent)) {
+      return GameState.lost;
+    } else if (checkTie()) {
+      return GameState.tie;
+    }
     return GameState.running;
+  }
+
+  private boolean checkTie() {
+    for(int x = 0; x < 3; x++) {
+      for(int y = 0; y < 3; y++) {
+        if(grid.markIsEmpty(x, y)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  private boolean checkWonOrLost(Mark mark) {
+    return checkForDiagonals(mark) || checkForLines(mark);
+  }
+
+  private boolean checkForDiagonals(Mark mark) {
+    final boolean middleIs = grid.markIs(1, 1, mark);
+    final boolean firstDiagonal = grid.markIs(0, 0, mark) && grid.markIs(2, 2, mark);
+    final boolean secondDiagonal = grid.markIs(0, 2, mark) && grid.markIs(2, 0, mark);
+    return middleIs && (firstDiagonal || secondDiagonal);
+  }
+
+  private boolean checkForLines(Mark mark) {
+    return checkForLine(mark, true) || checkForLine(mark, false);
+  }
+
+  private boolean checkForLine(Mark mark, boolean vertical) {
+    xLoop: for(int x = 0; x < 3; x++) {
+      for(int y = 0; y < 3; y++) {
+        if(!grid.markIs(vertical ? x : y, vertical ? y : x, mark)) {
+          continue xLoop;
+        }
+      }
+      return true;
+    }
+    return false;
   }
 }

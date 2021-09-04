@@ -1,0 +1,3 @@
+/*
+Calculates the worst move to make it impossible to lose
+*/
