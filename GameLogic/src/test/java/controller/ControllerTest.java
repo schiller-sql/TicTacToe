@@ -201,6 +201,10 @@ class ControllerTest {
         );
     }
 
+/*
+Alternativ solution would be one method with array-streams and lambda
+Expressions instead of three methods
+*/
     static Mark[][] getGrid(String stringGrid) {
         assert (stringGrid.length() == 30);
         final String[] rawGrid = stringGrid.split("\n");
