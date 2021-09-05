@@ -9,12 +9,20 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.HashMap;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class ControllerTest {
+    private static HashMap<Character, Mark> markState = new HashMap<Character, Mark>(3);
+
+    static {
+        markState.put('X', Mark.self);
+        markState.put('O', Mark.opponent);
+        markState.put('∙', null);
+    }
 
     @Test
     void setPointDirectlyWins() {
@@ -201,36 +209,17 @@ class ControllerTest {
         );
     }
 
-/*
-Alternativ solution would be one method with array-streams and lambda
-Expressions instead of three methods
-*/
-    static Mark[][] getGrid(String stringGrid) {
-        assert (stringGrid.length() == 30);
-        final String[] rawGrid = stringGrid.split("\n");
+    private static Mark[][] getGrid(String stringGrid) {
+        assert (stringGrid.length() == 30); //assert
+        stringGrid = stringGrid.replaceAll("\n", " | ").replaceAll("\r", " | "); //format
         final Mark[][] grid = new Mark[3][3];
-        for (int i = 0; i < 3; i++) {
-            grid[i] = marksFromStringLine(rawGrid[i]);
+
+        for (int i = 0; i < 3; i++) { //TODO streams
+            for (int j = 0; j < 3; j++) {
+                grid[i][j] = markState.get(stringGrid.charAt(0));
+                stringGrid = stringGrid.substring(3).trim();
+            }
         }
         return grid;
     }
-
-    static Mark[] marksFromStringLine(String line) {
-        final String[] rawMarks = line.trim().split("\\s\\|\\s");
-        final Mark[] marks = new Mark[3];
-        for (int i = 0; i < 3; i++) {
-            marks[i] = inferMark(rawMarks[i].charAt(0));
-        }
-        return marks;
-    }
-
-    static Mark inferMark(char stringMark) {
-        return switch (stringMark) {
-            case 'X' -> Mark.self;
-            case 'O' -> Mark.opponent;
-            case '∙' -> null;
-            default -> throw new Error("Not a valid Mark");
-        };
-    }
-
 }
