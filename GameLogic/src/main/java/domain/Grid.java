@@ -8,8 +8,8 @@ public interface Grid {
     /**
      * Get the Grid as a whole
      *
-     * @apiNote Do not mutate the given array
      * @return The Grid as a two-dimensional Mark array
+     * @apiNote Do not mutate the given array
      */
     Mark[][] getGrid();
 
@@ -28,4 +28,13 @@ public interface Grid {
      * @return The Mark which is searched for
      */
     Mark getMark(Point point);
+
+    /**
+     * Get all positions of a mark type in this Grid
+     *
+     * @param type The type of Mark to look for,
+     *             null means looking for an empty field
+     * @return All positions as a Point array
+     */
+    Point[] getAllOfMarkType(Mark type);
 }

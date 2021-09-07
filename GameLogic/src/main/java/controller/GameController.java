@@ -5,6 +5,9 @@ import domain.Mark;
 import domain.Point;
 import opponent.Opponent;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * Controls a 3 by 3 tic-tac-toe grid,
  * if someone calls setPoint,
@@ -198,6 +201,26 @@ public class GameController {
          */
         public Mark getMark(Point point) {
             return getGrid()[point.y()][point.x()];
+        }
+
+        /**
+         * Get all positions of a mark type in this Grid
+         *
+         * @param type The type of Mark to look for,
+         *             null means looking for an empty field
+         * @return All positions as a Point array
+         */
+        // TODO: Fix the warning by IntelliJ
+        public Point[] getAllOfMarkType(Mark type) {
+            ArrayList<Point> foundPoints = new ArrayList<>();
+            for (int y = 0; y < 3; y++) {
+                for (int x = 0; x < 3; x++) {
+                    if (grid[y][x] == type) {
+                        foundPoints.add(new Point(x, y));
+                    }
+                }
+            }
+            return foundPoints.toArray((Point[]) Array.newInstance(Point.class, foundPoints.size()));
         }
 
         /**
