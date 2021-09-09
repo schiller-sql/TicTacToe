@@ -6,14 +6,6 @@ package domain;
  */
 public interface Grid {
     /**
-     * Get the Grid as a whole
-     *
-     * @return The Grid as a two-dimensional Mark array
-     * @apiNote Do not mutate the given array
-     */
-    Mark[][] getGrid();
-
-    /**
      * Find out if a field is empty
      *
      * @param point The Point of the field in question
@@ -28,6 +20,18 @@ public interface Grid {
      * @return The Mark which is searched for
      */
     Mark getMark(Point point);
+
+    /**
+     * Get a Mark in the grid by its coordinates
+     *
+     * Is more performant than
+     * using the Point class for the coordinates
+     *
+     * @param x The x coordinate
+     * @param y The y coordinate
+     * @return The Mark which is searched for
+     */
+    Mark getMark(int x, int y);
 
     /**
      * Get all positions of a mark type in this Grid
