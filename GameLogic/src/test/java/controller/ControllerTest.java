@@ -12,13 +12,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static util.GridUtil.getGrid;
+import static util.MarkUtils.getGridDataFromString;
 
 
 class ControllerTest {
     @Test
     void setPointDirectlyWins() {
-        final Mark[][] grid = getGrid("""
+        final Mark[][] grid = getGridDataFromString("""
                 O | X | ∙
                 X | ∙ | X
                 X | X | ∙
@@ -35,7 +35,7 @@ class ControllerTest {
     @Test
     void setPointLoses() {
         final Opponent opponent = new FakeOpponent(new Point(2, 2));
-        final Mark[][] grid = getGrid("""
+        final Mark[][] grid = getGridDataFromString("""
                 O | X | ∙
                 X | O | X
                 X | X | ∙
@@ -196,7 +196,7 @@ class ControllerTest {
 
     static Arguments gameControllerResult(String grid, GameState state) {
         return Arguments.of(
-                getGrid(grid),
+                getGridDataFromString(grid),
                 state
         );
     }
