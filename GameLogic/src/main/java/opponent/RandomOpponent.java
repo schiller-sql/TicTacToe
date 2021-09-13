@@ -5,7 +5,7 @@ import domain.Grid;
 
 /**
  * Implements the Opponent interface in a random based way,
- * this is the simplest implementation of the Opponent
+ * this is the most simple implementation of the Opponent
  */
 public class RandomOpponent implements Opponent {
     @Override
