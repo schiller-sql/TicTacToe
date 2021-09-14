@@ -1,6 +1,5 @@
 package opponent;
 
-import controller.MutableGrid;
 import domain.Grid;
 import domain.Mark;
 import domain.Point;
@@ -13,7 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static util.GridUtil.getGrid;
+import static util.GridUtils.getGridFromString;
 
 class AdvancedBaseOpponentTest {
     AdvancedBaseOpponent advancedBaseOpponent;
@@ -25,8 +24,7 @@ class AdvancedBaseOpponentTest {
 
     @MethodSource("getRowFinalNeededPointsSource")
     @ParameterizedTest
-    void getRowFinalNeededPoints(Mark[][] rawGrid, Point[] finalNeededPoints) {
-        final Grid grid = new MutableGrid(rawGrid);
+    void getRowFinalNeededPoints(Grid grid, Point[] finalNeededPoints) {
         final Point[] foundPoints = advancedBaseOpponent.getRowFinalNeededPoints(grid, Mark.opponent);
 
         assertArrayEquals(finalNeededPoints, foundPoints);
@@ -84,7 +82,7 @@ class AdvancedBaseOpponentTest {
             finalNeededPoints[i] = new Point(rawFinalNeededPoints[i][0], rawFinalNeededPoints[i][1]);
         }
         return Arguments.of(
-                getGrid(grid),
+                getGridFromString(grid),
                 finalNeededPoints
         );
     }

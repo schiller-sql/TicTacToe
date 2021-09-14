@@ -6,11 +6,10 @@ import domain.Point;
 
 public class ExampleOpponent implements Opponent{
 
-
     @Override
     public Point move(Grid grid) {
         Point finalPoint;
-        //Point[] myPoints = grid.getAllOfMarkType(Mark.opponent);
+        Point[] myPoints = grid.getAllOfMarkType(Mark.opponent);
         Point[] playerPoints = grid.getAllOfMarkType(Mark.self);
         Point[] freePoints = new Point[9];
 
