@@ -2,9 +2,7 @@ import controller.GameController;
 import controller.GameState;
 import domain.Mark;
 import domain.Point;
-import opponent.ExampleOpponent;
-import opponent.Opponent;
-import opponent.RandomOpponent;
+import opponent.*;
 import utils.TerminalColors;
 import utils.TerminalUtils;
 import utils.TicTacToeUtils;
@@ -48,8 +46,9 @@ public class Main {
 
     private static Opponent getOpponentInput() {
         final Opponent[] opponents = new Opponent[]{
+                new TonyRandomOpponent(),
                 new RandomOpponent(),
-                new ExampleOpponent(),
+                new OleOpponent(),
         };
         for (int i = 0; i < opponents.length; i++) {
             System.out.println(i + 1 + ": " + opponents[i].getClass().getSimpleName());

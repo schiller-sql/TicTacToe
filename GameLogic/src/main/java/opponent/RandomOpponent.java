@@ -1,23 +1,12 @@
 package opponent;
 
-import domain.Point;
 import domain.Grid;
+import domain.Point;
 
-/**
- * Implements the Opponent interface in a random based way,
- * this is the simplest implementation of the Opponent
- */
-public class RandomOpponent implements Opponent {
+public class RandomOpponent extends AdvancedBaseOpponent {
+
     @Override
     public Point move(Grid grid) {
-        Point randomPoint;
-        do {
-            randomPoint = new Point(getRandomPosition(), getRandomPosition());
-        } while(!grid.markIsEmpty(randomPoint));
-        return randomPoint;
-    }
-
-    private int getRandomPosition() {
-        return (int) (Math.random() * 3);
+        return grid.getAllOfMarkType(null)[(int) (Math.random() * grid.getAllOfMarkType(null).length)];
     }
 }
