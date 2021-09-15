@@ -15,7 +15,7 @@ import opponent.Opponent;
  */
 public class GameController {
     private final Opponent opponent;
-    private final MutableGrid grid;
+    private Grid grid;
     private GameState state;
 
     /**
@@ -26,7 +26,7 @@ public class GameController {
      */
     public GameController(Opponent opponent) {
         this.opponent = opponent;
-        this.grid = new MutableGrid();
+        this.grid = new Grid();
         state = GameState.running;
     }
 
@@ -41,7 +41,7 @@ public class GameController {
         assert (startingGrid[2].length == 3);
 
         this.opponent = opponent;
-        this.grid = new MutableGrid(startingGrid);
+        this.grid = new Grid(startingGrid);
         state = calculateGameState();
     }
 
@@ -62,13 +62,13 @@ public class GameController {
     public void setPoint(Point point) {
         assert (state == GameState.running);
 
-        grid.setMarkSelf(point);
+        grid = Grid.mutatedGridFrom(grid, point, Mark.self);
         state = calculateGameState();
         if (state != GameState.running)
             return;
 
         final Point opponentPoint = opponent.move(grid);
-        grid.setMarkOpponent(opponentPoint);
+        grid = Grid.mutatedGridFrom(grid, opponentPoint, Mark.opponent);
         state = calculateGameState();
     }
 
@@ -140,14 +140,4 @@ public class GameController {
         }
         return false;
     }
-
-    /**
-     * Mutable version of the Grid class,
-     * so the controller can edit the grid
-     * <p>
-     * Should only be used in the controller,
-     * as in the opponent for example,
-     * it returns the point to be set
-     */
-
 }
