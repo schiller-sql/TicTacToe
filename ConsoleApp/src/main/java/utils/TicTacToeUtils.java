@@ -15,7 +15,7 @@ public class TicTacToeUtils {
         markStringMap.put(Mark.opponent, TerminalColors.blue + "O" + TerminalColors.reset);
 
         gameStateStringMap.put(GameState.won, TerminalUtils.colorString("You", TerminalColors.red) + " have won!");
-        gameStateStringMap.put(GameState.lost, TerminalUtils.colorString("", TerminalColors.blue) + " has won!");
+        gameStateStringMap.put(GameState.lost, "The " + TerminalUtils.colorString("opponent", TerminalColors.blue) + " has won!");
         gameStateStringMap.put(GameState.tie, "Nobody won, there was a tie!");
     }
 
