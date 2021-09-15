@@ -17,7 +17,7 @@ public class ExampleOpponent implements Opponent{
             for (int y = 0; y < 3; y++) {
                 Point temp = new Point(x,y);
                 if(grid.markIsEmpty(temp)) {
-                    freePoints[freePoints.length]=temp;
+                    freePoints[freePoints.length-1]=temp;
                 }
             }
         }
