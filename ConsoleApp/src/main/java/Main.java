@@ -15,7 +15,7 @@ public class Main {
     static GameController controller;
 
     public static void main(String[] args) {
-        System.out.println("Welcome to TicTacToe, select a opponent: ");
+        System.out.println("Welcome to TicTacToe, select an opponent: ");
         final Opponent opponent = getOpponentInput();
         System.out.println("The opponent \"" + opponent.getClass().getSimpleName() + "\" was chosen\n");
 
