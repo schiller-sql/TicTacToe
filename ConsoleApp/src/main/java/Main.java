@@ -1,21 +1,22 @@
-import domain.Grid;
+import controller.GameController;
+import controller.GameState;
+import domain.Mark;
 import domain.Point;
 import opponent.ExampleOpponent;
 import opponent.Opponent;
 import opponent.RandomOpponent;
+import utils.TerminalColors;
+import utils.TerminalUtils;
+import utils.TicTacToeUtils;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Scanner;
+
 
 public class Main {
-    static GameController controller;
-    public static void main(String[] args) {
-        final Opponent[] opponents = new Opponent[]{
-                new RandomOpponent(),
-                new ExampleOpponent(),
-        };
 
+    static GameController controller;
+
+    public static void main(String[] args) {
         System.out.println("Welcome to TicTacToe, select a opponent: ");
         final Opponent opponent = getOpponentInput();
         System.out.println("The opponent \"" + opponent.getClass().getSimpleName() + "\" was chosen\n");

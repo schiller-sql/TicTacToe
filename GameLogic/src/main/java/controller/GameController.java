@@ -1,6 +1,7 @@
 package controller;
 
 import domain.Mark;
+import domain.Grid;
 import domain.Point;
 import opponent.Opponent;
 
@@ -69,6 +70,15 @@ public class GameController {
         final Point opponentPoint = opponent.move(grid);
         grid.setMarkOpponent(opponentPoint);
         state = calculateGameState();
+    }
+
+    /**
+     * Get the Grid
+     *
+     * @return The current grid of this Opponent
+     */
+    public Grid getGrid() {
+        return grid;
     }
 
     /**
