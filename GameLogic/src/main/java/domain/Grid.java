@@ -73,21 +73,21 @@ public record Grid(Mark[][] grid) {
 
     /**
      * Get a mutated Grid,
-     * which is mutated on one location with a new mark
+     * which is mutated from this grid,
+     * on one location with a new mark
      *
-     * @param grid  Which Grid should be mutated from
-     * @param point Where to place the mark
+     * @param point The location to place the mark
      * @param mark  The mark to place
      * @return The mutated grid
      */
-    static public Grid mutatedGridFrom(Grid grid, Point point, Mark mark) {
+    public Grid copyWith(Point point, Mark mark) {
         Mark[][] rawGrid = new Mark[3][3];
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 if (point.x() == x && point.y() == y) {
                     rawGrid[y][x] = mark;
                 } else {
-                    rawGrid[y][x] = grid.getMark(x, y);
+                    rawGrid[y][x] = getMark(x, y);
                 }
             }
         }

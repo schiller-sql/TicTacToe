@@ -66,13 +66,13 @@ public class GameController {
     public void setPoint(Point point) {
         assert (state == GameState.running);
 
-        setGridAndAddToHistory(Grid.mutatedGridFrom(grid, point, Mark.self));
+        setGridAndAddToHistory(grid.copyWith(point, Mark.self));
         state = calculateGameState();
         if (state != GameState.running)
             return;
 
         final Point opponentPoint = opponent.move(grid);
-        setGridAndAddToHistory(Grid.mutatedGridFrom(grid, opponentPoint, Mark.opponent));
+        setGridAndAddToHistory(grid.copyWith(opponentPoint, Mark.opponent));
         state = calculateGameState();
     }
 
