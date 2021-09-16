@@ -30,7 +30,7 @@ public class GameController {
      */
     public GameController(Opponent opponent) {
         this.opponent = opponent;
-        setGridAndAddToHistory(new Grid());
+        setGridAndAddToHistory(Grid.emptyGrid());
         state = GameState.running;
     }
 

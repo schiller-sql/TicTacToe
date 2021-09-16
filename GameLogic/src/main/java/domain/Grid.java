@@ -7,26 +7,7 @@ import java.util.ArrayList;
 /**
  * Represents a 3 by 3 tic-tac-toe grid
  */
-public class Grid {
-
-    private final Mark[][] grid;
-
-    /**
-     * Empty constructor, with a clean grid
-     */
-    public Grid() {
-        grid = new Mark[3][3];
-    }
-
-    /**
-     * Constructor with a custom starting grid
-     *
-     * @param grid The starting grid
-     */
-    public Grid(Mark[][] grid) {
-        this.grid = grid;
-    }
-
+public record Grid(Mark[][] grid) {
 
     /**
      * Check if a field is empty by its Point
@@ -111,5 +92,12 @@ public class Grid {
             }
         }
         return new Grid(rawGrid);
+    }
+
+    /**
+     * Factory constructor to get an empty Grid
+     */
+    static public Grid emptyGrid() {
+        return new Grid(new Mark[3][3]);
     }
 }
