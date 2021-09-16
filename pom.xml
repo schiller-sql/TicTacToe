@@ -10,8 +10,8 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>GameLogic</module>
-        <module>DesktopApp</module>
         <module>ConsoleApp</module>
+        <module>DesktopApp</module>
     </modules>
 
     <properties>
