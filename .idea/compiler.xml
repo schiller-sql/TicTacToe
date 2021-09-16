@@ -7,8 +7,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="GameLogic" />
-        <module name="ConsoleApp" />
         <module name="DesktopApp" />
+        <module name="ConsoleApp" />
       </profile>
     </annotationProcessing>
   </component>
