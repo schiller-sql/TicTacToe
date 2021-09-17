@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+/**
+ * @author https://stackoverflow.com/a/4054711
+ * @param <T>
+ */
 public class Tree<T> {
-    //TODO: understand and specify this Tree class
 
-    private T head;
-    private ArrayList<Tree<T>> leafs = new ArrayList<Tree<T>>();
+    final private T head;
+    final private ArrayList<Tree<T>> leafs = new ArrayList<Tree<T>>();
     private Tree<T> parent = null;
     private HashMap<T, Tree<T>> locate = new HashMap<T, Tree<T>>();
 
@@ -18,6 +21,7 @@ public class Tree<T> {
     }
 
     public void addLeaf(T root, T leaf) {
+        //gib einem bestimmtem Child ein Leaf
         if (locate.containsKey(root)) {
             locate.get(root).addLeaf(leaf);
         } else {
@@ -26,6 +30,7 @@ public class Tree<T> {
     }
 
     public Tree<T> addLeaf(T leaf) {
+        //Gib .this ein leaf
         Tree<T> t = new Tree<>(leaf);
         leafs.add(t);
         t.parent = this;
@@ -35,6 +40,7 @@ public class Tree<T> {
     }
 
     public Tree<T> setAsParent(T parentRoot) {
+        //.this Tree wird Leaf von parentRoot
         Tree<T> t = new Tree<>(parentRoot);
         t.leafs.add(this);
         this.parent = t;
@@ -49,15 +55,18 @@ public class Tree<T> {
     }
 
     public Tree<T> getTree(T element) {
+        //zugriff auf generalisierte HashMap
         return locate.get(element);
     }
 
     public Tree<T> getParent() {
+        //gib parent von .this zurück
         return parent;
     }
 
     public Collection<T> getSuccessors(T root) {
-        Collection<T> successors = new ArrayList<T>();
+        //suche anhand des root die heads der childs als T
+        Collection<T> successors = new ArrayList<>();
         Tree<T> tree = getTree(root);
         if (null != tree) {
             for (Tree<T> leaf : tree.leafs) {
@@ -72,6 +81,7 @@ public class Tree<T> {
     }
 
     public static <T> Collection<T> getSuccessors(T of, Collection<Tree<T>> in) {
+        //überprüft für jedes Element aus der Collection ob T of als Head enthalten ist
         for (Tree<T> tree : in) {
             if (tree.locate.containsKey(of)) {
                 return tree.getSuccessors(of);
@@ -88,15 +98,23 @@ public class Tree<T> {
     private static final int indent = 2;
 
     private String printTree(int increment) {
-        String s = "";
-        String inc = "";
+        StringBuilder s;
+        StringBuilder inc = new StringBuilder();
         for (int i = 0; i < increment; ++i) {
-            inc = inc + " ";
+            inc.append(" ");
         }
-        s = inc + head;
+        s = new StringBuilder(inc.toString() + head);
         for (Tree<T> child : leafs) {
-            s += "\n" + child.printTree(increment + indent);
+            s.append("\n").append(child.printTree(increment + indent));
         }
-        return s;
+        return s.toString();
     }
+    /* Intelij Solution
+    private String printTree(int increment) {
+    StringBuilder s;
+    s = new StringBuilder(" ".repeat(Math.max(0, increment)) + head);
+        for (Tree<T> child : leafs) {
+        s.append("\n").append(child.printTree(increment + indent)); }
+        return s.toString();  }
+     */
 }
