@@ -17,6 +17,9 @@ public class QuandaryOpponent extends AdvancedBaseOpponent {
         if(getRowFinalNeededPoints(grid, Mark.opponent).length != 0) {
             return getRowFinalNeededPoints(grid, Mark.opponent)[0];
         } // checking if opponent can win by placing one point
+        if (getRowFinalNeededPoints(grid, Mark.self).length != 0) {
+            return getRowFinalNeededPoints(grid, Mark.self)[0];
+        } // checking if player could win
 
         List<Grid> possibleNextMarks = new ArrayList<>();
         Point[] markTypesNull = grid.getAllOfMarkType(null);
@@ -27,7 +30,7 @@ public class QuandaryOpponent extends AdvancedBaseOpponent {
         for (int i = 0; i < possibleNextMarks.size(); i++)
         {
             if (getRowFinalNeededPoints(possibleNextMarks.get(i), Mark.opponent).length > 1) {
-                return getRowFinalNeededPoints(possibleNextMarks.get(i), Mark.opponent)[0];
+                return markTypesNull[i];
             } // checking if creating a quandary (possible points to win more than one) is possible
         }
         return markTypesNull[(int) (Math.random() * markTypesNull.length)];
