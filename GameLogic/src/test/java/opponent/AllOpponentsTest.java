@@ -26,6 +26,7 @@ public class AllOpponentsTest {
                 new TonyRandomOpponent(),
                 new OleOpponent(),
                 new RandomOpponent(),
+                new QuandaryOpponent(),
         };
     }
 

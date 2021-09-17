@@ -3,6 +3,9 @@ package opponent;
 import domain.Grid;
 import domain.Point;
 
+/**
+ * Opponent chooses a random Point to return.
+ */
 public class RandomOpponent extends AdvancedBaseOpponent {
 
     @Override

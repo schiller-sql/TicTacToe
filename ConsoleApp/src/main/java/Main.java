@@ -49,6 +49,7 @@ public class Main {
                 new TonyRandomOpponent(),
                 new RandomOpponent(),
                 new OleOpponent(),
+                new QuandaryOpponent(),
         };
         for (int i = 0; i < opponents.length; i++) {
             System.out.println(i + 1 + ": " + opponents[i].getClass().getSimpleName());

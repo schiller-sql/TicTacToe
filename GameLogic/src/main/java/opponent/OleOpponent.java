@@ -2,6 +2,10 @@ package opponent;
 
 import domain.*;
 
+/**
+ * Opponent places one point if it can win directly otherwise it tries to block the players rows.
+ * If none of these cases is true opponent will place a random point.
+ */
 public class OleOpponent extends AdvancedBaseOpponent {
 
     @Override
