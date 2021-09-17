@@ -10,13 +10,67 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        TerminalUtils.printColor("Welcome to TicTacToe", TerminalColors.purple);
-        System.out.println();
+        boolean isHelp = false;
+        for (String arg : args) {
+            if (arg.equals("--help") || arg.equals("-h")) {
+                isHelp = true;
+                break;
+            }
+        }
 
-        TerminalUtils.printColor("You are now in the main menu, here are the commands:", TerminalColors.cyan);
-        listCommands();
+        boolean nonExistingOptionWasFound = false;
+        for (String arg : args) {
+            if (
+                    !arg.equals("--game") &&
+                    !arg.equals("-g") &&
+                    !arg.equals("--help") &&
+                    !arg.equals("-h")
+            ) {
+                System.err.println("The option '" + arg + "' does not exist, for all options use '--help'");
+                nonExistingOptionWasFound = true;
+            }
+        }
+        if (nonExistingOptionWasFound) {
+            System.exit(1);
+        }
+
+        boolean directlyGame = false;
+
+        for (String arg : args) {
+            if (arg.equals("--game") || arg.equals("-g")) {
+                if (isHelp) {
+                    System.err.println("The option '--help' is a standalone option");
+                    System.exit(1);
+                } else {
+                    directlyGame = true;
+                }
+            } else {
+                System.out.println("tic-tac-toe <options>");
+                System.out.println();
+                System.out.println("Options:");
+                System.out.println("  -h, --help      The help menu");
+                System.out.println("  -g, --game      Start directly in a game without");
+                System.out.println("                  the commands menu at the beginning");
+                System.exit(0);
+            }
+        }
+
+        handleTicTacToe(directlyGame);
+    }
+
+    private static void handleTicTacToe(boolean directlyGame) {
+        if (!directlyGame) {
+            TerminalUtils.printColor("Welcome to TicTacToe", TerminalColors.purple);
+            System.out.println();
+
+            TerminalUtils.printColor("You are now in the main menu, here are the commands:", TerminalColors.cyan);
+            listCommands();
+        }
 
         try {
+            if(directlyGame) {
+                startGame();
+            }
             matchCommands();
         } catch (TicTacToeQuitException e) {
             TerminalUtils.printColor("Program successfully exited", TerminalColors.cyan);
