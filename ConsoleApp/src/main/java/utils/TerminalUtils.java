@@ -16,8 +16,12 @@ public class TerminalUtils {
         System.out.println(colorString(message, color));
     }
 
+    public static void printStatus(String message) {
+        printColor(message, TerminalColors.cyan);
+    }
+
     public static void printError(String message) {
-        printColor(message, TerminalColors.red);
+        printColor(message, TerminalColors.yellow);
     }
 
     private static void inputMarker() {
@@ -25,11 +29,11 @@ public class TerminalUtils {
     }
 
     private static boolean getBooleanInput(Scanner scanner, String question) {
-        System.out.println(question + " (Y/n)");
+        TerminalUtils.printStatus(question + " (Y/n)");
         String input = null;
         do {
             if (input != null) {
-                System.out.println("Invalid input, only Y(es) and n(o) is allowed");
+                TerminalUtils.printError("Invalid input, only Y(es) and n(o) is allowed");
             }
             inputMarker();
             input = scanner.next();

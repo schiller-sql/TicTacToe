@@ -20,14 +20,18 @@ public class Game {
 
     private final GameController controller;
 
-    public Game() throws TicTacToeQuitException, TicTacToeRestartException, TicTacToeMenuException {
-        TerminalUtils.printColor("A game has started, select a opponent:", TerminalColors.cyan);
+    public Game(boolean firstGame) throws TicTacToeQuitException, TicTacToeRestartException, TicTacToeMenuException {
+        TerminalUtils.printStatus("A game has started, select a opponent");
 
         final Opponent opponent = getOpponentInput();
-        System.out.println("The opponent \"" + opponent.getClass().getSimpleName() + "\" was chosen\n");
+        TerminalUtils.printStatus("The opponent \"" + opponent.getClass().getSimpleName() + "\" was chosen\n");
 
         controller = new GameController(opponent);
         System.out.println(TicTacToeUtils.gridToString(controller.getGrid()));
+
+        if (firstGame) {
+            printTutorial();
+        }
 
         while (controller.getState() == GameState.running) {
             final Point point = getPointInput();
@@ -45,8 +49,6 @@ public class Game {
     }
 
     private void printTutorial() {
-        System.out.println(TicTacToeUtils.gridToString(controller.getGrid()));
-
         System.out.println("Press the number key of the respective field");
         System.out.println("you want to place your cross on");
         System.out.println();
@@ -55,10 +57,10 @@ public class Game {
         System.out.println("And the opponent is: " + TicTacToeUtils.markToString(Mark.opponent));
         System.out.println();
 
-        System.out.print("Please type a number between ");
+        System.out.print("To select a number, take a number between ");
         System.out.print(TerminalUtils.colorString("1", TerminalColors.black) + " and ");
-        System.out.print(TerminalUtils.colorString("9", TerminalColors.black));
-        System.out.println(" to select a field:");
+        System.out.print(TerminalUtils.colorString("9", TerminalColors.black) + "\n");
+        System.out.println();
     }
 
 
@@ -88,7 +90,7 @@ public class Game {
         int input = -1;
         do {
             if (input == -1) {
-                System.out.println("Choose your Point:");
+                TerminalUtils.printStatus("Choose your Point:");
             } else {
                 TerminalUtils.printError("The point was already taken, choose a new one:");
             }

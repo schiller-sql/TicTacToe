@@ -63,56 +63,64 @@ public class Main {
             TerminalUtils.printColor("Welcome to TicTacToe", TerminalColors.purple);
             System.out.println();
 
-            TerminalUtils.printColor("You are now in the main menu, here are the commands:", TerminalColors.cyan);
+            TerminalUtils.printStatus("You are now in the main menu, here are the commands:");
             listCommands();
         }
 
         try {
-            if(directlyGame) {
-                startGame();
+            if (directlyGame) {
+                startGame(false);
+                matchCommands(false);
+            } else {
+                matchCommands(true);
             }
-            matchCommands();
         } catch (TicTacToeQuitException e) {
-            TerminalUtils.printColor("Program successfully exited", TerminalColors.cyan);
+            TerminalUtils.printStatus("Program successfully exited");
         }
     }
 
-    private static GridHistory startGame() throws TicTacToeQuitException {
+    private static GridHistory startGame(boolean firstGame) throws TicTacToeQuitException {
         try {
-            final Game game = new Game();
-            TerminalUtils.printColor("You are now back in the main menu", TerminalColors.cyan);
+            final Game game = new Game(firstGame);
+            TerminalUtils.printStatus("You are now back in the main menu");
             return game.getHistory();
         } catch (TicTacToeMenuException e) {
-            TerminalUtils.printColor("You are now in the main menu", TerminalColors.cyan);
+            TerminalUtils.printStatus("You are now in the main menu");
             return null;
         } catch (TicTacToeRestartException e) {
-            TerminalUtils.printColor("Game successfully restarted", TerminalColors.cyan);
-            return startGame();
+            TerminalUtils.printStatus("Game successfully restarted");
+            return startGame(false);
         }
     }
 
-    private static void matchCommands() throws TicTacToeQuitException {
+    private static void matchCommands(boolean firstGame) throws TicTacToeQuitException {
+        boolean isFirstGame = firstGame;
         GridHistory lastHistory = null;
+        // TODO: Fix the warning
         while (true) {
+            // TODO: If there is a Y/n question, n fails, as it can't match
             final Scanner scanner = new Scanner(System.in);
             final String command = TerminalUtils.getInputWithExits(scanner);
             if (command.matches("^:g(game)?$")) {
-                lastHistory = startGame();
+                lastHistory = startGame(isFirstGame);
+                isFirstGame = true;
             } else if (command.matches("^:h(istory)?$")) {
                 if (lastHistory != null) {
                     System.out.println(TicTacToeUtils.gridHistoryToString(lastHistory));
                 } else {
-                    System.out.println("There is no game, to print the history from");
+                    TerminalUtils.printError("There is no game, to print the history from");
                 }
             } else if (command.matches("^:c(commands)?$")) {
-                TerminalUtils.printColor("Commands:", TerminalColors.cyan);
+                TerminalUtils.printStatus("Commands:");
                 listCommands();
+            } else if (command.matches(":(r(estart)?|m(enu)?)")) {
+                TerminalUtils.printError("This command only works inside of a game, for all valid commands see :c(ommands)");
             } else if (command.matches("^:")) {
                 TerminalUtils.printError("Not a valid command, for all valid commands see :c(ommands)");
             } else {
                 TerminalUtils.printError(
                         "All commands have to be prefixed with ':', " +
-                        "for all valid commands see :c(ommands)\""
+                        "for all valid commands see :c(ommands)"
                 );
             }
         }
