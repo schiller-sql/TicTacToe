@@ -1,6 +1,5 @@
 package opponent;
 
-import controller.MutableGrid;
 import domain.Grid;
 import domain.Mark;
 import domain.Point;
@@ -57,7 +56,7 @@ public class AllOpponentsTest {
                                                     rowFromInts(d, e, f),
                                                     rowFromInts(g, h, i),
                                             };
-                                            final Grid grid = new MutableGrid(gridData);
+                                            final Grid grid = new Grid(gridData);
                                             if (!gridIsFull(grid)) {
                                                 situations.add(grid);
                                             }

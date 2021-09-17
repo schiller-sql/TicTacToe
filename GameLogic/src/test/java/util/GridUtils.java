@@ -1,11 +1,10 @@
 package util;
 
-import controller.MutableGrid;
 import domain.Grid;
 
 public class GridUtils {
     public static Grid getGridFromString(String rawGrid) {
-        return new MutableGrid(MarkUtils.getGridDataFromString(rawGrid));
+        return new Grid(MarkUtils.getGridDataFromString(rawGrid));
     }
 
     public static boolean gridIsFull(Grid grid) {

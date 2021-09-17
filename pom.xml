@@ -10,13 +10,24 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>GameLogic</module>
-        <module>DesktopApp</module>
         <module>ConsoleApp</module>
+        <module>DesktopApp</module>
     </modules>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
     </properties>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

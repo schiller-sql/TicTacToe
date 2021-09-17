@@ -5,17 +5,21 @@ import domain.Grid;
 import domain.Point;
 import opponent.Opponent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Controls a 3 by 3 tic-tac-toe grid,
- * if someone calls setPoint,
- * the grid will be updated,
- * via the players input, the opponents' response,
- * it will be checked if everything is the game has ended or
- * if someone has won
+ * Controller of a 3x3 tic-tac-toe field.
+ * It can be given an opponent,
+ * which the player can then play against
+ *
+ * Will calculate if somebody wins after a move and
+ * stores the complete history of the game
  */
 public class GameController {
+    private final List<Grid> historyList = new ArrayList<>();
     private final Opponent opponent;
-    private final MutableGrid grid;
+    private Grid grid;
     private GameState state;
 
     /**
@@ -26,7 +30,7 @@ public class GameController {
      */
     public GameController(Opponent opponent) {
         this.opponent = opponent;
-        this.grid = new MutableGrid();
+        setGridAndAddToHistory(Grid.emptyGrid());
         state = GameState.running;
     }
 
@@ -41,7 +45,7 @@ public class GameController {
         assert (startingGrid[2].length == 3);
 
         this.opponent = opponent;
-        this.grid = new MutableGrid(startingGrid);
+        setGridAndAddToHistory(new Grid(startingGrid));
         state = calculateGameState();
     }
 
@@ -62,13 +66,13 @@ public class GameController {
     public void setPoint(Point point) {
         assert (state == GameState.running);
 
-        grid.setMarkSelf(point);
+        setGridAndAddToHistory(grid.copyWith(point, Mark.self));
         state = calculateGameState();
         if (state != GameState.running)
             return;
 
         final Point opponentPoint = opponent.move(grid);
-        grid.setMarkOpponent(opponentPoint);
+        setGridAndAddToHistory(grid.copyWith(opponentPoint, Mark.opponent));
         state = calculateGameState();
     }
 
@@ -86,6 +90,23 @@ public class GameController {
      */
     public GameState getState() {
         return state;
+    }
+
+    /**
+     * @return The history as a GridHistory
+     */
+    public GridHistory getHistory() {
+        return new GridHistory(historyList);
+    }
+
+    /**
+     * Add a new Grid to the history and set the current grid to it
+     *
+     * @param grid The new Grid
+     */
+    private void setGridAndAddToHistory(Grid grid) {
+        historyList.add(grid);
+        this.grid = grid;
     }
 
     /**
@@ -140,14 +161,4 @@ public class GameController {
         }
         return false;
     }
-
-    /**
-     * Mutable version of the Grid class,
-     * so the controller can edit the grid
-     * <p>
-     * Should only be used in the controller,
-     * as in the opponent for example,
-     * it returns the point to be set
-     */
-
 }
