@@ -8,10 +8,27 @@ import java.util.List;
  * Represents the History of a tic-tac-toe game,
  * by owning each Grid in the game's timeline
  */
-public record GridHistory(List<Grid> gridList) {
+public final class GridHistory {
+    private final List<Grid> gridList;
+
+    /**
+     */
+    public GridHistory(List<Grid> gridList) {
+        this.gridList = gridList;
+    }
+
     /**
      * @return How many Grids are contained in this class
      */
+    public int length() {
+        return gridList.size();
+    }
+
+    /**
+     * @return How many Grids are contained in this class
+     * @deprecated Replaced getLength() with length()
+     */
+    @Deprecated
     public int getLength() {
         return gridList.size();
     }
