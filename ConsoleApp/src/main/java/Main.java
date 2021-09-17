@@ -96,12 +96,17 @@ public class Main {
     private static void matchCommands(boolean firstGame) throws TicTacToeQuitException {
         boolean isFirstGame = firstGame;
         GridHistory lastHistory = null;
+        final Scanner scanner = new Scanner(System.in);
         // TODO: Fix the warning
         while (true) {
-            // TODO: If there is a Y/n question, n fails, as it can't match
-            final Scanner scanner = new Scanner(System.in);
-            final String command = TerminalUtils.getInputWithExits(scanner);
-            if (command.matches("^:g(game)?$")) {
+            final String command = TerminalUtils.getInput(scanner);
+            if (command.matches("^:q(uit)?$")) {
+                if (TerminalUtils.getBooleanInput(scanner, "Do you really want to quit the program?")) {
+                    throw new TicTacToeQuitException();
+                } else {
+                    TerminalUtils.printStatus("Quitting terminated");
+                }
+            } else if (command.matches("^:g(game)?$")) {
                 lastHistory = startGame(isFirstGame);
                 isFirstGame = true;
             } else if (command.matches("^:h(istory)?$")) {

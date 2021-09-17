@@ -28,8 +28,8 @@ public class TerminalUtils {
         System.out.print(colorString("> ", TerminalColors.green));
     }
 
-    private static boolean getBooleanInput(Scanner scanner, String question) {
-        TerminalUtils.printStatus(question + " (Y/n)");
+    public static boolean getBooleanInput(Scanner scanner, String question) {
+        System.out.println(TerminalUtils.colorString(question, TerminalColors.cyan) + " (Y/n)");
         String input = null;
         do {
             if (input != null) {
@@ -39,6 +39,11 @@ public class TerminalUtils {
             input = scanner.next();
         } while (!input.matches("^(Y(es)?|no?)$"));
         return !input.matches("^no?$");
+    }
+
+    public static String getInput(Scanner scanner) {
+        inputMarker();
+        return scanner.next();
     }
 
     private static String getInputWithAllExits(Scanner scanner) throws TicTacToeQuitException, TicTacToeMenuException, TicTacToeRestartException {
