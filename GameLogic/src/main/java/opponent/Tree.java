@@ -17,6 +17,8 @@ public class Tree<T extends Tree.TreePrintable> {
         String asString();
     }
 
+    //TODO: new method: search T by params of T in Collections of T returns T
+
     final private T head;
     final private ArrayList<Tree<T>> leafs = new ArrayList<>();
     private Tree<T> parent = null;
@@ -134,6 +136,7 @@ public class Tree<T extends Tree.TreePrintable> {
             }
         }
     }
+
     /* Intelij Solution
     private String printTree(int increment) {
     StringBuilder s;

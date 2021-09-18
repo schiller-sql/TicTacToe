@@ -4,6 +4,7 @@ import domain.Grid;
 import domain.Mark;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Node implements Tree.TreePrintable {
@@ -66,6 +67,12 @@ public class Node implements Tree.TreePrintable {
     }
 
     public String asString() {
-        return grid.asString();
+        return "Scores: " + Arrays.toString(score.toArray()) + "; "
+                +"MinimaxStatus: " + minimax + "; "
+                +"Grid: " +  grid.asString();
+    }
+
+    public Node getParent() {
+        return getParent();
     }
 }

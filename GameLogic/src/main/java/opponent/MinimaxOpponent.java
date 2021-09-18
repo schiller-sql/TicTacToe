@@ -2,10 +2,8 @@ package opponent;
 
 import domain.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.IntStream;
 
 public class MinimaxOpponent extends AdvancedBaseOpponent {
     ;
@@ -13,26 +11,26 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
     @Override
     public Point move(Grid grid) {
         final Tree<Node> tree = new Tree<>(new Node(grid));
-        generateTreeForRoot(tree, Mark.opponent);
-        Mark maxFor = Mark.opponent, minFor = Mark.self;
-        System.out.print(tree);
-       // tree.printTreeAlternativ(new StringBuilder(), "", "");
+        generateTreeForRoot(tree, Mark.opponent);//generates the tree based on the given grid
+        List<Node> lastChildren = new ArrayList<>(getLastChildren(tree, new ArrayList<>())); //find all lastChildren in the root tree
+        //calculates for every lastChildren the score
+        IntStream.range(0, lastChildren.size())
+                .forEachOrdered(i -> lastChildren.get(i)
+                        .addScore(calculateScore(lastChildren.get(i))));
 
-        //checkPLayerWins(): position: null, int score= -1*(num-empty-squares()+1)
+        //TODO: do this as long as all root leafes have exactly one best score
+        //give the score from each child to their parents
+        //by choosing the best score
+        giveScoreToParent(tree, lastChildren);
+
+       /* //check for each node in the tree if there are more than one score inherit by children and if yes, eliminate all others saved scores in this node
+        setBestScore(tree);*/
+
+
         //so the best score is returns for the earliest game stat the opponent can win, because by time there are less open fields
         //if tie(): position null, int schore
-
-        /*
-        if max() => set score to -Inf
-        else min() => set score to +Inf
-         */
-
-        //copyWith() for all Mark==null
-        //calculate the score for each
-
         /*save best new score
         basend on who the max_player is
-
         this effects that the min() returns the most negativ score
         and the max() the highest score
          */
@@ -40,6 +38,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
         return new Point(0, 0);
     }
 
+    //done
     public void generateTreeForRoot(Tree<Node> root, Mark player) {
         final Grid rootGrid = root.getHead().getGrid();
         Point[] markTypesNull = rootGrid.getAllOfMarkType(null);
@@ -51,22 +50,56 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
         }
     }
 
-    public List<Tree<Node>> getLastChilds(Tree<Node> tree) {
+    //done
+    public List<Node> getLastChildren(Tree<Node> root, List<Node> nodes) {
+        for(Tree<Node> child : root.getSubTrees()) {
+            if(child.getSubTrees().size()==0) {
+                nodes.add(child.getHead());
+            }
+            getLastChildren(child, nodes);
+        }
+        return nodes;
+    }
 
+    /*
+    public List<Node> setBestScore(Tree<Node> root) {
+        for(Tree<Node> child : root.getSubTrees()) {
+            if(child.getHead().getScores().size()>1) {
+                //Für fertigstellung: bestScore für child ermitteln und alle anderen löschen
+            }
+            setBestScore(child);
+        }
         return null;
+    } */
+
+    //done
+    private void giveScoreToParent(Tree<Node> tree, List<Node> lastChildren) {
+        IntStream.range(0, lastChildren.size()) //gebe den best score von jedem children an den parent weiter
+                .forEach(i -> lastChildren.get(i)
+                        .getParent().addScore(bestScore(lastChildren.get(i))));
+        /* for(int i = 0; i < lastChildren.size(); i++) {
+            lastChildren.get(i).addScore(calculateScore(lastChildren.get(i)));
+        } */
     }
 
-    private int calculateScore() {
+    //not done because calculateEmptyFields() have to be finished first
+    private int calculateScore(Node node) {
+        Mark minimaxStatus = node.getMinimax();
+        int score = minimaxStatus==Mark.opponent ? 1 : -1*(calculateEmptyFields(node)+1);
+        return score;
+    }
 
+    //not done
+    private int calculateEmptyFields(Node node) {
+        //TODO:
         return 0;
     }
 
-    private int bestScore() {
-
+    //not done
+    private int bestScore(Node node) {
+        //TODO:
         return 0;
     }
-
-
 
     private void minimax(Point position, Grid grid, int score) {
         /*
@@ -84,19 +117,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
         2. Schaue ob Node.getMinimax() false oder true gibt (minimize oder maximize)
            dann gebe den jeweiligen 'bestenScore' an den Parent weiter mit Node.setMinimax()
-
-        Solution 1:
-        for each last_child:
-        while(T != root) {
-           this.getParent().setScore(bestScore())
-        }
-
-        Solution 2:
-        gebe den wert von jedem last_child soweit nach oben, bis ein tree mehrere scores bekommt,
-        dann berechne anhand von minimize/maximize den best_score und gebe diesen wieder so lange weiter
-        bis ein parent tree wieder mehrere scores bekommt
-         */
-
+           */
     }
 
 }

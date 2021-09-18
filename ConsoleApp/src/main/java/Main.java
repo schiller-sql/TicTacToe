@@ -30,6 +30,7 @@ public class Main {
                 nonExistingOptionWasFound = true;
             }
         }
+        //TODO: ignore args instead of System.exit()
         if (nonExistingOptionWasFound) {
             System.exit(1);
         }
@@ -93,12 +94,13 @@ public class Main {
         }
     }
 
+    //TODO: boolean firstGame is not needed
     private static void matchCommands(boolean firstGame) throws TicTacToeQuitException {
         boolean isFirstGame = firstGame;
         GridHistory lastHistory = null;
         final Scanner scanner = new Scanner(System.in);
         // TODO: Fix the warning
-        while (true) {
+        while (true) { //TODO: böse Code, schlechter Code
             final String command = TerminalUtils.getInput(scanner);
             if (command.matches("^:q(uit)?$")) {
                 if (TerminalUtils.getBooleanInput(scanner, "Do you really want to quit the program?")) {
