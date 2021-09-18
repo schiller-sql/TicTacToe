@@ -30,13 +30,16 @@ public record GridHistory(List<Grid> gridList) {
 
     /**
      * @param historyPosition The position of the grid in the timeline,
-     *                        the first Grid placed has the history position of 0
+     *                        the first Grid placed has the history position of 0.
+     *                        <p>
+     *                        Make sure that the historyPosition is at least 1,
+     *                        as it has to be compared with the Grid before it
      * @return The Mark type of the last placed mark (in history)
      */
     public Mark getActorToHistoryRecord(int historyPosition) {
 
         Grid firstGrid = getHistoryRecord(historyPosition);
-        Grid secondGrid = getHistoryRecord(historyPosition-1);
+        Grid secondGrid = getHistoryRecord(historyPosition - 1);
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
