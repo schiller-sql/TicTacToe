@@ -28,23 +28,23 @@ public record GridHistory(List<Grid> gridList) {
         return gridList.get(historyPosition);
     }
 
+    /**
+     * @param historyPosition The position of the grid in the timeline,
+     *                        the first Grid placed has the history position of 0
+     * @return The Mark type of the last placed mark (in history)
+     */
     public Mark getActorToHistoryRecord(int historyPosition) {
 
         Grid firstGrid = getHistoryRecord(historyPosition);
         Grid secondGrid = getHistoryRecord(historyPosition-1);
-        boolean difference = false;
-        Mark mark = null;
 
-        while (!difference) {
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (firstGrid.getMark(i, j) != secondGrid.getMark(i, j)) {
-                        difference = true;
-                        mark = firstGrid.getMark(i, j);
-                    }
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (firstGrid.getMark(i, j) != secondGrid.getMark(i, j)) {
+                    return firstGrid.getMark(i, j);
                 }
             }
         }
-        return mark;
+        return null;
     }
 }
