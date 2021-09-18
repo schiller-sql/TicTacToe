@@ -72,7 +72,7 @@ public class Node implements Tree.TreePrintable {
                 +"Grid: " +  grid.asString();
     }
 
-    public Node getParent() {
-        return getParent();
+    public Tree<Node> getParent(Tree<Node> tree) {
+        return tree.getParent();
     }
 }

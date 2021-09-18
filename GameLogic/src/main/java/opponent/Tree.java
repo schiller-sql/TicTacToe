@@ -29,6 +29,7 @@ public class Tree<T extends Tree.TreePrintable> {
         locate.put(head, this);
     }
 
+
     public void addLeaf(T root, T leaf) {
         //gib einem bestimmtem Child ein Leaf
         if (locate.containsKey(root)) {
@@ -97,6 +98,11 @@ public class Tree<T extends Tree.TreePrintable> {
             }
         }
         return new ArrayList<>();
+    }
+
+    public int getDept(Tree<T> tree) { //max dept is 9
+        //TODO: complete
+        return 0;
     }
 
     @Override
