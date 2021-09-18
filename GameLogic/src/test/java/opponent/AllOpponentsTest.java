@@ -23,7 +23,10 @@ public class AllOpponentsTest {
     @BeforeEach
     void init() {
         opponents = new Opponent[]{
+                new TonyRandomOpponent(),
+                new OleOpponent(),
                 new RandomOpponent(),
+                new QuandaryOpponent(),
         };
     }
 
