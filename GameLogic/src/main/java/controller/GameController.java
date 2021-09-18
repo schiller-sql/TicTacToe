@@ -12,7 +12,7 @@ import java.util.List;
  * Controller of a 3x3 tic-tac-toe field.
  * It can be given an opponent,
  * which the player can then play against
- *
+ * <p>
  * Will calculate if somebody wins after a move and
  * stores the complete history of the game
  */
@@ -97,6 +97,13 @@ public class GameController {
      */
     public GridHistory getHistory() {
         return new GridHistory(historyList);
+    }
+
+    /**
+     * @return The opponent the player is playing against
+     */
+    public Opponent getOpponent() {
+        return opponent;
     }
 
     /**
