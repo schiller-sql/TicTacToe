@@ -11,9 +11,9 @@ import java.util.HashMap;
 public class Tree<T> {
 
     final private T head;
-    final private ArrayList<Tree<T>> leafs = new ArrayList<Tree<T>>();
+    final private ArrayList<Tree<T>> leafs = new ArrayList<>();
     private Tree<T> parent = null;
-    private HashMap<T, Tree<T>> locate = new HashMap<T, Tree<T>>();
+    private HashMap<T, Tree<T>> locate = new HashMap<>();
 
     public Tree(T head) {
         this.head = head;
@@ -80,7 +80,7 @@ public class Tree<T> {
         return leafs;
     }
 
-    public static <T> Collection<T> getSuccessors(T of, Collection<Tree<T>> in) {
+    public static <T extends TreePrintable> Collection<T> getSuccessors(T of, Collection<Tree<T>> in) {
         //überprüft für jedes Element aus der Collection ob T of als Head enthalten ist
         for (Tree<T> tree : in) {
             if (tree.locate.containsKey(of)) {

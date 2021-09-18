@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Opponent first checks if there is any possibility to win by placing one point otherwise opponent is checking if there is a possibility to create a quandary.
+ * Opponent first checks if there is any possibility to win by placing one point
+ * in second the opponent tries to stop the player from winning
+ * otherwise opponent is checking if there is a possibility to create a quandary.
  * If none of these cases is true, opponent will place a random point.
  */
 public class QuandaryOpponent extends AdvancedBaseOpponent {
