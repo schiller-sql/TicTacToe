@@ -6,10 +6,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * @author https://stackoverflow.com/a/4054711
  * @param <T>
+ * @author https://stackoverflow.com/a/4054711
  */
-public class Tree<T> {
+public class Tree<T extends Tree.TreePrintable> {
+
+    interface TreePrintable {
+        String toString(String padding);
+
+        String asString();
+    }
 
     final private T head;
     final private ArrayList<Tree<T>> leafs = new ArrayList<>();
@@ -99,15 +105,16 @@ public class Tree<T> {
         return buffer.toString();
     }
 
-    private static final int indent = 2;
+    private static final int indent = 4;
 
     private String printTree(int increment) {
         StringBuilder s;
         StringBuilder inc = new StringBuilder();
+
         for (int i = 0; i < increment; ++i) {
             inc.append(" ");
         }
-        s = new StringBuilder(inc.toString() + head);
+        s = new StringBuilder(head.toString(inc.toString()));
         for (Tree<T> child : leafs) {
             s.append("\n").append(child.printTree(increment + indent));
         }
