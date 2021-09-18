@@ -26,4 +26,6 @@ public record GridHistory(List<Grid> gridList) {
     public Grid getHistoryRecord(int historyPosition) {
         return gridList.get(historyPosition);
     }
+
+    //TODO: +getActorToHistoryRecord(int historyPosition): Mark
 }
