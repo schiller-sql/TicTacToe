@@ -1,6 +1,7 @@
 package controller;
 
 import domain.Grid;
+import domain.Mark;
 
 import java.util.List;
 
@@ -27,5 +28,23 @@ public record GridHistory(List<Grid> gridList) {
         return gridList.get(historyPosition);
     }
 
-    //TODO: +getActorToHistoryRecord(int historyPosition): Mark
+    public Mark getActorToHistoryRecord(int historyPosition) {
+
+        Grid firstGrid = getHistoryRecord(historyPosition);
+        Grid secondGrid = getHistoryRecord(historyPosition-1);
+        boolean difference = false;
+        Mark mark = null;
+
+        while (!difference) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (firstGrid.getMark(i, j) != secondGrid.getMark(i, j)) {
+                        difference = true;
+                        mark = firstGrid.getMark(i, j);
+                    }
+                }
+            }
+        }
+        return mark;
+    }
 }
