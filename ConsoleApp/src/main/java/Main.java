@@ -1,83 +1,142 @@
-import controller.GameController;
-import controller.GameState;
-import domain.Mark;
-import domain.Point;
-import opponent.*;
+import controller.GridHistory;
+import exceptions.TicTacToeMenuException;
+import exceptions.TicTacToeQuitException;
+import exceptions.TicTacToeRestartException;
 import utils.TerminalColors;
 import utils.TerminalUtils;
 import utils.TicTacToeUtils;
 
-import java.util.HashMap;
-
+import java.util.Scanner;
 
 public class Main {
-
-    static GameController controller;
-
     public static void main(String[] args) {
-        System.out.println("Welcome to TicTacToe, select an opponent: ");
-        final Opponent opponent = getOpponentInput();
-        System.out.println("The opponent \"" + opponent.getClass().getSimpleName() + "\" was chosen\n");
-
-        controller = new GameController(opponent);
-
-        System.out.println(TicTacToeUtils.gridToString(controller.getGrid()));
-
-        System.out.println("Press the number key of the respective field");
-        System.out.println("you want to place your cross on");
-        System.out.println();
-
-        System.out.println("You are: " + TicTacToeUtils.markToString(Mark.self));
-        System.out.println("And the opponent is: " + TicTacToeUtils.markToString(Mark.opponent));
-        System.out.println();
-
-        System.out.print("Please type a number between ");
-        System.out.print(TerminalUtils.colorString("1", TerminalColors.black) + " and ");
-        System.out.print(TerminalUtils.colorString("9", TerminalColors.black));
-        System.out.println(" to select a field:");
-
-        while (controller.getState() == GameState.running) {
-            final Point point = getPointInput();
-            controller.setPoint(point);
-            System.out.println(TicTacToeUtils.gridToString(controller.getGrid()));
-        }
-        System.out.println(TicTacToeUtils.gameStateToString(controller.getState()));
-    }
-
-    private static Opponent getOpponentInput() {
-        final Opponent[] opponents = new Opponent[]{
-                new TonyRandomOpponent(),
-                new RandomOpponent(),
-                new OleOpponent(),
-                new QuandaryOpponent(),
-        };
-        for (int i = 0; i < opponents.length; i++) {
-            System.out.println(i + 1 + ": " + opponents[i].getClass().getSimpleName());
-        }
-        System.out.println("\nSelect the number of the opponent you want to play against:");
-        final int choice = TerminalUtils.getIntInput(1, opponents.length);
-        return opponents[choice - 1];
-    }
-
-    private static Point getPointInput() {
-        int count = 0;
-        HashMap<Integer, Point> map = new HashMap<>();
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
-                count++;
-                map.put(count, new Point(x, y));
+        boolean isHelp = false;
+        for (String arg : args) {
+            if (arg.equals("--help") || arg.equals("-h")) {
+                isHelp = true;
+                break;
             }
         }
 
-        int input = -1;
-        do {
-            if (input == -1) {
-                System.out.println("Choose your Point:");
+        boolean nonExistingOptionWasFound = false;
+        for (String arg : args) {
+            if (
+                    !arg.equals("--game") &&
+                    !arg.equals("-g") &&
+                    !arg.equals("--help") &&
+                    !arg.equals("-h")
+            ) {
+                System.err.println("The option '" + arg + "' does not exist, for all options use '--help'");
+                nonExistingOptionWasFound = true;
+            }
+        }
+        if (nonExistingOptionWasFound) {
+            System.exit(1);
+        }
+
+        boolean directlyGame = false;
+
+        for (String arg : args) {
+            if (arg.equals("--game") || arg.equals("-g")) {
+                if (isHelp) {
+                    System.err.println("The option '--help' is a standalone option");
+                    System.exit(1);
+                } else {
+                    directlyGame = true;
+                }
             } else {
-                System.err.println("The point was already taken, choose a new one:");
+                System.out.println("tic-tac-toe <options>");
+                System.out.println();
+                System.out.println("Options:");
+                System.out.println("  -h, --help      The help menu");
+                System.out.println("  -g, --game      Start directly in a game without");
+                System.out.println("                  the commands menu at the beginning");
+                System.exit(0);
             }
-            input = TerminalUtils.getIntInput(1, 9);
-        } while (!controller.getGrid().markIsEmpty(map.get(input)));
-        return map.get(input);
+        }
+
+        handleTicTacToe(directlyGame);
+    }
+
+    private static void handleTicTacToe(boolean directlyGame) {
+        if (!directlyGame) {
+            TerminalUtils.printColor("Welcome to TicTacToe", TerminalColors.purple);
+            System.out.println();
+
+            TerminalUtils.printStatus("You are now in the main menu, here are the commands:");
+            listCommands();
+        }
+
+        try {
+            if (directlyGame) {
+                startGame(false);
+                matchCommands(false);
+            } else {
+                matchCommands(true);
+            }
+        } catch (TicTacToeQuitException e) {
+            TerminalUtils.printStatus("Program successfully exited");
+        }
+    }
+
+    private static GridHistory startGame(boolean firstGame) throws TicTacToeQuitException {
+        try {
+            final Game game = new Game(firstGame);
+            TerminalUtils.printStatus("You are now back in the main menu");
+            return game.getHistory();
+        } catch (TicTacToeMenuException e) {
+            TerminalUtils.printStatus("You are now in the main menu");
+            return null;
+        } catch (TicTacToeRestartException e) {
+            TerminalUtils.printStatus("Game successfully restarted");
+            return startGame(false);
+        }
+    }
+
+    private static void matchCommands(boolean firstGame) throws TicTacToeQuitException {
+        boolean isFirstGame = firstGame;
+        GridHistory lastHistory = null;
+        final Scanner scanner = new Scanner(System.in);
+        // TODO: Fix the warning
+        while (true) {
+            final String command = TerminalUtils.getInput(scanner);
+            if (command.matches("^:q(uit)?$")) {
+                if (TerminalUtils.getBooleanInput(scanner, "Do you really want to quit the program?")) {
+                    throw new TicTacToeQuitException();
+                } else {
+                    TerminalUtils.printStatus("Quitting terminated");
+                }
+            } else if (command.matches("^:g(game)?$")) {
+                lastHistory = startGame(isFirstGame);
+                isFirstGame = true;
+            } else if (command.matches("^:h(istory)?$")) {
+                if (lastHistory != null) {
+                    System.out.println(TicTacToeUtils.gridHistoryToString(lastHistory));
+                } else {
+                    TerminalUtils.printError("There is no game, to print the history from");
+                }
+            } else if (command.matches("^:c(commands)?$")) {
+                TerminalUtils.printStatus("Commands:");
+                listCommands();
+            } else if (command.matches(":(r(estart)?|m(enu)?)")) {
+                TerminalUtils.printError("This command only works inside of a game, for all valid commands see :c(ommands)");
+            } else if (command.matches("^:")) {
+                TerminalUtils.printError("Not a valid command, for all valid commands see :c(ommands)");
+            } else {
+                TerminalUtils.printError(
+                        "All commands have to be prefixed with ':', " +
+                        "for all valid commands see :c(ommands)"
+                );
+            }
+        }
+    }
+
+    private static void listCommands() {
+        System.out.println(TerminalUtils.colorString("  :q(uit)", TerminalColors.blue) + ",        quit the program");
+        System.out.println(TerminalUtils.colorString("  :m(enu)", TerminalColors.blue) + ",        go back to the menu         (only in a game)");
+        System.out.println(TerminalUtils.colorString("  :r(estart)", TerminalColors.blue) + ",     restart the game            (only in a game)");
+        System.out.println(TerminalUtils.colorString("  :g(game)", TerminalColors.blue) + ",       start a new game            (only in the main menu)");
+        System.out.println(TerminalUtils.colorString("  :h(history)", TerminalColors.blue) + ",    show history of last game   (only in the main menu, after a game)");
+        System.out.println(TerminalUtils.colorString("  :c(commands)", TerminalColors.blue) + ",   list all commands           (only in the main menu)");
     }
 }
