@@ -6,9 +6,7 @@ import domain.Point;
 import exceptions.TicTacToeMenuException;
 import exceptions.TicTacToeQuitException;
 import exceptions.TicTacToeRestartException;
-import opponent.ExampleOpponent;
-import opponent.Opponent;
-import opponent.RandomOpponent;
+import opponent.*;
 import utils.TerminalColors;
 import utils.TerminalUtils;
 import utils.TicTacToeUtils;
@@ -66,8 +64,10 @@ public class Game {
 
     private Opponent getOpponentInput() throws TicTacToeQuitException, TicTacToeRestartException, TicTacToeMenuException {
         final Opponent[] opponents = new Opponent[]{
+                new TonyRandomOpponent(),
+                new OleOpponent(),
                 new RandomOpponent(),
-                new ExampleOpponent(),
+                new QuandaryOpponent(),
         };
 
         for (int i = 0; i < opponents.length; i++) {
