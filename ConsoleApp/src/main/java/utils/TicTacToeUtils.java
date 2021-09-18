@@ -1,6 +1,7 @@
 package utils;
 
 import controller.GameState;
+import controller.GridHistory;
 import domain.Grid;
 import domain.Mark;
 
@@ -15,7 +16,7 @@ public class TicTacToeUtils {
         markStringMap.put(Mark.opponent, TerminalColors.blue + "O" + TerminalColors.reset);
 
         gameStateStringMap.put(GameState.won, TerminalUtils.colorString("You", TerminalColors.red) + " have won!");
-        gameStateStringMap.put(GameState.lost, TerminalUtils.colorString("", TerminalColors.blue) + " has won!");
+        gameStateStringMap.put(GameState.lost, "The " + TerminalUtils.colorString("opponent", TerminalColors.blue) + " has won!");
         gameStateStringMap.put(GameState.tie, "Nobody won, there was a tie!");
     }
 
@@ -32,6 +33,15 @@ public class TicTacToeUtils {
             return TerminalColors.black + alternative + TerminalColors.reset;
         }
         return markToString(mark);
+    }
+
+    public static String gridHistoryToString(GridHistory history) {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < history.getLength(); i++) {
+            final Grid grid = history.getHistoryRecord(i);
+            s.append(TicTacToeUtils.gridToString(grid)).append('\n');
+        }
+        return s.toString();
     }
 
     public static String gridToString(Grid grid) {
