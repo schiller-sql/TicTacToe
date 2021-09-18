@@ -6,6 +6,7 @@ import domain.Point;
 import exceptions.TicTacToeMenuException;
 import exceptions.TicTacToeQuitException;
 import exceptions.TicTacToeRestartException;
+import exceptions.TicTacToeRestartSameOpponentException;
 import opponent.*;
 import utils.TerminalColors;
 import utils.TerminalUtils;
@@ -18,19 +19,24 @@ public class Game {
 
     private final GameController controller;
 
-    public Game(boolean firstGame) throws TicTacToeQuitException, TicTacToeRestartException, TicTacToeMenuException {
+    public Game(Opponent withOpponent) {
+        controller = new GameController(withOpponent);
+    }
+
+    public Game(boolean firstGame) throws TicTacToeQuitException, TicTacToeRestartException, TicTacToeRestartSameOpponentException, TicTacToeMenuException {
         TerminalUtils.printStatus("A game has started, select a opponent");
 
         final Opponent opponent = getOpponentInput();
         TerminalUtils.printStatus("The opponent \"" + opponent.getClass().getSimpleName() + "\" was chosen\n");
 
         controller = new GameController(opponent);
-        System.out.println(TicTacToeUtils.gridToString(controller.getGrid()));
-
         if (firstGame) {
             printTutorial();
         }
+    }
 
+    public void start() throws TicTacToeQuitException, TicTacToeRestartException, TicTacToeRestartSameOpponentException, TicTacToeMenuException {
+        System.out.println(TicTacToeUtils.gridToString(controller.getGrid()));
         while (controller.getState() == GameState.running) {
             final Point point = getPointInput();
             controller.setPoint(point);
@@ -44,6 +50,10 @@ public class Game {
 
     public GridHistory getHistory() {
         return controller.getHistory();
+    }
+
+    public Opponent getOpponent() {
+        return controller.getOpponent();
     }
 
     private void printTutorial() {
@@ -62,7 +72,7 @@ public class Game {
     }
 
 
-    private Opponent getOpponentInput() throws TicTacToeQuitException, TicTacToeRestartException, TicTacToeMenuException {
+    private Opponent getOpponentInput() throws TicTacToeQuitException, TicTacToeRestartSameOpponentException, TicTacToeRestartException, TicTacToeMenuException {
         final Opponent[] opponents = new Opponent[]{
                 new TonyRandomOpponent(),
                 new OleOpponent(),
@@ -77,7 +87,7 @@ public class Game {
         return opponents[choice - 1];
     }
 
-    private Point getPointInput() throws TicTacToeQuitException, TicTacToeRestartException, TicTacToeMenuException {
+    private Point getPointInput() throws TicTacToeQuitException, TicTacToeRestartException, TicTacToeRestartSameOpponentException, TicTacToeMenuException {
         int count = 0;
         HashMap<Integer, Point> map = new HashMap<>();
         for (int y = 0; y < 3; y++) {
