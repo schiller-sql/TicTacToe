@@ -1,17 +1,31 @@
 package opponent;
 
 import domain.Grid;
+import domain.Mark;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Node implements Tree.TreePrintable {
 
     private Grid grid;
-    private int score;
-    private boolean minimax;
+    private List<Integer> score = new ArrayList<>();
+    private Mark minimax;
 
-    public Node(Grid grid, int score, boolean minimax) {
+    public Node(Grid grid, int score, Mark minimax) {
         this.grid = grid;
-        this.score = score;
+        this.score.add(score);
         this.minimax = minimax;
+    }
+
+    public Node(Grid grid, int score) {
+        this.grid=grid;
+        this.score.add(score);
+    }
+
+    public Node(Grid grid, Mark minimax) {
+        this.grid=grid;
+        this.minimax=minimax;
     }
 
     public Node(Grid grid) {
@@ -22,11 +36,11 @@ public class Node implements Tree.TreePrintable {
         this.grid = grid;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void addScore(int score) {
+        this.score.add(score);
     }
 
-    public void setMinimaxStatus(boolean minimax) {
+    public void setMinimaxStatus(Mark minimax) {
         this.minimax = minimax;
     }
 
@@ -34,17 +48,24 @@ public class Node implements Tree.TreePrintable {
         return grid;
     }
 
-    public int getScore() {
+    public List<Integer> getScores() {
         return score;
     }
 
-    public boolean getMinimax() {
+    public Mark getMinimax() {
         return minimax;
     }
 
     @Override
     public String toString(String padding) {
-        return padding + "Score: " + score
-                + "\n" + grid.toString(padding);
+        /*
+        return padding + "Scores: " + Arrays.toString(score.toArray())
+                + "\n" + padding +"MinimaxStatus: " + minimax
+                + "\n" + grid.toString(padding); */
+        return "abc";
+    }
+
+    public String asString() {
+        return grid.asString();
     }
 }

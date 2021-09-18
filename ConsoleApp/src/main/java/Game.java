@@ -68,6 +68,7 @@ public class Game {
                 new OleOpponent(),
                 new RandomOpponent(),
                 new QuandaryOpponent(),
+                new MinimaxOpponent(),
         };
 
         for (int i = 0; i < opponents.length; i++) {

@@ -14,12 +14,9 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
     public Point move(Grid grid) {
         final Tree<Node> tree = new Tree<>(new Node(grid));
         generateTreeForRoot(tree, Mark.opponent);
-
-
-        int availableMoves;
-        boolean winner;
         Mark maxFor = Mark.opponent, minFor = Mark.self;
-        //System.out.print(tree);
+        System.out.print(tree);
+       // tree.printTreeAlternativ(new StringBuilder(), "", "");
 
         //checkPLayerWins(): position: null, int score= -1*(num-empty-squares()+1)
         //so the best score is returns for the earliest game stat the opponent can win, because by time there are less open fields
@@ -49,9 +46,24 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
         for (Point point : markTypesNull) { //at start should be 8
             final Grid childGrid = rootGrid.copyWith(point, player);
-            final Tree<Node> childTree = root.addLeaf(new Node(childGrid));
+            final Tree<Node> childTree = root.addLeaf(new Node(childGrid, player));
             generateTreeForRoot(childTree, Mark.invert(player));
         }
+    }
+
+    public List<Tree<Node>> getLastChilds(Tree<Node> tree) {
+
+        return null;
+    }
+
+    private int calculateScore() {
+
+        return 0;
+    }
+
+    private int bestScore() {
+
+        return 0;
     }
 
 
@@ -84,24 +96,6 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
         dann berechne anhand von minimize/maximize den best_score und gebe diesen wieder so lange weiter
         bis ein parent tree wieder mehrere scores bekommt
          */
-
-    }
-
-    private int calculateScore() {
-
-        return 0;
-    }
-
-    private int bestScore() {
-
-        return 0;
-    }
-
-    private void minimize() {
-
-    }
-
-    private void maximize() {
 
     }
 

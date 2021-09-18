@@ -3,6 +3,7 @@ package opponent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * @author https://stackoverflow.com/a/4054711
@@ -92,7 +93,10 @@ public class Tree<T> {
 
     @Override
     public String toString() {
-        return printTree(0);
+        StringBuilder buffer = new StringBuilder();
+        printTreeAlternativ(buffer, "", "", head.toString());
+        //return printTree(0);
+        return buffer.toString();
     }
 
     private static final int indent = 2;
@@ -108,6 +112,20 @@ public class Tree<T> {
             s.append("\n").append(child.printTree(increment + indent));
         }
         return s.toString();
+    }
+
+    public void printTreeAlternativ(StringBuilder buffer, String s1, String s, String name) {
+        buffer.append(s1);
+        buffer.append(name); //if (head) => opponent.Node@560123dc
+        buffer.append('\n');
+        for (Iterator<Tree<T>> it = leafs.iterator(); it.hasNext();) {
+            Tree<T> next = it.next();
+            if (it.hasNext()) {
+                next.printTreeAlternativ(buffer, s + "├── ", s+"│   ", head.asString());
+            } else {
+                next.printTreeAlternativ(buffer, s +"└── ", s+"    ", head.asString());
+            }
+        }
     }
     /* Intelij Solution
     private String printTree(int increment) {
