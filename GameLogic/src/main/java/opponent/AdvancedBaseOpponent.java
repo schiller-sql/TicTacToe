@@ -19,7 +19,7 @@ public abstract class AdvancedBaseOpponent implements Opponent {
      * <p>
      * This means the Mark on the Point is null
      *
-     * @param grid     The grid you want the locations from
+     * @param grid     The gridData you want the locations from
      * @param markType Whose last Points should be searched for (self/opponent)
      * @return Array of Points, that need
      */

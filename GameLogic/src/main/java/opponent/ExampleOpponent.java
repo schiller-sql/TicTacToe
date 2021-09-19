@@ -83,22 +83,22 @@ public class ExampleOpponent implements Opponent{
          */
         Point[] surroundings = new Point[9];
         for(int i = 0; i < playerPoints.length; i++) {
-            //prüft, ob der Punkt im grid liegt und noch verfügbar ist
+            //prüft, ob der Punkt im gridData liegt und noch verfügbar ist
             if(playerPoints[i].x()-1 >= 0 && grid.markIsEmpty(new Point(playerPoints[i].x()-1, playerPoints[i].y()))) {
                 surroundings[surroundings.length]=new Point(playerPoints[i].x()-1, playerPoints[i].y());
             }
 
-            //prüft, ob der Punkt im grid liegt und noch verfügbar ist
+            //prüft, ob der Punkt im gridData liegt und noch verfügbar ist
             if(playerPoints[i].x()+1 < 3 && grid.markIsEmpty(new Point(playerPoints[i].x()+1, playerPoints[i].y()))) {
                 surroundings[surroundings.length]=new Point(playerPoints[i].x()+1, playerPoints[i].y());
             }
 
-            //prüft, ob der Punkt im grid liegt und noch verfügbar ist
+            //prüft, ob der Punkt im gridData liegt und noch verfügbar ist
             if(playerPoints[i].y()-1 >= 0 && grid.markIsEmpty(new Point(playerPoints[i].x(), playerPoints[i].y()-1))) {
                 surroundings[surroundings.length]=new Point(playerPoints[i].x(), playerPoints[i].y()-1);
             }
 
-            //prüft, ob der Punkt im grid liegt und noch verfügbar ist
+            //prüft, ob der Punkt im gridData liegt und noch verfügbar ist
             if(playerPoints[i].y()+1 < 3 && grid.markIsEmpty(new Point(playerPoints[i].x(), playerPoints[i].y()+1))) {
                 surroundings[surroundings.length]=new Point(playerPoints[i].x(), playerPoints[i].y()+1);
             }
