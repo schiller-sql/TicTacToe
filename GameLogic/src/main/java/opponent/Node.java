@@ -14,6 +14,7 @@ public class Node implements Tree.TreePrintable {
     private List<Integer> score = new ArrayList<>();
     private Mark minimax;
     private GameState gameState;
+    private int depth;
 
     public Node(Grid grid, int score, Mark minimax) {
         this.grid = grid;
@@ -21,27 +22,11 @@ public class Node implements Tree.TreePrintable {
         this.minimax = minimax;
     }
 
-    public Node(Grid grid, int score, Mark minimax, GameState gameState) {
-        this.grid = grid;
-        this.score.add(score);
-        this.minimax = minimax;
-        this.gameState=gameState;
-    }
-
-    public Node(Grid grid, int score) {
-        this.grid=grid;
-        this.score.add(score);
-    }
-
-    public Node(Grid grid, Mark minimax) {
-        this.grid=grid;
-        this.minimax=minimax;
-    }
-
-    public Node(Grid grid, Mark minimax, GameState gameState) {
+    public Node(Grid grid, Mark minimax, GameState gameState , int depth) {
         this.grid=grid;
         this.minimax=minimax;
         this.gameState=gameState;
+        this.depth=depth;
     }
 
     public Node(Grid grid) {
@@ -74,6 +59,10 @@ public class Node implements Tree.TreePrintable {
 
     public GameState getGameState() {
         return gameState;
+    }
+
+    public int getDepth() {
+        return depth;
     }
 
     @Override

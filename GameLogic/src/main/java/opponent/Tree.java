@@ -22,7 +22,7 @@ public class Tree<T extends Tree.TreePrintable> {
     final private T head;
     final private ArrayList<Tree<T>> leafs = new ArrayList<>();
     private Tree<T> parent = null;
-    private HashMap<T, Tree<T>> locate = new HashMap<>();
+    public HashMap<T, Tree<T>> locate = new HashMap<>();
 
     public Tree(T head) {
         this.head = head;
@@ -100,9 +100,9 @@ public class Tree<T extends Tree.TreePrintable> {
         return new ArrayList<>();
     }
 
-    public int getDept(Tree<T> tree) { //max dept is 9
+    public int getDept() { //max dept is 9
         //TODO: complete
-        return 9;
+        return 10;
     }
 
     @Override

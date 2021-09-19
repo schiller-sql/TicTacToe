@@ -5,11 +5,9 @@ import domain.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.IntStream;
 
 public class MinimaxOpponent extends AdvancedBaseOpponent {
-        /*
+     /*
     Total number of possible combinations is 3^9 = 19683.
     There are 5477 possible legal game states.
      */
@@ -17,70 +15,82 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
     @Override
     public Point move(Grid grid) {
-        final int[] bestScore = {0}; //have to be an array to make it final usable -> have to be final to use it in lambda expression without waring
-        AtomicReference<Grid> aimGrid = new AtomicReference<>();
+        Node aim = null;
         final Tree<Node> tree = new Tree<>(new Node(grid)); //add the given grid as tree root
         generateTreeForRoot(tree, Mark.opponent);//generates the tree based on the given grid
         List<Node> lastChildren = getLastChildren(tree); //find all lastChildren in the root tree
-        System.out.println("Last Children: " + lastChildren.size()); //Find 25873
-        /*for(int i = 0; i < lastChildren.size(); i++) {
-            System.out.println(lastChildren.get(i).getGrid().asString());
-        }*/
+        //System.out.println("Last Children: " + lastChildren.size()); //Find 25873
+        //lastChildren.stream().map(lastChild -> lastChild.getGrid().asString()).forEach(System.out::println);
 
-        for(int i = 0; i < lastChildren.size(); i++) {
-            int score = calculateScore(lastChildren.get(i));
-            System.out.println("Score: " + score + ", " + lastChildren.get(i).getGrid().asString() + ", " + lastChildren.get(i).getGameState());
-            lastChildren.get(i).addScore(score);
-        }
+        for (Node lastChild : lastChildren) { //calculates the score for each lastChildren
+            int score = calculateScore(lastChild);
+            //System.out.println("Score: " + score + ", " + lastChild.getGrid().asString() + ", " + lastChild.getGameState());
+            lastChild.addScore(score);
+        } //TODO: should be functionally until here
 
-        addScoreToRootLeafs(tree, lastChildren); //push all scores to the root leafs //TODO: error here
+        addScoreToRootLeafs(tree, lastChildren); //push all scores to the root leafs //TODO: duplicate scores
 
-        List<Tree<Node>> rootLeafs = new ArrayList<>(tree.getSubTrees());
-        for (int i = 0; i < rootLeafs.size(); i++) {
-            Node node = rootLeafs.get(i).getHead();
-            if (node.getScores().size() == 0) {
-                System.err.println("Node: " + node.getGrid().asString() + " has a score of " + Arrays.toString(node.getScores().toArray()));
+        List<Tree<Node>> rootLeafs = new ArrayList<>(tree.getSubTrees()); //prints an error for each root leaf, that don't have a count of scores of one
+        for (Tree<Node> rootLeaf : rootLeafs) {
+            Node node = rootLeaf.getHead();
+            if (node.getScores().size() != 1) {
+                System.err.println("Node: " + node.getGrid().asString() + " has a scores of " + Arrays.toString(node.getScores().toArray()));
             }
         }
 
-        tree.getSubTrees().forEach(child -> {//make sure every root leaf have a final score //TODO: not tested yet
-            System.out.println(Arrays.toString(child.getHead().getScores().toArray()));
-            if (child.getHead().getScores().size() != 1) { //is 0
-                System.err.println("Something went wrong");
-                System.exit(-1);
-            }
-        });
 
-        tree.getSubTrees().forEach(child -> {//choose the best score and the best grid //TODO: not tested yet
-            if (child.getHead().getScores().get(0) > bestScore[0]) {
-                bestScore[0] = child.getHead().getScores().get(0);
-                aimGrid.set(child.getHead().getGrid());
+        for (Tree<Node> child : tree.getSubTrees()) {//make sure every root leaf have a final score //TODO: not tested yet
+            if (child != null) {
+                System.out.println("child: " + Arrays.toString(child.getHead().getScores().toArray())); //TODO: to much scores, where did they come from?
             }
-        });
+        }
 
-        assert aimGrid != null;
-        return compareGrids(tree.getHead().getGrid(), aimGrid.get()); //return the point from the grid with the best score //TODO: not tested yet
+
+        final int bestScore=bestScore(tree.getHead());
+        //TODO: set aim here as the grid stores the best score
+        System.out.println("Best Score: " + bestScore + ", Next Grid: " + aim.getGrid().asString()); //TODO: aim is null
+
+        return compareGrids(tree.getHead().getGrid(), aim.getGrid()); //return the point from the grid with the best score //TODO: error here => NullPointerException for more see the todo above
     }
 
-    /*
-    Soll eine List<Node> zurückgeben, die keine weiteren leafs besitzen
-    (diese teilen die Eigenschaft, dass sie ein beendetes spiel repräsentieren)
-     */
-
-    private void addScoreToRootLeafs(Tree<Node> tree, List<Node> children) { //TODO: error here
-        List<Node> parents = new ArrayList<>();
-        for (Node child : children) {
-            if (child.getParent(tree) != null) {
-                child.getParent(tree).getHead()
-                        .addScore(bestScore(child)); //add the best score from the children to the parent
-                children.remove(child);
-                parents.add(child.getParent(tree).getHead());     //what happend if I add and remov items from the list in loop?
+    private void addScoreToRootLeafs(Tree<Node> root, List<Node> lastChildren) {
+        List<Node> parents = new ArrayList<>(); //#NEWLINE
+        //for each layer of the Tree
+        for(int i = root.getDept(); i > 0; i--) {
+            //for each given children
+            for(Node child : lastChildren) {
+                //with the current depth
+                if(child.getDepth()==i) { //if depth < 2 => found no child
+                    //if the parent of the child is not null (else NullPointer)
+                    if(child.getParent(root.locate.get(child))!=null) {
+                        //set the score from the current child to his parent =>
+                        child.getParent(root.locate.get(child)) //find the parent
+                                .getHead() //get the parent head
+                                .addScore(bestScore(child)); //add bestScore from the child to the parent
+                        parents.add(child.getParent(root.locate.get(child)).getHead()); //#NEWLINE
+                    }
+                }
             }
         }
-        if (parents.size() > 0) {
-            addScoreToRootLeafs(tree, parents);
-        }
+        if(parents.size()>0) {//#NEWLINE
+            addScoreToRootLeafs(root, parents); //#NEWLINE
+        }//#NEWLINE
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -88,17 +98,15 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
 
     private List<Node> getLastChildren(Tree<Node> root) { //return the false children
-        List<Node> lastChildren = new ArrayList<>();
         //root.locate.forEach((key, value) -> System.out.println(key.getGrid().asString() + "  |  " + value.getHead().getGrid().asString()));
-        root.locate.forEach((key, value) -> System.out.println(key.getGameState() + ":" + key.getGrid().asString() +
-                "  |  " + value.getHead().getGameState() + ":" + value.getHead().getGrid().asString()));
-        lastChildren.addAll(root.locate
-                .values()
+        // TODO: DEBUGGING WEG MACHEN!!!!!
+        /*root.locate.forEach((key, value) -> System.out.println(key.getGameState() + ":" + key.getGrid().asString() +
+                "  |  " + value.getHead().getGameState() + ":" + value.getHead().getGrid().asString())); */
+        return new ArrayList<>(root.allTrees()
                 .stream()
-                .filter(t -> t.getHead().getGameState()!=GameState.running)
+                .filter(t -> t.getHead().getGameState() != GameState.running)
                 .map(Tree::getHead)
                 .toList());
-        return lastChildren;
     }
 
     private void generateTreeForRoot(@NotNull Tree<Node> root, Mark player) {
@@ -106,14 +114,16 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
         Point[] markTypesNull = rootGrid.getAllOfMarkType(null); //get all empty points
 
         for (Point point : markTypesNull) {
-            //if(calculateGameState(rootGrid.copyWith(point, player))==GameState.running) { //TODO: erstellt nur laufende Grids
-                Tree<Node> childTree = root.addLeaf(new Node(rootGrid.copyWith(point, player),
-                        player,
-                        calculateGameState(rootGrid.copyWith(point, player)))); //create new children from root with new generated head
-                if(calculateGameState(childTree.getHead().getGrid())==GameState.running) {
-                    generateTreeForRoot(childTree, Mark.invert(player)); //do again with child
-                }
-           // }
+            final Node node = new Node(
+                    rootGrid.copyWith(point, player),
+                    player,
+                    calculateGameState(rootGrid.copyWith(point, player)),
+                    depth
+            );
+            Tree<Node> childTree = root.addLeaf(node); //create new children from root with new generated head
+            if (calculateGameState(node.getGrid()) == GameState.running) {
+                generateTreeForRoot(childTree, Mark.invert(player), depth+1); //do again with child
+            }
         }
     }
 
@@ -141,6 +151,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
         return Collections.min(node.getScores());
     }
 
+    //compare two grids and returns the different as a Point, if there is no different the method will return null
     public Point compareGrids(Grid root, Grid leaf) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -152,6 +163,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
         return null;
     }
 
+    //TODO: duplicated code below
     private GameState calculateGameState(Grid grid) {
         if (checkWonOrLost(Mark.self, grid)) {
             return GameState.won;
@@ -178,7 +190,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
         return checkForDiagonals(mark, grid) || checkForLines(mark, grid);
     }
 
-    private boolean checkForDiagonals(Mark mark, Grid grid) {
+    private boolean checkForDiagonals(Mark mark, @NotNull Grid grid) {
         final boolean middleIs = grid.getMark(1, 1) == mark;
         final boolean firstDiagonal = grid.getMark(0, 0) == mark && grid.getMark(2, 2) == mark;
         final boolean secondDiagonal = grid.getMark(0, 2) == mark && grid.getMark(2, 0) == mark;
