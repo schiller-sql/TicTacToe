@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="GameLogic" />
         <module name="DesktopApp" />
+        <module name="ConsoleApp" />
       </profile>
     </annotationProcessing>
   </component>

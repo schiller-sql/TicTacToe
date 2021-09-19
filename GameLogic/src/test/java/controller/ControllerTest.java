@@ -9,24 +9,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.HashMap;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static util.MarkUtils.getGridDataFromString;
 
 
 class ControllerTest {
-    private static HashMap<Character, Mark> markState = new HashMap<Character, Mark>(3);
-
-    static {
-        markState.put('X', Mark.self);
-        markState.put('O', Mark.opponent);
-        markState.put('∙', null);
-    }
-
     @Test
     void setPointDirectlyWins() {
-        final Mark[][] grid = getGrid("""
+        final Mark[][] grid = getGridDataFromString("""
                 O | X | ∙
                 X | ∙ | X
                 X | X | ∙
@@ -43,7 +35,7 @@ class ControllerTest {
     @Test
     void setPointLoses() {
         final Opponent opponent = new FakeOpponent(new Point(2, 2));
-        final Mark[][] grid = getGrid("""
+        final Mark[][] grid = getGridDataFromString("""
                 O | X | ∙
                 X | O | X
                 X | X | ∙
@@ -204,22 +196,10 @@ class ControllerTest {
 
     static Arguments gameControllerResult(String grid, GameState state) {
         return Arguments.of(
-                getGrid(grid),
+                getGridDataFromString(grid),
                 state
         );
     }
 
-    private static Mark[][] getGrid(String stringGrid) {
-        assert (stringGrid.length() == 30); //assert
-        stringGrid = stringGrid.replaceAll("\n", " | ").replaceAll("\r", " | "); //format
-        final Mark[][] grid = new Mark[3][3];
 
-        for (int i = 0; i < 3; i++) { //TODO streams
-            for (int j = 0; j < 3; j++) {
-                grid[i][j] = markState.get(stringGrid.charAt(0));
-                stringGrid = stringGrid.substring(3).trim();
-            }
-        }
-        return grid;
-    }
 }
