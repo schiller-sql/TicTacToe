@@ -130,6 +130,109 @@ public final class Grid {
         return foundPoints;
     }
 
+    /**
+     * Analyse each criterion if it matches Marks from either of both directions
+     *
+     * @param criteriaPosition          Which of the criteria should be looked at
+     * @param countBothDirectionsPoints True means that if both the outer Marks are of the same value,
+     *                                  the outer Marks positions will both be returned
+     *                                  <p>
+     *                                  Example: When you have opponent, self, opponent,
+     *                                  if you set countBothDirectionsPoints to true,
+     *                                  it means that a Point for the first and second opponent should be given,
+     *                                  but setting it to false means that only the position
+     *                                  of one of the opponents not both, will be returned
+     * @param criteria                  Should be three long, is the marks that should be found in rows
+     * @return All found Points
+     * @apiNote If criteriaPosition is 1, make sure that both outer Marks do not equal the center mark
+     */
+    public Collection<Point> analyseRowsBothDirectionsMarkOrder(boolean countBothDirectionsPoints, int criteriaPosition, Mark... criteria) {
+        assert (criteria.length == 3);
+        assert (criteriaPosition >= 0 && criteriaPosition < 3);
+
+        assert criteriaPosition != 1 || (criteria[criteriaPosition] != criteria[0] && criteria[criteriaPosition] != criteria[2]);
+
+        final Collection<Point> foundPoints = new HashSet<>();
+
+
+        // alternating between i being y (even)
+        // and j(Left/Right) being y (!even)
+        for (int _i = 0; _i < 6; _i++) {
+            final int i = _i / 2;
+            final boolean even = _i % 2 == 0;
+
+            final Mark[] row;
+
+            if (even) {
+                row = gridData[i];
+            } else {
+                row = new Mark[]{gridData[0][i], gridData[1][i], gridData[2][i]};
+            }
+
+            final int jLeft = rowMatchesDirectionalCriteria(criteriaPosition, true, criteria, row);
+            final int jRight = rowMatchesDirectionalCriteria(criteriaPosition, false, criteria, row);
+
+            addCorrectPointsToCollection(foundPoints, countBothDirectionsPoints, even, jLeft, jRight, i, i);
+        }
+
+        // jUpper begins at (0|0) and goes to (2|2)
+        final int xUpperLeft = rowMatchesDirectionalCriteria(criteriaPosition, true, criteria, getDiagonalUpper());
+        final int xUpperRight = rowMatchesDirectionalCriteria(criteriaPosition, false, criteria, getDiagonalUpper());
+        addCorrectPointsToCollection(foundPoints, countBothDirectionsPoints, true, xUpperLeft, xUpperRight, xUpperLeft, xUpperRight);
+
+        // jLower begins at (0|2) and goes to (2|0)
+        final int xLowerLeft = rowMatchesDirectionalCriteria(criteriaPosition, true, criteria, getDiagonalLower());
+        final int xLowerRight = rowMatchesDirectionalCriteria(criteriaPosition, false, criteria, getDiagonalLower());
+        addCorrectPointsToCollection(foundPoints, countBothDirectionsPoints, true, xLowerLeft, xLowerRight, 2 - xLowerLeft, 2 - xLowerRight);
+
+        // remove countBothDirectionsPoints
+        return foundPoints;
+    }
+
+    private void addCorrectPointsToCollection(Collection<Point> collection, boolean duplicates, boolean even, int left, int right, int leftOther, int rightOther) {
+        if (left != -1) {
+            if (even) {
+                collection.add(new Point(left, leftOther));
+            } else {
+                collection.add(new Point(leftOther, left));
+            }
+        }
+        if (right != -1 && (right != left || (duplicates && left != 0))) {
+            if (even) {
+                collection.add(new Point(right, rightOther));
+            } else {
+                collection.add(new Point(rightOther, right));
+            }
+        }
+    }
+
+    private int rowMatchesDirectionalCriteria(int rowSearchPosition, boolean directionIsLeft, Mark[] criteria, Mark[] row) {
+        int searchPosition = 0;
+        for (int i = 0; i < 3; i++) {
+            if (row[i] != criteria[i]) {
+                return -1;
+            }
+            if (i == rowSearchPosition) {
+                searchPosition = i;
+            }
+        }
+        return directionIsLeft ? searchPosition : 2 - searchPosition;
+    }
+
+    /**
+     * @return The row from (0|0) to (2|2)
+     */
+    private Mark[] getDiagonalUpper() {
+        return new Mark[]{gridData[0][0], gridData[1][1], gridData[2][2]};
+    }
+
+    /**
+     * @return The row from (0|2) to (2|0)
+     */
+    private Mark[] getDiagonalLower() {
+        return new Mark[]{gridData[2][0], gridData[1][1], gridData[0][2]};
+    }
+
 
     @Override
     public boolean equals(Object obj) {
