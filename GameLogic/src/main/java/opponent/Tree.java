@@ -46,7 +46,7 @@ public class Tree<T extends Tree.TreePrintable> {
         t.parent = this;
         t.locate = this.locate;
         locate.put(leaf, t);
-        return t;
+        return t; //returns the tree of the leaf
     }
 
     public Tree<T> setAsParent(T parentRoot) {
@@ -102,7 +102,7 @@ public class Tree<T extends Tree.TreePrintable> {
 
     public int getDept(Tree<T> tree) { //max dept is 9
         //TODO: complete
-        return 0;
+        return 9;
     }
 
     @Override

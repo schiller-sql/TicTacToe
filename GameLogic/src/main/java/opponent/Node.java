@@ -1,5 +1,6 @@
 package opponent;
 
+import controller.GameState;
 import domain.Grid;
 import domain.Mark;
 
@@ -12,11 +13,19 @@ public class Node implements Tree.TreePrintable {
     private Grid grid;
     private List<Integer> score = new ArrayList<>();
     private Mark minimax;
+    private GameState gameState;
 
     public Node(Grid grid, int score, Mark minimax) {
         this.grid = grid;
         this.score.add(score);
         this.minimax = minimax;
+    }
+
+    public Node(Grid grid, int score, Mark minimax, GameState gameState) {
+        this.grid = grid;
+        this.score.add(score);
+        this.minimax = minimax;
+        this.gameState=gameState;
     }
 
     public Node(Grid grid, int score) {
@@ -27,6 +36,12 @@ public class Node implements Tree.TreePrintable {
     public Node(Grid grid, Mark minimax) {
         this.grid=grid;
         this.minimax=minimax;
+    }
+
+    public Node(Grid grid, Mark minimax, GameState gameState) {
+        this.grid=grid;
+        this.minimax=minimax;
+        this.gameState=gameState;
     }
 
     public Node(Grid grid) {
@@ -55,6 +70,10 @@ public class Node implements Tree.TreePrintable {
 
     public Mark getMinimax() {
         return minimax;
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 
     @Override
