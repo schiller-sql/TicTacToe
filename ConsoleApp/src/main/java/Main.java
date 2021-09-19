@@ -112,7 +112,7 @@ public class Main {
                 );
                 continue;
             }
-            switch (command) {
+            switch (command.substring(1)) {
                 case "q":
                 case "quit":
                     throw new TicTacToeQuitException();
