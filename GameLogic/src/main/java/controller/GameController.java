@@ -36,7 +36,7 @@ public class GameController {
 
     /**
      * @param opponent     The opponent responsible for the countermove
-     * @param startingGrid The starting grid data, the grid should have
+     * @param startingGrid The starting gridData data, the gridData should have
      */
     public GameController(Opponent opponent, Mark[][] startingGrid) {
         assert (startingGrid.length == 3);
@@ -50,7 +50,7 @@ public class GameController {
     }
 
     /**
-     * Updates the state of the grid with the players cross
+     * Updates the state of the gridData with the players cross
      * and the opponents response
      * <p>
      * Also finds out if anyone has won,
@@ -79,7 +79,7 @@ public class GameController {
     /**
      * Get the Grid
      *
-     * @return The current grid of this Opponent
+     * @return The current gridData of this Opponent
      */
     public Grid getGrid() {
         return grid;
@@ -107,7 +107,7 @@ public class GameController {
     }
 
     /**
-     * Add a new Grid to the history and set the current grid to it
+     * Add a new Grid to the history and set the current gridData to it
      *
      * @param grid The new Grid
      */

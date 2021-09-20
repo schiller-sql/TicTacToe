@@ -19,7 +19,7 @@ public record GridHistory(List<Grid> gridList) {
     /**
      * Get a Grid in the timeline
      *
-     * @param historyPosition The position of the grid in the timeline,
+     * @param historyPosition The position of the gridData in the timeline,
      *                        the first Grid placed has the history position of 0
      * @return The Grid at the historyPosition
      */
