@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class MinimaxOpponent extends AdvancedBaseOpponent {
      /*
@@ -16,43 +17,46 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
     @Override
     public Point move(Grid grid) {
-        /**
-         * Define the aim Node temporary as a valid Point
-         * This prevents NullPointerExceptions
+        /*
+         Define the aim Node temporary as a valid Point
+         This prevents NullPointerExceptions
          */
         Node aim = new Node(grid.copyWith(grid.getAllOfMarkType(null)[0], Mark.opponent));
 
-        /**
-         * Set the given grid as tree root
+        /*
+         Set the given grid as tree root
          */
         final Tree<Node> tree = new Tree<>(new Node(grid));
 
-        /**
-         * Generates the tree, based on the given grid
-         * The result will be a tree, who contains all possible future games
+        /*
+         Generates the tree, based on the given grid
+         The result will be a tree, who contains all possible future games
          */
-        generateTreeForRoot(tree, Mark.opponent, 0);
+        generateTreeForRoot(tree, Mark.opponent, 1);
 
-        /**
-         * prints the tree
+        for (Node n : tree.locate.keySet()) {
+            System.out.println(n.getDepth());
+        }
+        /*
+         prints the tree
          */
         //System.out.println(tree);
 
-        /**
-         * Finds all lastChildren in the root tree
+        /*
+         Finds all lastChildren in the root tree
          */
         List<Node> lastChildren = getLastChildren(tree);
 
-        /**
-         * prints the count of last children
-         * and all last children as grid
+        /*
+         prints the count of last children
+         and all last children as grid
          */
         //System.out.println("Last Children: " + lastChildren.size()); //Find 25873
         //lastChildren.stream().map(lastChild -> lastChild.getGrid().asString()).forEach(System.out::println);
 
-        /**
-         * Calculates the score for each lastChildren
-         */
+        /*
+        Calculates the score for each lastChildren
+        */
         for (Node lastChild : lastChildren) {
             int score = calculateScore(lastChild);
             //System.out.println("Score: " + score + ", " + lastChild.getGrid().asString() + ", " + lastChild.getGameState());
@@ -63,10 +67,10 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
          * Push all scores to the root leafs
          * TODO: this method may contains logic problems
          */
-        addScoreToRootLeafs(tree, lastChildren);
+        addScoreToRootLeafs(tree);
 
-        /**
-         * Prints an error for each root leaf, that don't have a count of scores of one (should be exactly one score in each child of root)
+        /*
+         Prints an error for each root leaf, that don't have a count of scores of one (should be exactly one score in each child of root)
          */
         List<Tree<Node>> rootLeafs = new ArrayList<>(tree.getSubTrees());
         for (Tree<Node> rootLeaf : rootLeafs) {
@@ -75,10 +79,10 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
                 System.err.println("Node: " + node.getGrid().asString() + " has a scores of " + Arrays.toString(node.getScores().toArray()));
             }
         }
-        /**
+        /*
          * Print for each child all scores
-         * TODO: print to much scores
-         * The problem maybe comes from the  addScoreToRootLeafs(tree, lastChildren) method?!
+         TODO: print to much scores
+         The problem maybe comes from the  addScoreToRootLeafs(tree, lastChildren) method?!
          */
         for (Tree<Node> child : tree.getSubTrees()) {
             if (child != null) {
@@ -96,51 +100,36 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
     /**
      * TODO: warning => this method may contain unknown logical problems
      * This method pushes the scores from all last children ordered to the root leafs of the root tree
+     *
      * @param root the root tree
-     * @param lastChildren all children that get a new score in the last run, at the beginning this param is the list of lastChildren
+     *             // * @param lastChildren all children that get a new score in the last run, at the beginning this param is the list of lastChildren
      */
-    private void addScoreToRootLeafs(@NotNull Tree<Node> root, List<Node> lastChildren) {
-        List<Node> parents = new ArrayList<>(); //#NEWLINE
+    private void addScoreToRootLeafs(@NotNull Tree<Node> root) {
+        final Collection<Tree<Node>> allTrees = root.locate.values();
         //for each layer of the Tree
-        for(int i = root.getDepthOfTree(); i > 0; i--) {
-            //for each given children
-            for(Node child : lastChildren) {
-                //with the current depth
-                if(child.getDepth()==i) { //if depth < 2 => found no child
-                    //if the parent of the child is not null (else NullPointer)
-                    if(child.getParent(root.locate.get(child))!=null) {
-                        //set the score from the current child to his parent =>
-                        child.getParent(root.locate.get(child)) //find the parent
-                                .getHead() //get the parent head
-                                .addScore(bestScore(child)); //add bestScore from the child to the parent
-                        parents.add(child.getParent(root.locate.get(child)).getHead()); //#NEWLINE
-                    }
-                }
-            }
+        for (int i = 9; i > 0; i--) {
+            final var a = i;
+            allTrees
+                    .stream()
+                    .filter(t -> t.getHead().getDepth() == a)
+                    .forEach(this::giveToParent);
         }
-        if(parents.size()>0) {//#NEWLINE
-            addScoreToRootLeafs(root, parents); //#NEWLINE
-        }//#NEWLINE
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
+    private void giveToParent(Tree<Node> t) {
+        final int score = bestScore(t.getHead());
+        final Tree<Node> parent = t.getParent();
+        parent.getHead().addScore(score);
+    }
 
 
 //below here all method are hopefully functional
 
+    // FALSCH: // Nicht mehr nötig, da die children über ihre depth gefunden werden, bzw. locate
+
     /**
      * Search all children in the tree, with a different game state than 'running'
+     *
      * @param root the tree to search in
      * @return a List of all the last children in root
      */
@@ -157,9 +146,10 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
     /**
      * Generates the tree
-     * @param root the root tree
+     *
+     * @param root   the root tree
      * @param player the actor of the current layer in the tree (self/opponent)
-     * @param depth the current depth of the tree
+     * @param depth  the current depth of the tree
      */
     private void generateTreeForRoot(@NotNull Tree<Node> root, Mark player, int depth) {
         final Grid rootGrid = root.getHead().getGrid(); //gets the root grid
@@ -174,7 +164,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
             );
             Tree<Node> childTree = root.addLeaf(node); //create new children from root with new generated head
             if (calculateGameState(node.getGrid()) == GameState.running) {
-                generateTreeForRoot(childTree, Mark.invert(player), depth+1); //do again with child
+                generateTreeForRoot(childTree, Mark.invert(player), depth + 1); //do again with child
             }
         }
     }
@@ -182,6 +172,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
     /**
      * Calculates the score depends on how deep the node is saved in the tree
      * If node.getMinimax() returns Mark.opponent, the score is positiv otherwise negativ
+     *
      * @param node the node to calculate for
      * @return the score
      */
@@ -195,6 +186,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
     /**
      * Calculates the empty fields
+     *
      * @param node the node to calculate for
      * @return the count of empty fields from the grid of the given node
      */
@@ -205,6 +197,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
     /**
      * Choose the best score for maximize or minimize
      * The best score is returns for the earliest game stat the opponent can win, because by time there are less open fields
+     *
      * @param node the node to calculate the best score for
      * @return the best score of the given node, if the MinimaxStatus is equal to Mark.opponent the method return the highest score otherwise the lowest
      */
@@ -217,6 +210,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
     /**
      * Compare two grids and returns the different
+     *
      * @param root
      * @param leaf
      * @return a Point of the different, if there is no different the method will return null
@@ -233,8 +227,10 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
     }
 
     //TODO: duplicated code below
+
     /**
      * Calculates the game state
+     *
      * @param grid the grid to test of
      * @return the game state of the grid
      */
@@ -251,6 +247,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
     /**
      * Check if the grid is full of marks
+     *
      * @param grid the grid to test of
      * @return true if the given grid is full
      */
@@ -267,6 +264,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
     /**
      * Check if the game is won or lost
+     *
      * @param mark the mark to test for
      * @param grid the grid to test of
      * @return true if the game is won or lost else false
@@ -277,6 +275,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
     /**
      * Check for all diagonal lines
+     *
      * @param mark the mark to test for
      * @param grid the grid to test of
      * @return true if at least one diagonal line contains three marks of the same type else false
@@ -290,6 +289,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
     /**
      * Check for all vertical and all horizontal lines
+     *
      * @param mark the mark to test for
      * @param grid the grid to test of
      * @return true if at least one horizontal or vertical line contains three marks of the same type else false
@@ -301,9 +301,10 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
     /**
      * Check for all vertical or all horizontal lines
-     * @param mark the mark to test for
+     *
+     * @param mark     the mark to test for
      * @param vertical if check on verticals or horizontals
-     * @param grid the grid to test of
+     * @param grid     the grid to test of
      * @return true if at least one line contains three marks of the same type else false
      */
     private boolean checkForLine(Mark mark, boolean vertical, Grid grid) {
