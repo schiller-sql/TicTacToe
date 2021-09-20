@@ -55,6 +55,20 @@ public final class Grid {
         return gridData[point.y()][point.x()];
     }
 
+    /**
+     * Get three Marks in a row
+     *
+     * @param row Which row to get back
+     * @return The marks as an array
+     */
+    public Mark[] getRow(Row row) {
+        return new Mark[]{
+                getMark(row.firstX(), row.firstY()),
+                getMark(row.getMiddle()),
+                getMark(row.secondX(), row.secondY()),
+        };
+    }
+
 
     /**
      * Get a Mark in the gridData by its coordinates
