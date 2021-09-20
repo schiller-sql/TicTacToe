@@ -1,6 +1,5 @@
 package domain;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -38,10 +37,21 @@ class GridTest {
         assertEquals(expectedResult, result);
     }
 
-    @Disabled
+
+    @ParameterizedTest
+    @MethodSource("analyseRowsRandomMarkOrderForOnePointSucceedsSource")
+    void analyseRowsRandomMarkOrderForOnePointSucceeds(Grid grid, Mark searchedMark, Mark patternMark2, Mark patternMark3, Collection<Point> expectedResult) {
+        var result = grid.analyseRowsRandomMarkOrderForOnePoint(searchedMark, patternMark2, patternMark3);
+
+        assertEquals(expectedResult, result);
+    }
+
     @ParameterizedTest
     @MethodSource("analyseRowsRandomMarkOrderSucceedsSource")
-    void analyseRowsRandomMarkOrderSucceeds(Grid grid, Collection<Point> expectedResult) {
+    void analyseRowsRandomMarkOrderSucceeds(Grid grid, Mark[] criteria, Collection<Row> expectedResult) {
+        var result = grid.analyseRowsRandomMarkOrder(criteria);
+
+        assertEquals(expectedResult, result);
     }
 
     static Stream<Arguments> getAllMarkPositionsSucceedsSource() {
@@ -201,8 +211,124 @@ class GridTest {
         );
     }
 
+    static Stream<Arguments> analyseRowsRandomMarkOrderForOnePointSucceedsSource() {
+        return Stream.of(
+                analyseRowsRandomMarkOrderForOnePointResult(
+                        """
+                                X | O | X
+                                X | O | O
+                                X | X | X
+                                """,
+                        Mark.opponent, Mark.self, Mark.self,
+                        new Point(1, 0),
+                        new Point(1, 1),
+                        new Point(2, 1)
+                ),
+                analyseRowsRandomMarkOrderForOnePointResult(
+                        """
+                                ∙ | X | O
+                                O | ∙ | X
+                                X | O | ∙
+                                """,
+                        null, Mark.self, Mark.opponent,
+                        new Point(0, 0),
+                        new Point(1, 1),
+                        new Point(2, 2)
+                ),
+                analyseRowsRandomMarkOrderForOnePointResult(
+                        """
+                                ∙ | ∙ | ∙
+                                ∙ | ∙ | ∙
+                                ∙ | ∙ | ∙
+                                """,
+                        Mark.opponent, null, null
+                ),
+                analyseRowsRandomMarkOrderForOnePointResult(
+                        """
+                                ∙ | ∙ | ∙
+                                ∙ | X | X
+                                ∙ | X | X
+                                """,
+                        null, Mark.self, Mark.self,
+                        // (0|0)
+                        new Point(0, 0),
+                        // (1|0)-(2|0)
+                        new Point(1, 0),
+                        new Point(2, 0),
+                        // (0|1)-(0|2)
+                        new Point(0, 1),
+                        new Point(0, 2)
+                )
+        );
+    }
+
     static Stream<Arguments> analyseRowsRandomMarkOrderSucceedsSource() {
         return Stream.of(
+                analyseRowsRandomMarkOrderResult(
+                        """
+                                X | ∙ | O
+                                ∙ | O | ∙
+                                O | ∙ | X
+                                """,
+                        new Mark[]{Mark.self, Mark.self, Mark.opponent},
+                        new Point(0, 0), new Point(2, 2)
+                ),
+                analyseRowsRandomMarkOrderResult(
+                        """
+                                O | X | X
+                                X | X | O
+                                X | O | O
+                                """,
+                        new Mark[]{Mark.self, Mark.self, Mark.opponent},
+                        // Horizontal
+                        new Point(0, 0), new Point(2, 0),
+                        new Point(0, 1), new Point(2, 1),
+                        // Vertical
+                        new Point(0, 0), new Point(0, 2),
+                        new Point(1, 0), new Point(1, 2)
+                ),
+                analyseRowsRandomMarkOrderResult(
+                        """
+                                ∙ | X | O
+                                O | ∙ | X
+                                X | O | ∙
+                                """,
+                        new Mark[]{Mark.self, Mark.opponent, null},
+                        // Horizontal
+                        new Point(0, 0), new Point(2, 0),
+                        new Point(0, 1), new Point(2, 1),
+                        new Point(0, 2), new Point(2, 2),
+                        // Vertical
+                        new Point(0, 0), new Point(0, 2),
+                        new Point(1, 0), new Point(1, 2),
+                        new Point(2, 0), new Point(2, 2),
+                        // Diagonal
+                        new Point(0, 2), new Point(2, 0)
+                ),
+                analyseRowsRandomMarkOrderResult(
+                        """
+                                ∙ | ∙ | ∙
+                                ∙ | ∙ | ∙
+                                ∙ | ∙ | ∙
+                                """,
+                        new Mark[]{Mark.opponent, null, null}
+                ),
+                analyseRowsRandomMarkOrderResult(
+                        """
+                                ∙ | ∙ | ∙
+                                ∙ | X | X
+                                ∙ | X | X
+                                """,
+                        new Mark[]{null, Mark.self, Mark.self},
+                        // (0|0)
+                        new Point(0, 0), new Point(2, 2),
+                        // (1|0)-(2|0)
+                        new Point(1, 0), new Point(1, 2),
+                        new Point(2, 0), new Point(2, 2),
+                        // (0|1)-(0|2)
+                        new Point(0, 1), new Point(2, 1),
+                        new Point(0, 2), new Point(2, 2)
+                )
         );
     }
 
@@ -228,6 +354,34 @@ class GridTest {
                 criteriaPosition,
                 criteria,
                 new HashSet<>(Arrays.asList(expectedResult))
+        );
+    }
+
+    static Arguments analyseRowsRandomMarkOrderForOnePointResult(String rawGrid, Mark searchedMark, Mark patternMark2, Mark patternMark3, Point... expectedResult) {
+        return Arguments.of(
+                getGridFromString(rawGrid),
+                searchedMark,
+                patternMark2,
+                patternMark3,
+                new HashSet<>(Arrays.asList(expectedResult))
+        );
+    }
+
+    static Arguments analyseRowsRandomMarkOrderResult(String rawGrid, Mark[] criteria, Point... rawExpectedResult) {
+        /*
+        two Points represent one Row, which is why they are formatted on the same line,
+        and why there has to be an equal amount of them
+        */
+        assert (rawExpectedResult.length % 2 == 0);
+
+        var expectedResult = new HashSet<Row>();
+        for (int i = 0; i < rawExpectedResult.length; i += 2) {
+            expectedResult.add(Row.fromTwoPoints(rawExpectedResult[i], rawExpectedResult[i + 1]));
+        }
+        return Arguments.of(
+                getGridFromString(rawGrid),
+                criteria,
+                expectedResult
         );
     }
 }

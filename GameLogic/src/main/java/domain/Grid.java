@@ -233,6 +233,127 @@ public final class Grid {
     }
 
     /**
+     * Get one Point back from all rows,
+     * which contain the Marks in some order which are searched for
+     *
+     * @param searchedMark Which mark should be searched for and the position given
+     * @param patternMark2 Other mark to be searched for
+     * @param patternMark3 Other mark to be searched for
+     * @return All positions of searchedMark
+     * @apiNote searchedMark should not equal either patternMark2 or patternMark3
+     */
+    public Collection<Point> analyseRowsRandomMarkOrderForOnePoint(Mark searchedMark, Mark patternMark2, Mark patternMark3) {
+        assert (searchedMark != patternMark2);
+        assert (searchedMark != patternMark3);
+
+        final Collection<Point> foundRows = new HashSet<>();
+        // alternating between j being y (even)
+        // and j being x (!even)
+        for (int _j = 0; _j < 6; _j++) {
+            final int j = _j / 2;
+            final boolean even = _j % 2 == 0;
+            final Mark[] row;
+            // even means that j is y
+            if (even) {
+                row = gridData[j];
+            } else {
+                row = new Mark[]{gridData[0][j], gridData[1][j], gridData[2][j]};
+            }
+            final int markPosition = rowMarkCriteriaRandomPosition(row, searchedMark, patternMark2, patternMark3);
+            if (markPosition != -1) {
+                // even means that j is y
+                if (even) {
+                    foundRows.add(new Point(markPosition, j));
+                } else {
+                    foundRows.add(new Point(j, markPosition));
+                }
+            }
+        }
+        int upperDiagonalMarkPosition = rowMarkCriteriaRandomPosition(getDiagonalUpper(), searchedMark, patternMark2, patternMark3);
+        int lowerDiagonalMarkPosition = rowMarkCriteriaRandomPosition(getDiagonalLower(), searchedMark, patternMark2, patternMark3);
+
+        if (upperDiagonalMarkPosition != -1) {
+            foundRows.add(new Point(upperDiagonalMarkPosition, upperDiagonalMarkPosition));
+        }
+        if (lowerDiagonalMarkPosition != -1) {
+            foundRows.add(new Point(lowerDiagonalMarkPosition, 2 - lowerDiagonalMarkPosition));
+        }
+        return foundRows;
+    }
+
+    private int rowMarkCriteriaRandomPosition(Mark[] row, Mark searchedMark, Mark patternMark2, Mark patternMark3) {
+        boolean patternTwoFound = false, patternThreeFound = false;
+        int searchedMarkPosition = -1;
+        for (int i = 0; i < 3; i++) {
+            final Mark mark = row[i];
+            if (mark == searchedMark) {
+                searchedMarkPosition = i;
+            } else if (mark == patternMark2 && !patternTwoFound) {
+                patternTwoFound = true;
+            } else if (mark == patternMark3 && !patternThreeFound) {
+                patternThreeFound = true;
+            } else {
+                return -1;
+            }
+        }
+        return searchedMarkPosition;
+    }
+
+    /**
+     * Searches for rows that include the Marks in criteria in a random order
+     *
+     * @param criteria Exactly three marks which represent, which Marks a row should contain
+     * @return All found Rows with the criteria
+     */
+    public Collection<Row> analyseRowsRandomMarkOrder(Mark... criteria) {
+        final Collection<Row> foundRows = new HashSet<>();
+        // alternating between j being y (even)
+        // and j being x (!even)
+        for (int _j = 0; _j < 6; _j++) {
+            final int j = _j / 2;
+            final boolean even = _j % 2 == 0;
+            final Mark[] row;
+            // even means that j is y
+            if (even) {
+                row = gridData[j];
+            } else {
+                row = new Mark[]{gridData[0][j], gridData[1][j], gridData[2][j]};
+            }
+            if (rowContainsMarksInRandomPosition(row, criteria)) {
+                // even means that j is y
+                if (even) {
+                    foundRows.add(new Row(0, j, 2, j));
+                } else {
+                    foundRows.add(new Row(j, 0, j, 2));
+                }
+            }
+        }
+        if (rowContainsMarksInRandomPosition(getDiagonalUpper(), criteria)) {
+            foundRows.add(new Row(0, 0, 2, 2));
+        }
+        if (rowContainsMarksInRandomPosition(getDiagonalLower(), criteria)) {
+            foundRows.add(new Row(0, 2, 2, 0));
+        }
+        return foundRows;
+    }
+
+    private boolean rowContainsMarksInRandomPosition(Mark[] row, Mark[] pattern) {
+        final boolean[] patternMarkChecker = new boolean[3];
+        row:
+        for (int i = 0; i < 3; i++) {
+            final Mark matchingFieldMark = row[i];
+            for (int j = 0; j < 3; j++) {
+                if (matchingFieldMark == pattern[j] && !patternMarkChecker[j]) {
+                    patternMarkChecker[j] = true;
+                    continue row;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * @return The row from (0|0) to (2|2)
      */
     private Mark[] getDiagonalUpper() {
