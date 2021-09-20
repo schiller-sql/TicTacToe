@@ -144,16 +144,15 @@ public final class Grid {
      *                                  of one of the opponents not both, will be returned
      * @param criteria                  Should be three long, is the marks that should be found in rows
      * @return All found Points
-     * @apiNote If criteriaPosition is 1, make sure that both outer Marks do not equal the center mark
+     * // (Not important) @apiNote If criteriaPosition is 1, make sure that both outer Marks do not equal the center mark
      */
     public Collection<Point> analyseRowsBothDirectionsMarkOrder(boolean countBothDirectionsPoints, int criteriaPosition, Mark... criteria) {
         assert (criteria.length == 3);
         assert (criteriaPosition >= 0 && criteriaPosition < 3);
 
-        assert criteriaPosition != 1 || (criteria[criteriaPosition] != criteria[0] && criteria[criteriaPosition] != criteria[2]);
+        // assert criteriaPosition != 1 || (criteria[criteriaPosition] != criteria[0] && criteria[criteriaPosition] != criteria[2]);
 
         final Collection<Point> foundPoints = new HashSet<>();
-
 
         // alternating between i being y (even)
         // and j(Left/Right) being y (!even)
