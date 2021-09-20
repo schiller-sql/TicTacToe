@@ -155,7 +155,13 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
                 .toList());
     }
 
-    private void generateTreeForRoot(@NotNull Tree<Node> root, Mark player) {
+    /**
+     * Generates the tree
+     * @param root the root tree
+     * @param player the actor of the current layer in the tree (self/opponent)
+     * @param depth the current depth of the tree
+     */
+    private void generateTreeForRoot(@NotNull Tree<Node> root, Mark player, int depth) {
         final Grid rootGrid = root.getHead().getGrid(); //gets the root grid
         Point[] markTypesNull = rootGrid.getAllOfMarkType(null); //get all empty points
 

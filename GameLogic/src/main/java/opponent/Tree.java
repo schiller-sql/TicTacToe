@@ -1,9 +1,8 @@
 package opponent;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
 
 /**
  * @param <T>
@@ -29,6 +28,23 @@ public class Tree<T extends Tree.TreePrintable> {
         locate.put(head, this);
     }
 
+    //TODO: ???
+    public Collection<Tree<T>> allTrees() {
+        return locate.values();
+    }
+
+    public int length() {
+        return locate.values().size();
+    }
+
+   /* public Collection<T> getLowestChildren() {
+        return locate
+                .values()
+                .stream()
+                .filter(tree -> tree.getSubTrees().size() == 0)
+                .map(Tree::getHead)
+                .toList();
+    }*/
 
     public void addLeaf(T root, T leaf) {
         //gib einem bestimmtem Child ein Leaf
@@ -133,12 +149,12 @@ public class Tree<T extends Tree.TreePrintable> {
         buffer.append(s1);
         buffer.append(name); //if (head) => opponent.Node@560123dc
         buffer.append('\n');
-        for (Iterator<Tree<T>> it = leafs.iterator(); it.hasNext();) {
+        for (Iterator<Tree<T>> it = leafs.iterator(); it.hasNext(); ) {
             Tree<T> next = it.next();
             if (it.hasNext()) {
-                next.printTreeAlternativ(buffer, s + "├── ", s+"│   ", head.asString());
+                next.printTreeAlternativ(buffer, s + "├── ", s + "│   ", head.asString());
             } else {
-                next.printTreeAlternativ(buffer, s +"└── ", s+"    ", head.asString());
+                next.printTreeAlternativ(buffer, s + "└── ", s + "    ", head.asString());
             }
         }
     }
