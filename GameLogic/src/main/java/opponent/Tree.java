@@ -100,7 +100,7 @@ public class Tree<T extends Tree.TreePrintable> {
         return new ArrayList<>();
     }
 
-    public int getDept() { //max dept is 9
+    public int getDepthOfTree() { //max dept is 9
         //TODO: complete
         return 10;
     }

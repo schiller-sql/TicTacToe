@@ -75,8 +75,10 @@ public class Node implements Tree.TreePrintable {
     }
 
     public String asString() {
-        return "Scores: " + Arrays.toString(score.toArray()) + "; "
-                +"MinimaxStatus: " + minimax + "; "
+        return "Scores: " + Arrays.toString(score.toArray()) + " + "
+                +"MinimaxStatus: " + minimax + " + "
+                +"GameState: " + gameState + " + "
+                +"Depth: " +  getDepth() + " + "
                 +"Grid: " +  grid.asString();
     }
 
