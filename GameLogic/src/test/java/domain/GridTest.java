@@ -19,7 +19,7 @@ class GridTest {
     @MethodSource("getAllMarkPositionsSucceedsSource")
     void getAllMarkPositionsSucceeds(Grid grid, Mark searchingMarkType, Collection<Point> expectedResult) {
         var result = grid.getAllMarkPositions(searchingMarkType);
-        var assertableResult = new HashSet<Point>(result);
+        var assertableResult = new HashSet<>(result);
 
         assertEquals(expectedResult, assertableResult);
     }

@@ -220,7 +220,7 @@ public final class Grid {
     }
 
     private int rowMatchesDirectionalCriteria(int rowSearchPosition, boolean directionIsLeft, Mark[] criteria, Mark[] row) {
-        int searchPosition = 0;
+        int searchPosition = -1;
         for (int i = 0; i < 3; i++) {
             if (row[i] != criteria[i]) {
                 return -1;
