@@ -8,7 +8,7 @@ package domain;
  */
 public enum Mark {
     opponent, self;
-
+  
     public static Mark invert(Mark mark) {
         if(mark == Mark.opponent) {
             return Mark.self;

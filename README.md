@@ -1,2 +1,3 @@
 # TicTacToe
-A simple AI powered tic-tac-toe game written in Java with a simple UI in JavaFX
+
+A tic-tac-toe game, consisting of a tic-tac-toe library, a CLI and soon a desktop application

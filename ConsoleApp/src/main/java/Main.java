@@ -2,6 +2,8 @@ import controller.GridHistory;
 import exceptions.TicTacToeMenuException;
 import exceptions.TicTacToeQuitException;
 import exceptions.TicTacToeRestartException;
+import exceptions.TicTacToeRestartSameOpponentException;
+import opponent.Opponent;
 import utils.TerminalColors;
 import utils.TerminalUtils;
 import utils.TicTacToeUtils;
@@ -69,76 +71,102 @@ public class Main {
         }
 
         try {
-            if (directlyGame) {
-                startGame(false);
-                matchCommands(false);
-            } else {
-                matchCommands(true);
-            }
+            matchCommands(directlyGame);
         } catch (TicTacToeQuitException e) {
             TerminalUtils.printStatus("Program successfully exited");
         }
     }
 
-    private static GridHistory startGame(boolean firstGame) throws TicTacToeQuitException {
+    private static Game startGame(Opponent withOpponent, boolean firstGame) throws TicTacToeQuitException {
+        Game game = null;
         try {
-            final Game game = new Game(firstGame);
+            if (withOpponent == null) {
+                game = new Game(firstGame);
+            } else {
+                game = new Game(withOpponent);
+            }
+            game.start();
             TerminalUtils.printStatus("You are now back in the main menu");
-            return game.getHistory();
+            return game;
         } catch (TicTacToeMenuException e) {
             TerminalUtils.printStatus("You are now in the main menu");
             return null;
         } catch (TicTacToeRestartException e) {
             TerminalUtils.printStatus("Game successfully restarted");
-            return startGame(false);
+            return startGame(null, false);
+        } catch (TicTacToeRestartSameOpponentException e) {
+            TerminalUtils.printStatus("Game surrendered, restarting with same opponent");
+            return startGame(game != null ? game.getOpponent() : null, false);
         }
     }
 
-    //TODO: boolean firstGame is not needed
-    private static void matchCommands(boolean firstGame) throws TicTacToeQuitException {
-        boolean isFirstGame = firstGame;
-        GridHistory lastHistory = null;
+    private static void matchCommands(boolean startDirectly) throws TicTacToeQuitException {
+        Game lastGame = startDirectly ? startGame(null, true) : null;
         final Scanner scanner = new Scanner(System.in);
         // TODO: Fix the warning
         while (true) { //TODO: böse Code, schlechter Code
             final String command = TerminalUtils.getInput(scanner);
-            if (command.matches("^:q(uit)?$")) {
-                if (TerminalUtils.getBooleanInput(scanner, "Do you really want to quit the program?")) {
-                    throw new TicTacToeQuitException();
-                } else {
-                    TerminalUtils.printStatus("Quitting terminated");
-                }
-            } else if (command.matches("^:g(game)?$")) {
-                lastHistory = startGame(isFirstGame);
-                isFirstGame = true;
-            } else if (command.matches("^:h(istory)?$")) {
-                if (lastHistory != null) {
-                    System.out.println(TicTacToeUtils.gridHistoryToString(lastHistory));
-                } else {
-                    TerminalUtils.printError("There is no game, to print the history from");
-                }
-            } else if (command.matches("^:c(commands)?$")) {
-                TerminalUtils.printStatus("Commands:");
-                listCommands();
-            } else if (command.matches(":(r(estart)?|m(enu)?)")) {
-                TerminalUtils.printError("This command only works inside of a game, for all valid commands see :c(ommands)");
-            } else if (command.matches("^:")) {
-                TerminalUtils.printError("Not a valid command, for all valid commands see :c(ommands)");
-            } else {
+            if (command.charAt(0) != ':') {
                 TerminalUtils.printError(
                         "All commands have to be prefixed with ':', " +
                         "for all valid commands see :c(ommands)"
                 );
+                continue;
+            }
+            switch (command.substring(1)) {
+                case "q":
+                case "quit":
+                    throw new TicTacToeQuitException();
+                case "m":
+                case "menu":
+                    TerminalUtils.printError("You are already in the menu");
+                    break;
+                case "r":
+                case "restart":
+                    TerminalUtils.printError("You can only restart, if you are in a game");
+                    break;
+                case "s":
+                case "surrender":
+                    TerminalUtils.printError("You can only surrender, if you are in a game");
+                    break;
+                case "c":
+                case "commands":
+                    listCommands();
+                    break;
+                case "g":
+                case "game":
+                    lastGame = startGame(null, lastGame == null);
+                    break;
+                case "o":
+                case "opponent":
+                    if (lastGame != null) {
+                        lastGame = startGame(lastGame.getOpponent(), false);
+                    } else {
+                        TerminalUtils.printError("There is no game, to take the opponent from");
+                    }
+                    break;
+                case "h":
+                case "history":
+                    if (lastGame != null) {
+                        System.out.println(TicTacToeUtils.gridHistoryToString(lastGame.getHistory()));
+                    } else {
+                        TerminalUtils.printError("There is no game, to print the history from");
+                    }
+                    break;
+                default:
+                    TerminalUtils.printError("Not a valid command, for all valid commands see :c(ommands)");
             }
         }
     }
 
     private static void listCommands() {
         System.out.println(TerminalUtils.colorString("  :q(uit)", TerminalColors.blue) + ",        quit the program");
-        System.out.println(TerminalUtils.colorString("  :m(enu)", TerminalColors.blue) + ",        go back to the menu         (only in a game)");
-        System.out.println(TerminalUtils.colorString("  :r(estart)", TerminalColors.blue) + ",     restart the game            (only in a game)");
-        System.out.println(TerminalUtils.colorString("  :g(game)", TerminalColors.blue) + ",       start a new game            (only in the main menu)");
-        System.out.println(TerminalUtils.colorString("  :h(history)", TerminalColors.blue) + ",    show history of last game   (only in the main menu, after a game)");
-        System.out.println(TerminalUtils.colorString("  :c(commands)", TerminalColors.blue) + ",   list all commands           (only in the main menu)");
+        System.out.println(TerminalUtils.colorString("  :m(enu)", TerminalColors.blue) + ",        go back to the menu            (only in a game)");
+        System.out.println(TerminalUtils.colorString("  :r(estart)", TerminalColors.blue) + ",     restart the game               (only in a game)");
+        System.out.println(TerminalUtils.colorString("  :s(urrender)", TerminalColors.blue) + ",   restart but keep the opponent  (only in a game)");
+        System.out.println(TerminalUtils.colorString("  :c(commands)", TerminalColors.blue) + ",   list all commands              (only in the main menu)");
+        System.out.println(TerminalUtils.colorString("  :g(game)", TerminalColors.blue) + ",       start a new game               (only in the main menu)");
+        System.out.println(TerminalUtils.colorString("  :o(pponent)", TerminalColors.blue) + ",    play again with same opponent  (only in the main menu, after a game)");
+        System.out.println(TerminalUtils.colorString("  :h(history)", TerminalColors.blue) + ",    show history of last game      (only in the main menu, after a game)");
     }
 }
