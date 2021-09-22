@@ -396,4 +396,43 @@ public final class Grid {
         return new Grid(new Mark[3][3]);
     }
 
+    public String toString(String padding) {
+        StringBuilder stringBuffer = new StringBuilder();
+        for (int y = 0; y < 3; y++) {
+            stringBuffer.append(padding);
+            for (int x = 0; x < 3; x++) {
+                final Mark mark = this.getMark(x, y);
+                final String markAsString = mark == null ? " " : mark == Mark.self ?  "X" : "O";
+                stringBuffer
+                        .append(markAsString)
+                        .append("|");
+            }
+            stringBuffer
+                    .deleteCharAt(stringBuffer.length() - 1)
+                    .append("\n");
+        }
+        return stringBuffer.toString();
+    }
+
+    @Override
+    public String toString() {
+        return toString("");
+    }
+
+    public String asString() {
+        StringBuilder stringBuffer = new StringBuilder();
+        for(int y = 0; y < 3; y++) {
+            stringBuffer.append(y+1 + ". ");
+            for(int x = 0; x < 3; x++) {
+                final Mark mark = this.getMark(x, y);
+                final String markAsString = mark == null ? "-" : mark == Mark.self ?  "X" : "O";
+                stringBuffer
+                        .append(markAsString)
+                        .append("|");
+            }
+            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+            stringBuffer.append("; ");
+        }
+        return stringBuffer.toString();
+    }
 }

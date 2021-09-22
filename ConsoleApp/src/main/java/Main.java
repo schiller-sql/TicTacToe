@@ -32,6 +32,7 @@ public class Main {
                 nonExistingOptionWasFound = true;
             }
         }
+        //TODO: ignore args instead of System.exit()
         if (nonExistingOptionWasFound) {
             System.exit(1);
         }
@@ -103,7 +104,7 @@ public class Main {
         Game lastGame = startDirectly ? startGame(null, true) : null;
         final Scanner scanner = new Scanner(System.in);
         // TODO: Fix the warning
-        while (true) {
+        while (true) { //TODO: böse Code, schlechter Code
             final String command = TerminalUtils.getInput(scanner);
             if (command.charAt(0) != ':') {
                 TerminalUtils.printError(

@@ -27,6 +27,7 @@ public class AllOpponentsTest {
                 new OleOpponent(),
                 new RandomOpponent(),
                 new QuandaryOpponent(),
+                new MinimaxOpponent(),
         };
     }
 

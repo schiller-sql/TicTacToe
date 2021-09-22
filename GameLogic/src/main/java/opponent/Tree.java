@@ -1,23 +1,62 @@
 package opponent;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import domain.Grid;
+import org.jetbrains.annotations.NotNull;
 
-public class Tree<T> {
-    //TODO: understand and specify this Tree class
+import java.util.*;
 
-    private T head;
-    private ArrayList<Tree<T>> leafs = new ArrayList<Tree<T>>();
+/**
+ * This class represents a generic tree data structure
+ * This tree is used by the MinimaxOpponent.java
+ *
+ * @param <T>
+ * @author https://stackoverflow.com/a/4054711
+ */
+public class Tree<T extends Tree.TreePrintable> {
+
+    interface TreePrintable {
+        String toString(String padding);
+
+        String asString();
+    }
+
+    //TODO: new method: search T by params of T in Collections of T returns T
+    //TODO: new method: getDepth()
+    //TODO: new method: calculateDepth()
+
+    final private T head;
+    final private ArrayList<Tree<T>> leafs = new ArrayList<>();
     private Tree<T> parent = null;
-    private HashMap<T, Tree<T>> locate = new HashMap<T, Tree<T>>();
+    public HashMap<T, Tree<T>> locate = new HashMap<>();
 
+    /**
+     * @param head the root of the tree
+     */
     public Tree(T head) {
         this.head = head;
         locate.put(head, this);
     }
 
-    public void addLeaf(T root, T leaf) {
+    //TODO: ???
+    public Collection<Tree<T>> allTrees() {
+        return locate.values();
+    }
+
+    public int length() {
+        return locate.values().size();
+    }
+
+    public Collection<T> getLowestChildren() { //TODO: unchecked
+        return locate
+                .values()
+                .stream()
+                .filter(tree -> tree.getSubTrees().size() == 0)
+                .map(Tree::getHead)
+                .toList();
+    }
+
+    public void addLeaf(T root, T leaf) { //TODO: unused
+        //gib einem bestimmtem Child ein Leaf
         if (locate.containsKey(root)) {
             locate.get(root).addLeaf(leaf);
         } else {
@@ -26,15 +65,17 @@ public class Tree<T> {
     }
 
     public Tree<T> addLeaf(T leaf) {
+        //Gib .this ein leaf
         Tree<T> t = new Tree<>(leaf);
         leafs.add(t);
         t.parent = this;
         t.locate = this.locate;
         locate.put(leaf, t);
-        return t;
+        return t; //returns the tree of the leaf
     }
 
-    public Tree<T> setAsParent(T parentRoot) {
+    public Tree<T> setAsParent(T parentRoot) { //TODO: unused
+        //.this Tree wird Leaf von parentRoot
         Tree<T> t = new Tree<>(parentRoot);
         t.leafs.add(this);
         this.parent = t;
@@ -49,15 +90,18 @@ public class Tree<T> {
     }
 
     public Tree<T> getTree(T element) {
+        //zugriff auf generalisierte HashMap
         return locate.get(element);
     }
 
     public Tree<T> getParent() {
+        //gib parent von .this zurück
         return parent;
     }
 
     public Collection<T> getSuccessors(T root) {
-        Collection<T> successors = new ArrayList<T>();
+        //suche anhand des root die heads der childs als T
+        Collection<T> successors = new ArrayList<>();
         Tree<T> tree = getTree(root);
         if (null != tree) {
             for (Tree<T> leaf : tree.leafs) {
@@ -71,7 +115,8 @@ public class Tree<T> {
         return leafs;
     }
 
-    public static <T> Collection<T> getSuccessors(T of, Collection<Tree<T>> in) {
+    public static <T extends TreePrintable> Collection<T> getSuccessors(T of, Collection<Tree<T>> in) {
+        //überprüft für jedes Element aus der Collection ob T of als Head enthalten ist
         for (Tree<T> tree : in) {
             if (tree.locate.containsKey(of)) {
                 return tree.getSuccessors(of);
@@ -85,18 +130,28 @@ public class Tree<T> {
         return printTree(0);
     }
 
-    private static final int indent = 2;
+    private static final int indent = 4;
 
     private String printTree(int increment) {
-        String s = "";
-        String inc = "";
+        StringBuilder s;
+        StringBuilder inc = new StringBuilder();
+
         for (int i = 0; i < increment; ++i) {
-            inc = inc + " ";
+            inc.append(" ");
         }
-        s = inc + head;
+        s = new StringBuilder(head.toString(inc.toString()));
         for (Tree<T> child : leafs) {
-            s += "\n" + child.printTree(increment + indent);
+            s.append("\n").append(child.printTree(increment + indent));
         }
-        return s;
+        return s.toString();
     }
+
+    /* Intelij Solution
+    private String printTree(int increment) {
+    StringBuilder s;
+    s = new StringBuilder(" ".repeat(Math.max(0, increment)) + head);
+        for (Tree<T> child : leafs) {
+        s.append("\n").append(child.printTree(increment + indent)); }
+        return s.toString();  }
+     */
 }
