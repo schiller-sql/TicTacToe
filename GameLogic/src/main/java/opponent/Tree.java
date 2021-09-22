@@ -18,6 +18,8 @@ public class Tree<T extends Tree.TreePrintable> {
     }
 
     //TODO: new method: search T by params of T in Collections of T returns T
+    //TODO: new method: getDepth()
+    //TODO: new method: calculateDepth()
 
     final private T head;
     final private ArrayList<Tree<T>> leafs = new ArrayList<>();
@@ -38,16 +40,16 @@ public class Tree<T extends Tree.TreePrintable> {
         return locate.values().size();
     }
 
-   /* public Collection<T> getLowestChildren() {
+    public Collection<T> getLowestChildren() { //TODO: unchecked
         return locate
                 .values()
                 .stream()
                 .filter(tree -> tree.getSubTrees().size() == 0)
                 .map(Tree::getHead)
                 .toList();
-    }*/
+    }
 
-    public void addLeaf(T root, T leaf) {
+    public void addLeaf(T root, T leaf) { //TODO: unused
         //gib einem bestimmtem Child ein Leaf
         if (locate.containsKey(root)) {
             locate.get(root).addLeaf(leaf);
@@ -66,7 +68,7 @@ public class Tree<T extends Tree.TreePrintable> {
         return t; //returns the tree of the leaf
     }
 
-    public Tree<T> setAsParent(T parentRoot) {
+    public Tree<T> setAsParent(T parentRoot) { //TODO: unused
         //.this Tree wird Leaf von parentRoot
         Tree<T> t = new Tree<>(parentRoot);
         t.leafs.add(this);
@@ -117,17 +119,9 @@ public class Tree<T extends Tree.TreePrintable> {
         return new ArrayList<>();
     }
 
-    public int getDepthOfTree() { //max dept is 9
-        //TODO: complete
-        return 10;
-    }
-
     @Override
     public String toString() {
-        //StringBuilder buffer = new StringBuilder();
-        //printTreeAlternativ(buffer, "", "", head.asString());
         return printTree(0);
-        //return buffer.toString();
     }
 
     private static final int indent = 4;
@@ -144,20 +138,6 @@ public class Tree<T extends Tree.TreePrintable> {
             s.append("\n").append(child.printTree(increment + indent));
         }
         return s.toString();
-    }
-
-    public void printTreeAlternativ(StringBuilder buffer, String s1, String s, String name) {
-        buffer.append(s1);
-        buffer.append(name); //if (head) => opponent.Node@560123dc
-        buffer.append('\n');
-        for (Iterator<Tree<T>> it = leafs.iterator(); it.hasNext(); ) {
-            Tree<T> next = it.next();
-            if (it.hasNext()) {
-                next.printTreeAlternativ(buffer, s + "├── ", s + "│   ", head.asString());
-            } else {
-                next.printTreeAlternativ(buffer, s + "└── ", s + "    ", head.asString());
-            }
-        }
     }
 
     /* Intelij Solution

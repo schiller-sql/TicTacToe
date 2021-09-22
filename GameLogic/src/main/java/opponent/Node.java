@@ -16,12 +16,6 @@ public class Node implements Tree.TreePrintable {
     private GameState gameState;
     private int depth;
 
-    public Node(Grid grid, int score, Mark minimax) {
-        this.grid = grid;
-        this.score.add(score);
-        this.minimax = minimax;
-    }
-
     public Node(Grid grid, Mark minimax, GameState gameState , int depth) {
         this.grid=grid;
         this.minimax=minimax;
