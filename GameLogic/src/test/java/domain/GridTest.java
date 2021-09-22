@@ -5,8 +5,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,11 +16,10 @@ class GridTest {
 
     @ParameterizedTest
     @MethodSource("getAllMarkPositionsSucceedsSource")
-    void getAllMarkPositionsSucceeds(Grid grid, Mark searchingMarkType, Collection<Point> expectedResult) {
+    void getAllMarkPositionsSucceeds(Grid grid, Mark searchingMarkType, Set<Point> expectedResult) {
         var result = grid.getAllMarkPositions(searchingMarkType);
-        var assertableResult = new HashSet<>(result);
 
-        assertEquals(expectedResult, assertableResult);
+        assertEquals(expectedResult, result);
     }
 
     @ParameterizedTest
@@ -30,7 +29,7 @@ class GridTest {
             boolean countBothDirectionsPoints,
             int criteriaPosition,
             Mark[] criteria,
-            Collection<Point> expectedResult
+            Set<Point> expectedResult
     ) {
         var result = grid.analyseRowsBothDirectionsMarkOrder(countBothDirectionsPoints, criteriaPosition, criteria);
 
@@ -40,7 +39,13 @@ class GridTest {
 
     @ParameterizedTest
     @MethodSource("analyseRowsRandomMarkOrderForOnePointSucceedsSource")
-    void analyseRowsRandomMarkOrderForOnePointSucceeds(Grid grid, Mark searchedMark, Mark patternMark2, Mark patternMark3, Collection<Point> expectedResult) {
+    void analyseRowsRandomMarkOrderForOnePointSucceeds(
+            Grid grid,
+            Mark searchedMark,
+            Mark patternMark2,
+            Mark patternMark3,
+            Set<Point> expectedResult
+    ) {
         var result = grid.analyseRowsRandomMarkOrderForOnePoint(searchedMark, patternMark2, patternMark3);
 
         assertEquals(expectedResult, result);
@@ -48,7 +53,7 @@ class GridTest {
 
     @ParameterizedTest
     @MethodSource("analyseRowsRandomMarkOrderSucceedsSource")
-    void analyseRowsRandomMarkOrderSucceeds(Grid grid, Mark[] criteria, Collection<Row> expectedResult) {
+    void analyseRowsRandomMarkOrderSucceeds(Grid grid, Mark[] criteria, Set<Row> expectedResult) {
         var result = grid.analyseRowsRandomMarkOrder(criteria);
 
         assertEquals(expectedResult, result);

@@ -130,10 +130,10 @@ public final class Grid {
      *
      * @param type The type of Mark to look for,
      *             null means looking for empty fields
-     * @return All found positions as a Point Collection
+     * @return All found positions as a Point Set
      */
-    public Collection<Point> getAllMarkPositions(Mark type) {
-        final Collection<Point> foundPoints = new ArrayList<>();
+    public Set<Point> getAllMarkPositions(Mark type) {
+        final Set<Point> foundPoints = new HashSet<>();
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 if (gridData[y][x] == type) {
@@ -160,13 +160,13 @@ public final class Grid {
      * @return All found Points
      * // (Not important) @apiNote If criteriaPosition is 1, make sure that both outer Marks do not equal the center mark
      */
-    public Collection<Point> analyseRowsBothDirectionsMarkOrder(boolean countBothDirectionsPoints, int criteriaPosition, Mark... criteria) {
+    public Set<Point> analyseRowsBothDirectionsMarkOrder(boolean countBothDirectionsPoints, int criteriaPosition, Mark... criteria) {
         assert (criteria.length == 3);
         assert (criteriaPosition >= 0 && criteriaPosition < 3);
 
         // assert criteriaPosition != 1 || (criteria[criteriaPosition] != criteria[0] && criteria[criteriaPosition] != criteria[2]);
 
-        final Collection<Point> foundPoints = new HashSet<>();
+        final Set<Point> foundPoints = new HashSet<>();
 
         // alternating between i being y (even)
         // and j(Left/Right) being y (!even)
@@ -185,36 +185,36 @@ public final class Grid {
             final int jLeft = rowMatchesDirectionalCriteria(criteriaPosition, true, criteria, row);
             final int jRight = rowMatchesDirectionalCriteria(criteriaPosition, false, criteria, row);
 
-            addCorrectPointsToCollection(foundPoints, countBothDirectionsPoints, even, jLeft, jRight, i, i);
+            addCorrectPointsToSet(foundPoints, countBothDirectionsPoints, even, jLeft, jRight, i, i);
         }
 
         // jUpper begins at (0|0) and goes to (2|2)
         final int xUpperLeft = rowMatchesDirectionalCriteria(criteriaPosition, true, criteria, getDiagonalUpper());
         final int xUpperRight = rowMatchesDirectionalCriteria(criteriaPosition, false, criteria, getDiagonalUpper());
-        addCorrectPointsToCollection(foundPoints, countBothDirectionsPoints, true, xUpperLeft, xUpperRight, xUpperLeft, xUpperRight);
+        addCorrectPointsToSet(foundPoints, countBothDirectionsPoints, true, xUpperLeft, xUpperRight, xUpperLeft, xUpperRight);
 
         // jLower begins at (0|2) and goes to (2|0)
         final int xLowerLeft = rowMatchesDirectionalCriteria(criteriaPosition, true, criteria, getDiagonalLower());
         final int xLowerRight = rowMatchesDirectionalCriteria(criteriaPosition, false, criteria, getDiagonalLower());
-        addCorrectPointsToCollection(foundPoints, countBothDirectionsPoints, true, xLowerLeft, xLowerRight, 2 - xLowerLeft, 2 - xLowerRight);
+        addCorrectPointsToSet(foundPoints, countBothDirectionsPoints, true, xLowerLeft, xLowerRight, 2 - xLowerLeft, 2 - xLowerRight);
 
         // remove countBothDirectionsPoints
         return foundPoints;
     }
 
-    private void addCorrectPointsToCollection(Collection<Point> collection, boolean duplicates, boolean even, int left, int right, int leftOther, int rightOther) {
+    private void addCorrectPointsToSet(Set<Point> pointsSet, boolean duplicates, boolean even, int left, int right, int leftOther, int rightOther) {
         if (left != -1) {
             if (even) {
-                collection.add(new Point(left, leftOther));
+                pointsSet.add(new Point(left, leftOther));
             } else {
-                collection.add(new Point(leftOther, left));
+                pointsSet.add(new Point(leftOther, left));
             }
         }
         if (right != -1 && (right != left || (duplicates && left != 0))) {
             if (even) {
-                collection.add(new Point(right, rightOther));
+                pointsSet.add(new Point(right, rightOther));
             } else {
-                collection.add(new Point(rightOther, right));
+                pointsSet.add(new Point(rightOther, right));
             }
         }
     }
@@ -242,11 +242,11 @@ public final class Grid {
      * @return All positions of searchedMark
      * @apiNote searchedMark should not equal either patternMark2 or patternMark3
      */
-    public Collection<Point> analyseRowsRandomMarkOrderForOnePoint(Mark searchedMark, Mark patternMark2, Mark patternMark3) {
+    public Set<Point> analyseRowsRandomMarkOrderForOnePoint(Mark searchedMark, Mark patternMark2, Mark patternMark3) {
         assert (searchedMark != patternMark2);
         assert (searchedMark != patternMark3);
 
-        final Collection<Point> foundRows = new HashSet<>();
+        final Set<Point> foundRows = new HashSet<>();
         // alternating between j being y (even)
         // and j being x (!even)
         for (int _j = 0; _j < 6; _j++) {
@@ -302,11 +302,10 @@ public final class Grid {
     /**
      * Searches for rows that include the Marks in criteria in a random order
      *
-     * @param criteria Exactly three marks which represent, which Marks a row should contain
-     * @return All found Rows with the criteria
+     * @param criteria Exactly three marks which represent, which Marks a row should contain * @return All found Rows with the criteria
      */
-    public Collection<Row> analyseRowsRandomMarkOrder(Mark... criteria) {
-        final Collection<Row> foundRows = new HashSet<>();
+    public Set<Row> analyseRowsRandomMarkOrder(Mark... criteria) {
+        final Set<Row> foundRows = new HashSet<>();
         // alternating between j being y (even)
         // and j being x (!even)
         for (int _j = 0; _j < 6; _j++) {
