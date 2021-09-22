@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
+ * This class represents a generic tree data structure
+ * This tree is used by the MinimaxOpponent.java
+ *
  * @param <T>
  * @author https://stackoverflow.com/a/4054711
  */
@@ -26,6 +29,9 @@ public class Tree<T extends Tree.TreePrintable> {
     private Tree<T> parent = null;
     public HashMap<T, Tree<T>> locate = new HashMap<>();
 
+    /**
+     * @param head the root of the tree
+     */
     public Tree(T head) {
         this.head = head;
         locate.put(head, this);
