@@ -2,11 +2,9 @@ package opponent;
 
 import controller.GameState;
 import domain.*;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class MinimaxOpponent extends AdvancedBaseOpponent {
      /*
@@ -17,92 +15,67 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
 
     @Override
     public Point move(Grid grid) {
-        /*
-         Define the aim Node temporary as a valid Point
-         This prevents NullPointerExceptions
-         */
-        Node aim = new Node(grid.copyWith(grid.getAllOfMarkType(null)[0], Mark.opponent));
 
-        /*
-         Set the given grid as tree root
-         */
+        // Define the aim Node temporary as a valid Point, this prevents NullPointerExceptions
+        Node aim = new Node(grid.copyWith(grid.getAllOfMarkType(null)[0], Mark.opponent));
         final Tree<Node> tree = new Tree<>(new Node(grid));
 
-        /*
-         Generates the tree, based on the given grid
-         The result will be a tree, who contains all possible future games
-         */
-        generateTreeForRoot(tree, Mark.opponent, 1);
 
-        for (Node n : tree.locate.keySet()) {
-            System.out.println(n.getDepth());
-        }
-        /*
-         prints the tree
-         */
-        //System.out.println(tree);
-
-        /*
-         Finds all lastChildren in the root tree
-         */
-        List<Node> lastChildren = getLastChildren(tree);
-
-        /*
-         prints the count of last children
-         and all last children as grid
-         */
-        //System.out.println("Last Children: " + lastChildren.size()); //Find 25873
-        //lastChildren.stream().map(lastChild -> lastChild.getGrid().asString()).forEach(System.out::println);
-
-        /*
-        Calculates the score for each lastChildren
-        */
-        for (Node lastChild : lastChildren) {
-            int score = calculateScore(lastChild);
-            //System.out.println("Score: " + score + ", " + lastChild.getGrid().asString() + ", " + lastChild.getGameState());
-            lastChild.addScore(score);
-        }
-
-        /**
-         * Push all scores to the root leafs
-         * TODO: this method may contains logic problems
-         */
+        //Generates the tree, based on the given grid, the result will be a tree, who contains all possible future games
+        generateTreeForRoot(tree, Mark.opponent, 0);
+        System.out.println();
+        System.out.println(tree);
+        //Push all scores to the root leafs
+        System.out.println();
+        System.out.println("Push all scores to the root leafs...");
+        System.out.println();
         addScoreToRootLeafs(tree);
+        System.out.println(tree);
 
-        /*
-         Prints an error for each root leaf, that don't have a count of scores of one (should be exactly one score in each child of root)
-         */
-        List<Tree<Node>> rootLeafs = new ArrayList<>(tree.getSubTrees());
-        for (Tree<Node> rootLeaf : rootLeafs) {
-            Node node = rootLeaf.getHead();
-            if (node.getScores().size() != 1) {
-                System.err.println("Node: " + node.getGrid().asString() + " has a scores of " + Arrays.toString(node.getScores().toArray()));
-            }
-        }
-        /*
-         * Print for each child all scores
-         TODO: print to much scores
-         The problem maybe comes from the  addScoreToRootLeafs(tree, lastChildren) method?!
-         */
+        int bestScore = -5;
+
         for (Tree<Node> child : tree.getSubTrees()) {
             if (child != null) {
-                System.out.println("child: " + Arrays.toString(child.getHead().getScores().toArray()));
+                child.getHead().setMinimaxStatus(Mark.invert(child.getHead().getMinimax())); //invert the minimaxStatus of the child
+                child.getHead().setScore(bestScore(child.getHead()));
+            } else {
+                System.err.println("ERROR");
+            }
+            System.out.println("Root child: " + child.getHead().getGrid().asString() + ", final score: " + Arrays.toString(child.getHead().getScores().toArray()));
+        }
+
+        for (Tree<Node> child : tree.getSubTrees()) {
+            if (child != null) {
+                if(bestScore < bestScore(child.getHead())) {
+                    bestScore = Collections.min(child.getHead().getScores());
+                    System.out.println("new best score: " + bestScore);
+                }
             }
         }
 
-        final int bestScore = 0; //TODO
-        //TODO: set aim here as the grid, which stores the best score!!!
+        //find the grid to the score
+        List<Tree<Node>> rootLeafs = new ArrayList<>(tree.getSubTrees());
+        for (Tree<Node> rootLeaf : rootLeafs) { //for each root leaf
+            Node node = rootLeaf.getHead();
+            for(int i = 0; i < node.getScores().size(); i++) { //for each score in the current leaf head
+                if(node.getScores().get(i)==bestScore) {
+                    aim = node;
+                   /* System.out.println("The grid " + node.getGrid().asString() + " with the score of " + node.getScores().get(i)
+                            + " has the best Score: " + bestScore); */
+                }
+            }
+        }
+        System.out.println("ROOT SCORES: " + tree.getHead().getScores());
         System.out.println("Best Score: " + bestScore + ", Next Grid: " + aim.getGrid().asString()); //TODO: aim is null, see todo above
+        System.out.println(compareGrids(tree.getHead().getGrid(), aim.getGrid()).x() + ":" + compareGrids(tree.getHead().getGrid(), aim.getGrid()).y());
 
         return compareGrids(tree.getHead().getGrid(), aim.getGrid()); //return the point from the grid with the best score //TODO: error here => NullPointerException for more see the todo above
     }
 
     /**
-     * TODO: warning => this method may contain unknown logical problems
-     * This method pushes the scores from all last children ordered to the root leafs of the root tree
+     * This method pushes the scores from all last children ordered to the head of the root tree
      *
      * @param root the root tree
-     *             // * @param lastChildren all children that get a new score in the last run, at the beginning this param is the list of lastChildren
      */
     private void addScoreToRootLeafs(@NotNull Tree<Node> root) {
         final Collection<Tree<Node>> allTrees = root.locate.values();
@@ -116,43 +89,15 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
         }
     }
 
-    private void giveToParent(Tree<Node> t) {
+    private void giveToParent(@NotNull Tree<Node> t) {
         final int score = bestScore(t.getHead());
         final Tree<Node> parent = t.getParent();
         parent.getHead().addScore(score);
     }
 
-
-//below here all method are hopefully functional
-
-    // FALSCH: // Nicht mehr nötig, da die children über ihre depth gefunden werden, bzw. locate
-
-    /**
-     * Search all children in the tree, with a different game state than 'running'
-     *
-     * @param root the tree to search in
-     * @return a List of all the last children in root
-     */
-    private List<Node> getLastChildren(Tree<Node> root) {
-        // TODO: DEBUGGING WEG MACHEN!!!!!
-        /*root.locate.forEach((key, value) -> System.out.println(key.getGameState() + ":" + key.getGrid().asString() +
-                "  |  " + value.getHead().getGameState() + ":" + value.getHead().getGrid().asString())); */
-        return new ArrayList<>(root.allTrees()
-                .stream()
-                .filter(t -> t.getHead().getGameState() != GameState.running)
-                .map(Tree::getHead)
-                .toList());
-    }
-
-    /**
-     * Generates the tree
-     *
-     * @param root   the root tree
-     * @param player the actor of the current layer in the tree (self/opponent)
-     * @param depth  the current depth of the tree
-     */
     private void generateTreeForRoot(@NotNull Tree<Node> root, Mark player, int depth) {
         final Grid rootGrid = root.getHead().getGrid(); //gets the root grid
+        System.out.println("Generate tree below: " + rootGrid.asString());
         Point[] markTypesNull = rootGrid.getAllOfMarkType(null); //get all empty points
 
         for (Point point : markTypesNull) {
@@ -162,12 +107,23 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
                     calculateGameState(rootGrid.copyWith(point, player)),
                     depth
             );
+            System.out.println("Add node " + node.getGrid().asString() + " as leaf to the tree");
             Tree<Node> childTree = root.addLeaf(node); //create new children from root with new generated head
-            if (calculateGameState(node.getGrid()) == GameState.running) {
+            if (calculateGameState(node.getGrid()) == GameState.running) { //if child is not a last children
                 generateTreeForRoot(childTree, Mark.invert(player), depth + 1); //do again with child
+            } else {
+                final int score = calculateScore(node);
+                node.addScore(score);
+                if(player==Mark.opponent) {
+                    System.out.println("Add score " + score + " to " + node.getGrid().asString() + " status=" + calculateGameState(node.getGrid()));
+                    if(score<0 && (calculateGameState(node.getGrid())==GameState.lost || calculateGameState(node.getGrid())==GameState.tie)) { // 0 or below and lost or tie
+                        System.err.println("Calculated false score");
+                    }
+                }
             }
         }
     }
+
 
     /**
      * Calculates the score depends on how deep the node is saved in the tree
@@ -202,7 +158,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
      * @return the best score of the given node, if the MinimaxStatus is equal to Mark.opponent the method return the highest score otherwise the lowest
      */
     private int bestScore(@NotNull Node node) {
-        if (node.getMinimax() == Mark.opponent) {
+        if (node.getMinimax() == Mark.opponent) { //TODO: i dont know if i have to check for Mark.opponent or Mark.self
             return Collections.max(node.getScores());
         }
         return Collections.min(node.getScores());

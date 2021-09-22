@@ -1,5 +1,6 @@
 package opponent;
 
+import domain.Grid;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -123,10 +124,10 @@ public class Tree<T extends Tree.TreePrintable> {
 
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-        printTreeAlternativ(buffer, "", "", head.toString());
-        //return printTree(0);
-        return buffer.toString();
+        //StringBuilder buffer = new StringBuilder();
+        //printTreeAlternativ(buffer, "", "", head.asString());
+        return printTree(0);
+        //return buffer.toString();
     }
 
     private static final int indent = 4;

@@ -65,13 +65,19 @@ public class Node implements Tree.TreePrintable {
         return depth;
     }
 
+    public void setScore(int score) {
+        this.score.removeAll(this.score);
+        //System.out.println(Arrays.toString(this.score.toArray()));
+        this.score.add(score);
+    }
+
     @Override
     public String toString(String padding) {
-        /*
-        return padding + "Scores: " + Arrays.toString(score.toArray())
+
+        return padding +"Depth: " + depth
+                + "\n" + padding + "GameState: " + gameState + " => Scores: " + Arrays.toString(score.toArray())
                 + "\n" + padding +"MinimaxStatus: " + minimax
-                + "\n" + grid.toString(padding); */
-        return "abc";
+                + "\n" + grid.toString(padding);
     }
 
     public String asString() {
