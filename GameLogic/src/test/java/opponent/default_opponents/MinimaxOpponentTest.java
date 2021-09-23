@@ -1,18 +1,15 @@
-package opponent;
+package opponent.default_opponents;
 
+import domain.Point;
+import opponent.Opponent;
+import opponent.OpponentTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static util.GridUtils.getGridFromString;
 
-class MinimaxOpponentTest {
-
-    MinimaxOpponent sut;
-
-    @BeforeEach
-    void init() {
-        sut = new MinimaxOpponent();
-    }
+class MinimaxOpponentTest extends OpponentTest {
 
     @Test
     void move1() { //generates a simple sized Tree
@@ -24,7 +21,9 @@ class MinimaxOpponentTest {
                         """
         ); //Output should be: 2,2
 
-        sut.move(grid);
+        final var result = opponent.move(grid);
+
+        assertEquals(new Point(2, 2), result);
     }
 
     @Test
@@ -37,7 +36,9 @@ class MinimaxOpponentTest {
                         """
         ); //Output should be: 2,0
 
-        sut.move(grid);
+        final var result = opponent.move(grid);
+
+        assertEquals(new Point(2, 0), result);
     }
 
     @Test
@@ -48,9 +49,11 @@ class MinimaxOpponentTest {
                         O | O | X
                         ∙ | X | ∙
                         """
-        ); //Output should be: 2,2 (0,2 have the same score)
+        ); //Output should be: 2,2 (0,2 has the same score)
 
-        sut.move(grid);
+        final var result = opponent.move(grid);
+
+        assertEquals(new Point(2, 2), result);
     }
 
     @Test
@@ -62,19 +65,24 @@ class MinimaxOpponentTest {
                         X | ∙ | O
                         """
         ); //Output should be: 0,1
-        sut.move(grid);
+        final var result = opponent.move(grid);
+
+        assertEquals(new Point(0, 1), result);
     }
 
-        @Test
-        void move5() { //generates a moderate sized Tree
-            final var grid = getGridFromString( //check
-                    """
-                            X | ∙ | ∙
-                            O | O | X
-                            X | ∙ | ∙
-                            """
-            ); //Output should be: 0,1
-            sut.move(grid);
+    @Test
+    void move5() { //generates a moderate sized Tree
+        final var grid = getGridFromString( //check
+                """
+                        X | ∙ | ∙
+                        O | O | X
+                        X | ∙ | ∙
+                        """
+        ); //Output should be: 0,1
+
+        final var result = opponent.move(grid);
+
+        assertEquals(new Point(2, 2), result);
     }
 
     @Test
@@ -86,6 +94,14 @@ class MinimaxOpponentTest {
                         X | O | O
                         """
         ); //Output should be: 0,1
-        sut.move(grid);
+
+        final var result = opponent.move(grid);
+
+        assertEquals(new Point(2, 1), result);
+    }
+
+    @Override
+    protected Opponent getOpponent() {
+        return new MinimaxOpponent();
     }
 }

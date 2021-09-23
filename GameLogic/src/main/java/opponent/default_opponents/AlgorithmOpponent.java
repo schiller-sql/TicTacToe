@@ -1,10 +1,10 @@
-package opponent;
+package opponent.default_opponents;
 
 import domain.Grid;
 import domain.Point;
+import opponent.Opponent;
 
-public class AdvancedExampleOpponent extends AdvancedBaseOpponent{
-
+public class AlgorithmOpponent extends Opponent {
     @Override
     public Point move(Grid grid) {
         return null;

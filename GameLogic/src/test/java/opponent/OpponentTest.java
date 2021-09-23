@@ -8,42 +8,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static util.GridUtils.gridIsFull;
 import static util.MarkUtils.markFromInt;
 
-// TODO: Do this with a special method, by making (All)Opponent(s)Test abstract
-//       and each OpponentTest extending it, which also makes it possible to
-//       write other test methods
-public class AllOpponentsTest {
-    Opponent[] opponents;
+public abstract class OpponentTest {
+    private static final List<Grid> allPossibleSituations = new ArrayList<>();
 
-    @BeforeEach
-    void init() {
-        opponents = new Opponent[]{
-                new TonyRandomOpponent(),
-                new OleOpponent(),
-                new RandomOpponent(),
-                new QuandaryOpponent(),
-                new MinimaxOpponent(),
-        };
-    }
-
-    @ParameterizedTest
-    @MethodSource("moveGivesBackValidPointIndependentFromWhichSituationSource")
-    void moveGivesBackValidPointIndependentFromWhichSituation(Grid situation) {
-        for (Opponent opponent : opponents) {
-            final Point move = opponent.move(situation);
-
-            assertTrue(situation.markIsEmpty(move), "Opponent: " + opponent.getClass().getName());
-        }
-    }
-
-    static Stream<Grid> moveGivesBackValidPointIndependentFromWhichSituationSource() {
-        // 19,171 possible combinations values
-        ArrayList<Grid> situations = new ArrayList<>();
+    static {
         for (int a = 0; a < 3; a++) {
             for (int b = 0; b < 3; b++) {
                 for (int c = 0; c < 3; c++) {
@@ -60,7 +35,7 @@ public class AllOpponentsTest {
                                             };
                                             final Grid grid = new Grid(gridData);
                                             if (!gridIsFull(grid)) {
-                                                situations.add(grid);
+                                                allPossibleSituations.add(grid);
                                             }
                                         }
                                     }
@@ -71,7 +46,28 @@ public class AllOpponentsTest {
                 }
             }
         }
-        return situations.stream();
+    }
+
+    protected abstract Opponent getOpponent();
+
+    protected Opponent opponent;
+
+    @BeforeEach
+    protected void init() {
+        this.opponent = getOpponent();
+    }
+
+    @ParameterizedTest
+    @MethodSource("moveGivesBackValidPointIndependentFromWhichSituationSource")
+    void moveGivesBackValidPointIndependentFromWhichSituation(Grid situation) {
+        final Point move = opponent.move(situation);
+
+        assertTrue(situation.markIsEmpty(move));
+    }
+
+    static private Stream<Grid> moveGivesBackValidPointIndependentFromWhichSituationSource() {
+        // 19,171 possible combinations values
+        return allPossibleSituations.stream();
     }
 
     static private Mark[] rowFromInts(int i1, int i2, int i3) {

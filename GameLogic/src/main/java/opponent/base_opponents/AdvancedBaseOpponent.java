@@ -1,8 +1,10 @@
-package opponent;
+package opponent.base_opponents;
 
 import domain.Grid;
 import domain.Mark;
 import domain.Point;
+import opponent.Opponent;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -12,7 +14,7 @@ import java.util.stream.Stream;
  * if they want to have access to 'advanced' methods,
  * to help in creating a tic-tac-toe opponent
  */
-public abstract class AdvancedBaseOpponent implements Opponent {
+public abstract class AdvancedBaseOpponent extends Opponent {
     /**
      * Get an array of Points back,
      * which are the last Point needed to complete a row
@@ -23,7 +25,7 @@ public abstract class AdvancedBaseOpponent implements Opponent {
      * @param markType Whose last Points should be searched for (self/opponent)
      * @return Array of Points, that need
      */
-    protected Point[] getRowFinalNeededPoints(Grid grid, Mark markType) {
+    public Point[] getRowFinalNeededPoints(Grid grid, Mark markType) {
         Stream<Field[]> rows = gridToRowStream(grid);
         rows = rows.filter(
                 fields -> rowContainsMarks(

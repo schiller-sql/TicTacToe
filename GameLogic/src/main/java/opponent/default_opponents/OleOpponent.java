@@ -1,6 +1,7 @@
-package opponent;
+package opponent.default_opponents;
 
 import domain.*;
+import opponent.base_opponents.AdvancedBaseOpponent;
 
 /**
  * Opponent places one point if it can win directly otherwise it tries to block the players rows.

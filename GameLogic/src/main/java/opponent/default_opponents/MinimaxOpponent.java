@@ -1,7 +1,10 @@
-package opponent;
+package opponent.default_opponents;
 
 import controller.GameState;
 import domain.*;
+import opponent.base_opponents.AdvancedBaseOpponent;
+import opponent.helper_classes.Node;
+import opponent.helper_classes.Tree;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

@@ -1,4 +1,4 @@
-package opponent;
+package opponent.helper_classes;
 
 import controller.GameState;
 import domain.Grid;

@@ -1,7 +1,4 @@
-package opponent;
-
-import domain.Grid;
-import org.jetbrains.annotations.NotNull;
+package opponent.helper_classes;
 
 import java.util.*;
 
@@ -14,7 +11,7 @@ import java.util.*;
  */
 public class Tree<T extends Tree.TreePrintable> {
 
-    interface TreePrintable {
+    public interface TreePrintable {
         String toString(String padding);
 
         String asString();
