@@ -8,7 +8,6 @@ import exceptions.TicTacToeQuitException;
 import exceptions.TicTacToeRestartException;
 import exceptions.TicTacToeRestartSameOpponentException;
 import opponent.*;
-import opponent.default_opponents.*;
 import utils.TerminalColors;
 import utils.TerminalUtils;
 import utils.TicTacToeUtils;

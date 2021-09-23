@@ -1,4 +1,3 @@
-import controller.GridHistory;
 import exceptions.TicTacToeMenuException;
 import exceptions.TicTacToeQuitException;
 import exceptions.TicTacToeRestartException;
