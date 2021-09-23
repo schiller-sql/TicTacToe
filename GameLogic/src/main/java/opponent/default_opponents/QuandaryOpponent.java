@@ -1,6 +1,7 @@
-package opponent;
+package opponent.default_opponents;
 
 import domain.*;
+import opponent.base_opponents.AdvancedBaseOpponent;
 
 import java.util.ArrayList;
 import java.util.List;

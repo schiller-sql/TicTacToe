@@ -3,6 +3,7 @@ package opponent;
 import domain.Grid;
 import domain.Mark;
 import domain.Point;
+import opponent.default_opponents.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

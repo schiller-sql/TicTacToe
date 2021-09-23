@@ -4,6 +4,7 @@ import domain.Grid;
 import domain.Mark;
 import domain.Point;
 import fixtures.TestableAdvancedBaseOpponent;
+import opponent.base_opponents.AdvancedBaseOpponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

@@ -1,5 +1,6 @@
 package opponent;
 
+import opponent.default_opponents.MinimaxOpponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

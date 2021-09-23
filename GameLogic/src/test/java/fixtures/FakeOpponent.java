@@ -4,7 +4,7 @@ import domain.Grid;
 import domain.Point;
 import opponent.Opponent;
 
-public class FakeOpponent implements Opponent {
+public class FakeOpponent extends Opponent {
 
     final Point placingPoint;
 

@@ -1,7 +1,8 @@
-package opponent;
+package opponent.default_opponents;
 
 import domain.Grid;
 import domain.Point;
+import opponent.base_opponents.AdvancedBaseOpponent;
 
 /**
  * Opponent chooses a random Point to return.
