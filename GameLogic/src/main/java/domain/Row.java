@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public record Row(int firstX, int firstY, int secondX, int secondY) {
-    Point[] toPoints() {
+    public Point[] toPoints() {
         return new Point[]{
                 new Point(firstX, firstY),
                 getMiddle(),
