@@ -1,4 +1,4 @@
-package opponent;
+package opponent.base_opponents;
 
 import domain.Grid;
 import domain.Mark;

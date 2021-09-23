@@ -17,8 +17,11 @@ public abstract class Opponent {
      */
     public static Opponent[] defaultOpponents() {
         return new Opponent[]{
+                // new AIOpponent(),
+                // new AlgorithmOpponent(),
                 new ExampleOpponent(),
                 new MinimaxOpponent(),
+                // new NoobOpponent
                 new OleOpponent(),
                 new QuandaryOpponent(),
                 new RandomOpponent(),
