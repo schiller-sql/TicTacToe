@@ -5,7 +5,7 @@ import java.util.*;
 
 
 /**
- * Represents a 3 by 3 tic-tac-toe gridData
+ * Represents a 3 by 3 tic-tac-toe grid
  */
 public final class Grid {
     private final Mark[][] gridData;
@@ -300,11 +300,60 @@ public final class Grid {
     }
 
     /**
+     * Same as analyseRowsRandomMarkOrderForOnePoint,
+     * but gives back the Points of two of the searched for Marks in a single Row
+     *
+     * @param searchedMark1 The first Mark that the Point is given back for
+     * @param searchedMark2 The second Mark that the Point is given back for
+     * @param patternMark   The only Mark that is not given back as a Point
+     * @return All Points of the Rows that match searchedMark1 or searchedMark2
+     * @apiNote searchedMark1 or searchedMark2 should not be equal to patternMark3
+     */
+    public Set<Point> analyseRowsRandomMarkOrderForTwoPoints(Mark searchedMark1, Mark searchedMark2, Mark patternMark) {
+        assert (patternMark != searchedMark1);
+        assert (patternMark != searchedMark2);
+
+        final Set<Row> foundRows = analyseRowsRandomMarkOrder(searchedMark1, searchedMark2, patternMark);
+        final Set<Point> foundPoints = new HashSet<>();
+
+        for (Row foundRow : foundRows) {
+            for (Point point : foundRow.toPoints()) {
+                if (getMark(point) == searchedMark1 || getMark(point) == searchedMark2) {
+                    foundPoints.add(point);
+                }
+            }
+        }
+        return foundPoints;
+    }
+
+    /**
+     * Same as analyseRowsRandomMarkOrderForOnePoint and analyseRowsRandomMarkOrderForTwoPoints,
+     * but gives all Points of all found Rows back
+     *
+     * @param criteria The three Marks that should be searched for in a Row
+     * @return All Points of each found Row
+     * @apiNote All searchedMarks are allowed to be the same
+     */
+    public Set<Point> analyseRowsRandomMarkOrderForThreePoints(Mark... criteria) {
+        assert (criteria.length == 3);
+
+        final Set<Row> foundRows = analyseRowsRandomMarkOrder(criteria[0], criteria[1], criteria[2]);
+        final Set<Point> foundPoints = new HashSet<>();
+
+        for (Row foundRow : foundRows) {
+            foundPoints.addAll(Arrays.stream(foundRow.toPoints()).toList());
+        }
+        return foundPoints;
+    }
+
+    /**
      * Searches for rows that include the Marks in criteria in a random order
      *
      * @param criteria Exactly three marks which represent, which Marks a row should contain * @return All found Rows with the criteria
      */
     public Set<Row> analyseRowsRandomMarkOrder(Mark... criteria) {
+        assert (criteria.length == 3);
+
         final Set<Row> foundRows = new HashSet<>();
         // alternating between j being y (even)
         // and j being x (!even)
