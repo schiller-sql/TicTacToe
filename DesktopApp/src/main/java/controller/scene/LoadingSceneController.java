@@ -1,14 +1,17 @@
-package controller;
+package controller.scene;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+import javafx.event.ActionEvent;
+
+public class LoadingSceneController {
+
     @FXML
     private Label welcomeText;
 
     @FXML
-    protected void onHelloButtonClick() {
+    protected void onHelloButtonClick(ActionEvent actionEvent) {
         welcomeText.setText("Welcome to JavaFX Application!");
     }
 }
