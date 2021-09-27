@@ -11,4 +11,13 @@ public class MainSceneController {
     public void displayName(String name) {
         nameLabel.setText("Hello " + name);
     }
+
+    /**
+     * future method...
+     *
+     * displays the Grid
+     */
+    public void displayGrid(String gridString) {
+
+    }
 }

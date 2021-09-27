@@ -26,7 +26,6 @@ public class Main extends Application{
         padding = this.getClass().getResource("/styles/padding.css").toExternalForm();
         scene.getStylesheets().add(font);
         //stage.setTitle("Hello!");
-
         */
     }
 

@@ -10,7 +10,6 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.scene.MainSceneController">
 
-    <Button text="Hello from the Main Scene!" />
    <Label fx:id="nameLabel" layoutX="220.0" layoutY="148.0" prefHeight="104.0" prefWidth="161.0" text="Hello:">
       <font>
          <Font size="27.0" />
