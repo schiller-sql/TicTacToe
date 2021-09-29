@@ -286,7 +286,7 @@ public final class Grid {
         int searchedMarkPosition = -1;
         for (int i = 0; i < 3; i++) {
             final Mark mark = row[i];
-            if (mark == searchedMark) {
+            if (mark == searchedMark && searchedMarkPosition == -1) {
                 searchedMarkPosition = i;
             } else if (mark == patternMark2 && !patternTwoFound) {
                 patternTwoFound = true;
