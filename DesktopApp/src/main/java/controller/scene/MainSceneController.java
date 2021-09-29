@@ -19,10 +19,9 @@ public class MainSceneController {
         ImageView imageView = new ImageView(getClass().getResource("/images/cross.png").toExternalForm());
         imageView.setFitHeight(50);
         imageView.setFitWidth(50);
-        this.button= (Button) e.getSource();
+        this.button = (Button) e.getSource();
         button.setGraphic(imageView);
     }
-
 
 
 }

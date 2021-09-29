@@ -1,16 +1,12 @@
 package controller.scene;
 
-import controller.GameController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-
-import javafx.event.ActionEvent;
-import javafx.scene.control.TextField;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
@@ -21,15 +17,14 @@ public class LoadingSceneController {
     @FXML
     Button button;
 
-    private GameController gameController;
 
     private Stage stage;
     private Scene scene;
     private Parent root;
 
-    public void selectButton(ActionEvent e) throws IOException{
+    public void selectButton(ActionEvent e) throws IOException {
         Circle circle = new Circle(15);
-        this.button= (Button) e.getSource();
+        this.button = (Button) e.getSource();
         button.setShape(circle);
     }
 
@@ -40,7 +35,7 @@ public class LoadingSceneController {
 
         MainSceneController controller = loader.getController();
 
-        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
