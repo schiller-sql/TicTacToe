@@ -16,7 +16,6 @@ import java.util.HashMap;
 
 public class Game {
 
-
     private final GameController controller;
 
     public Game(Opponent withOpponent) {

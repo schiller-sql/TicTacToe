@@ -16,17 +16,6 @@ public class Main extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-
-        /*
-        CSS:
-
-        String font, group, padding;
-        font = this.getClass().getResource("/styles/font.css").toExternalForm();
-        group = this.getClass().getResource("/styles/group.css").toExternalForm();
-        padding = this.getClass().getResource("/styles/padding.css").toExternalForm();
-        scene.getStylesheets().add(font);
-        //stage.setTitle("Hello!");
-        */
     }
 
     public static void main(String[] args) {

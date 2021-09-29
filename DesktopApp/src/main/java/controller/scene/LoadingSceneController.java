@@ -1,5 +1,6 @@
 package controller.scene;
 
+import controller.GameController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -19,6 +20,8 @@ public class LoadingSceneController {
 
     @FXML
     Button button;
+
+    private GameController gameController;
 
     private Stage stage;
     private Scene scene;
