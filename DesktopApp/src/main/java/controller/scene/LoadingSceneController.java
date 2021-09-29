@@ -1,8 +1,6 @@
 package controller.scene;
 
 import controller.GameController;
-import domain.Grid;
-import domain.Point;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,18 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import opponent.Opponent;
 
 import java.io.IOException;
 
 public class LoadingSceneController {
-
-     GameController controller = new GameController(new Opponent() {
-        @Override
-        public Point move(Grid grid) {
-            return null;
-        }
-    });
 
     @FXML
     Button button;
@@ -44,7 +34,7 @@ public class LoadingSceneController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/main-scene.fxml"));
         root = loader.load();
 
-        MainSceneController controller = loader.getController();
+        //MainSceneController controller = loader.getController(); to give attributes to the mainscenecontroller
 
         stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         scene = new Scene(root);
