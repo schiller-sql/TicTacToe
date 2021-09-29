@@ -21,7 +21,7 @@ public abstract class Opponent {
                 // new AlgorithmOpponent(),
                 new ExampleOpponent(),
                 new MinimaxOpponent(),
-                // new NoobOpponent
+                new NoobOpponent(),
                 new OleOpponent(),
                 new QuandaryOpponent(),
                 new RandomOpponent(),
