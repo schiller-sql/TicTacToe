@@ -12,10 +12,8 @@ module DesktopApp {
     requires javafx.graphics;
 
     opens application to javafx.fxml;
-    opens controller to javafx.fxml;
     opens controller.scene to javafx.fxml;
 
     exports application;
-    exports controller;
     exports controller.scene;
 }

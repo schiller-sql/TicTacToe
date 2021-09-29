@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.scene.LoadingSceneController">
     <Label fx:id="welcomeText" />
-    <Button fx:id="loginButton" layoutX="485.0" layoutY="50.0" onAction="#login" prefHeight="70.0" prefWidth="107.0" text="Play">
-      <font>
-         <Font size="24.0" />
-      </font></Button>
-   <TextField fx:id="nameTextField" layoutX="485.0" layoutY="25.0" prefHeight="16.0" prefWidth="107.0" />
-   <Text layoutX="485.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type your name here:" />
-   <GridPane layoutX="200.0" layoutY="155.0">
+   <GridPane layoutX="150.0" layoutY="50.0" prefHeight="300.0" prefWidth="300.0">
      <columnConstraints>
        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
      </columnConstraints>
      <rowConstraints>
        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -29,12 +28,84 @@
        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
      </rowConstraints>
       <children>
-         <Button mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Button" />
-         <Button mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Button" GridPane.columnIndex="1" />
-         <Button mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Button" GridPane.rowIndex="1" />
-         <Button mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-         <Button mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Button" GridPane.rowIndex="2" />
-         <Button mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         <Pane prefHeight="200.0" prefWidth="200.0">
+            <children>
+               <ImageView fitHeight="100.0" fitWidth="107.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/cross.png" />
+                  </image>
+               </ImageView>
+            </children>
+         </Pane>
+         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 0 1;" GridPane.columnIndex="1">
+            <children>
+               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+            </children></Pane>
+         <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+            <children>
+               <ImageView fitHeight="110.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/circle.png" />
+                  </image>
+               </ImageView>
+            </children>
+         </Pane>
+         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 1 0;" GridPane.rowIndex="1">
+            <children>
+               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+            </children></Pane>
+         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 1 0;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <children>
+               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/cross.png" />
+                  </image>
+               </ImageView>
+            </children>
+         </Pane>
+         <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+            <children>
+               <ImageView fitHeight="111.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/circle.png" />
+                  </image>
+               </ImageView>
+            </children>
+         </Pane>
+         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 0 1;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <children>
+               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+            </children></Pane>
+         <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <children>
+               <ImageView fitHeight="109.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/cross.png" />
+                  </image>
+               </ImageView>
+            </children>
+         </Pane>
+         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 1;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <children>
+               <Button fx:id="play" cacheShape="false" centerShape="false" focusTraversable="false" layoutX="3.0" mnemonicParsing="false" onAction="#switchToMainScene" opacity="0.0" prefHeight="100.0" prefWidth="94.0" scaleShape="false" />
+               <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="-2.0" layoutY="-1.0" smooth="false">
+                  <image>
+                     <Image url="@../images/play.png" />
+                  </image>
+                  <viewport>
+                     <Rectangle2D />
+                  </viewport>
+                  <cursor>
+                     <Cursor fx:constant="DEFAULT" />
+                  </cursor>
+               </ImageView>
+            </children>
+         </Pane>
       </children>
    </GridPane>
+   <Text layoutX="239.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="A TicTacToe Game" textAlignment="CENTER">
+      <font>
+         <Font name="System Bold" size="14.0" />
+      </font>
+   </Text>
 </AnchorPane>
