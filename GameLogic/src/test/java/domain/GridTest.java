@@ -220,6 +220,14 @@ class GridTest {
         return Stream.of(
                 analyseRowsRandomMarkOrderForOnePointResult(
                         """
+                                ∙ | ∙ | ∙
+                                ∙ | X | ∙
+                                ∙ | ∙ | ∙
+                                """,
+                        null, Mark.opponent, Mark.opponent
+                ),
+                analyseRowsRandomMarkOrderForOnePointResult(
+                        """
                                 X | O | X
                                 X | O | O
                                 X | X | X
