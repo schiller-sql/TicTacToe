@@ -1,4 +1,4 @@
-module com.desktop.app.desktopapp {
+module com.DesktopApp{
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -8,6 +8,7 @@ module com.desktop.app.desktopapp {
     requires validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires eu.hansolo.tilesfx;
+    requires GameLogic;
 
     opens application to javafx.fxml;
     opens controller.scene to javafx.fxml;
