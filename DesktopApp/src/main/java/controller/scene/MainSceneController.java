@@ -9,8 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
 
@@ -20,7 +20,7 @@ public class MainSceneController {
 
     private GameController controller;
     private Opponent opponent;
-    private ImageView imageViewCross, imageViewCircle;
+    private Image crossImage, circleImage;
     private HashMap<String, Opponent> opponentClasses = new HashMap();
 
     @FXML
@@ -57,16 +57,19 @@ public class MainSceneController {
 
     @FXML
     public void initialize() {
-        imageViewCross = new ImageView(getClass().getResource("/images/cross.png").toExternalForm());
-        imageViewCross.setFitHeight(50);
-        imageViewCross.setFitWidth(50);
+        crossImage = new Image(getClass().getResource("/images/cross.png").toExternalForm());
 
-        imageViewCircle = new ImageView(getClass().getResource("/images/circle.png").toExternalForm());
-        imageViewCircle.setFitHeight(50);
-        imageViewCircle.setFitWidth(50);
+        circleImage = new Image(getClass().getResource("/images/circle.png").toExternalForm());
 
         RandomOpponent.setToggleGroup(opponents);
         RandomOpponent.setSelected(true);
+    }
+
+    private ImageView imageViewFromImage(Image image) {
+        final ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(50);
+        imageView.setFitWidth(50);
+        return imageView;
     }
 
     private Button[] allButtons() {
@@ -105,15 +108,19 @@ public class MainSceneController {
         final Button playerButton = (Button) e.getSource();
         final Point playerPoint = getPointForButton(playerButton);
 
-        playerButton.setGraphic(imageViewCross);
+        playerButton.setGraphic(imageViewFromImage(crossImage));
         playerButton.setDisable(true);
 
+        final Point opponentPoint = controller.setPoint(playerPoint);
         if (controller.getState() == GameState.running) {
-            final Point opponentPoint = controller.setPoint(playerPoint);
             final Button opponentButton = getButtonForPoint(opponentPoint);
 
-            opponentButton.setGraphic(imageViewCircle);
+            opponentButton.setGraphic(imageViewFromImage(circleImage));
             opponentButton.setDisable(true);
+        } else {
+            for (Button button : allButtons()) {
+                button.setDisable(true);
+            }
         }
     }
 
