@@ -20,7 +20,7 @@ public class MainSceneController {
     private Opponent opponent;
     private ImageView imageViewCross, imageViewCircle;
     private HashMap<String, Opponent> opponentClasses = new HashMap();
-    private HashMap<Button, Point> field = new HashMap(); //TODO: make field key=string of button fxId
+    private HashMap<String, Point> field = new HashMap(); //TODO: make field key=string of button fxId
     private List<Button> buttons;
 
     @FXML
@@ -56,7 +56,7 @@ public class MainSceneController {
         int count = 0;
         for(int y = 0; y < 3; y++) {
             for(int x = 0; x < 3; x++) {
-                field.put(buttons.get(count), new Point(x, y)); //TODO: buttons.get(count) is null?
+                field.put(buttons.get(count).getId(), new Point(x, y)); //TODO: buttons.get(count) is null?
                         count++;
             }
         }
@@ -78,8 +78,8 @@ public class MainSceneController {
 
     public void selectButton(ActionEvent e){ //TODO abfrage ob button schon image hat
         this.button = (Button) e.getSource();
-        Point playerPoint = field.get(button); //TODO: field.get(button) is null
-        Point opponentPoint = controller.setPoint(playerPoint); //called with null
+        Point playerPoint = field.get(this.button.getId()); //TODO: field.get(button) is null
+        Point opponentPoint = controller.setPoint(playerPoint); //called with null //TODO: NullPointerHere
         button.setGraphic(imageViewCross);
         Button opponentField = (Button) field.values().stream().filter(p -> p.equals(opponentPoint));
         opponentField.setGraphic(imageViewCircle);
