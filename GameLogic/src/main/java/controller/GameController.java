@@ -62,6 +62,9 @@ public class GameController {
      * is updated inside the controller
      *
      * @param point The point where the player sets his cross
+     * @return The point which the opponent sets,
+     * is null when the opponent does not set a point,
+     * because of a tie or win by the player
      */
     public Point setPoint(Point point) {
         assert (state == GameState.running);
