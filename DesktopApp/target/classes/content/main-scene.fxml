@@ -25,15 +25,15 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button fx:id="field00" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" />
-                <Button fx:id="field10" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
-                <Button fx:id="field20" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" />
-                <Button fx:id="field01" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" GridPane.rowIndex="1" />
+                <Button fx:id="field00" mnemonicParsing="false" onAction="#selectButton" prefHeight="100.0" prefWidth="100.0" />
+                <Button fx:id="field10" mnemonicParsing="false" onAction="#selectButton" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
+                <Button fx:id="field20" mnemonicParsing="false" onAction="#selectButton" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" />
+                <Button fx:id="field01" mnemonicParsing="false" onAction="#selectButton" prefHeight="100.0" prefWidth="100.0" GridPane.rowIndex="1" />
                 <Button fx:id="field11" mnemonicParsing="false" onAction="#selectButton" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <Button fx:id="field21" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                <Button fx:id="field02" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" GridPane.rowIndex="2" />
-                <Button fx:id="field12" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <Button fx:id="field22" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                <Button fx:id="field21" mnemonicParsing="false" onAction="#selectButton" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <Button fx:id="field02" mnemonicParsing="false" onAction="#selectButton" prefHeight="100.0" prefWidth="100.0" GridPane.rowIndex="2" />
+                <Button fx:id="field12" mnemonicParsing="false" onAction="#selectButton" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Button fx:id="field22" mnemonicParsing="false" onAction="#selectButton" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             </children>
         </GridPane>
         <MenuBar layoutY="2.0" prefHeight="27.0" prefWidth="394.0">
