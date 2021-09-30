@@ -63,17 +63,18 @@ public class GameController {
      *
      * @param point The point where the player sets his cross
      */
-    public void setPoint(Point point) {
+    public Point setPoint(Point point) {
         assert (state == GameState.running);
 
         setGridAndAddToHistory(grid.copyWith(point, Mark.self));
         state = calculateGameState();
-        if (state != GameState.running)
-            return;
-
-        final Point opponentPoint = opponent.move(grid);
-        setGridAndAddToHistory(grid.copyWith(opponentPoint, Mark.opponent));
-        state = calculateGameState();
+        if (state == GameState.running) {
+            final Point opponentPoint = opponent.move(grid);
+            setGridAndAddToHistory(grid.copyWith(opponentPoint, Mark.opponent));
+            state = calculateGameState();
+            return opponentPoint;
+        }
+        return null;
     }
 
     /**

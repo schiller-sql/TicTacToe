@@ -11,16 +11,17 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import opponent.Opponent;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class MainSceneController {
 
     private Button button;
     private GameController controller;
     private Opponent opponent;
-    private ImageView imageView;
+    private ImageView imageViewCross, imageViewCircle;
     private HashMap<String, Opponent> opponentClasses = new HashMap();
-    private HashMap<Button, Point> field = new HashMap();
+    private HashMap<Button, Point> field = new HashMap(); //TODO: make field key=string of button fxId
+    private List<Button> buttons;
 
     @FXML
     RadioMenuItem RandomOpponent = new RadioMenuItem(); //Default Opponent
@@ -31,6 +32,17 @@ public class MainSceneController {
     @FXML
     MenuItem start, restart, surrender;
 
+    @FXML
+    Button field00 = new Button(),
+            field10 = new Button(),
+            field20 = new Button(),
+            field01 = new Button(),
+            field11 = new Button(),
+            field21 = new Button(),
+            field02 = new Button(),
+            field12 = new Button(),
+            field22 = new Button();
+
     public MainSceneController(){
         final Opponent[] availableOpponents = Opponent.defaultOpponents();
         for (int i = 0; i < availableOpponents.length; i++) {
@@ -39,21 +51,38 @@ public class MainSceneController {
 
         opponent = opponentClasses.get(RandomOpponent.toString());
         controller = new GameController(opponent);
+
+        buttons = Arrays.asList(field00, field10, field20, field01, field11, field21, field02, field12, field22);
+        int count = 0;
+        for(int y = 0; y < 3; y++) {
+            for(int x = 0; x < 3; x++) {
+                field.put(buttons.get(count), new Point(x, y)); //TODO: buttons.get(count) is null?
+                        count++;
+            }
+        }
     }
 
     @FXML
     public void initialize() {
-        imageView = new ImageView(getClass().getResource("/images/cross.png").toExternalForm());
-        imageView.setFitHeight(50);
-        imageView.setFitWidth(50);
+        imageViewCross = new ImageView(getClass().getResource("/images/cross.png").toExternalForm());
+        imageViewCross.setFitHeight(50);
+        imageViewCross.setFitWidth(50);
+
+        imageViewCircle = new ImageView(getClass().getResource("/images/circle.png").toExternalForm());
+        imageViewCircle.setFitHeight(50);
+        imageViewCircle.setFitWidth(50);
 
         RandomOpponent.setToggleGroup(opponents);
         RandomOpponent.setSelected(true);
     }
 
-    public void selectButton(ActionEvent e){ //TODO
+    public void selectButton(ActionEvent e){ //TODO abfrage ob button schon image hat
         this.button = (Button) e.getSource();
-        button.setGraphic(imageView);
+        Point playerPoint = field.get(button); //TODO: field.get(button) is null
+        Point opponentPoint = controller.setPoint(playerPoint); //called with null
+        button.setGraphic(imageViewCross);
+        Button opponentField = (Button) field.values().stream().filter(p -> p.equals(opponentPoint));
+        opponentField.setGraphic(imageViewCircle);
     }
 
     public void selectOpponent(ActionEvent e) { //TODO should available in a running game?

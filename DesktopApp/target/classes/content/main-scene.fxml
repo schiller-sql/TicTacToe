@@ -40,9 +40,9 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Game">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Start" />
-                        <MenuItem mnemonicParsing="false" text="Restart" />
-                        <MenuItem mnemonicParsing="false" text="Surrender" />
+                        <MenuItem fx:id="start" mnemonicParsing="false" onAction="#startGame" text="Start" />
+                        <MenuItem fx:id="restart" mnemonicParsing="false" onAction="#restartGame" text="Restart" />
+                        <MenuItem fx:id="surrender" mnemonicParsing="false" onAction="#surrenderGame" text="Surrender" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Opponent">
@@ -52,10 +52,10 @@
                                 <ToggleGroup fx:id="opponents" />
                             </toggleGroup>
                         </RadioMenuItem>
-                        <RadioMenuItem mnemonicParsing="false" text="RandomOpponent" toggleGroup="$opponents" />
-                        <RadioMenuItem mnemonicParsing="false" text="QuandaryOpponent" toggleGroup="$opponents" />
-                        <RadioMenuItem mnemonicParsing="false" text="MinimaxOpponent" toggleGroup="$opponents" />
-                        <RadioMenuItem mnemonicParsing="false" text="NoobOpponent" toggleGroup="$opponents" />
+                        <RadioMenuItem fx:id="RandomOpponent" mnemonicParsing="false" onAction="#selectOpponent" text="RandomOpponent" toggleGroup="$opponents" />
+                        <RadioMenuItem fx:id="QuandaryOpponent" mnemonicParsing="false" onAction="#selectOpponent" text="QuandaryOpponent" toggleGroup="$opponents" />
+                        <RadioMenuItem fx:id="MinimaxOpponent" mnemonicParsing="false" onAction="#selectOpponent" text="MinimaxOpponent" toggleGroup="$opponents" />
+                        <RadioMenuItem fx:id="NoobOpponent" mnemonicParsing="false" onAction="#selectOpponent" text="NoobOpponent" toggleGroup="$opponents" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Settings">
