@@ -104,7 +104,7 @@ public class MainSceneController {
         throw new Error("Button not found");
     }
 
-    public void selectButton(ActionEvent e) { //TODO abfrage ob button schon image hat
+    public void selectButton(ActionEvent e) {
         final Button playerButton = (Button) e.getSource();
         final Point playerPoint = getPointForButton(playerButton);
 
@@ -127,9 +127,9 @@ public class MainSceneController {
         }
     }
 
-    public void selectOpponent(ActionEvent e) { //TODO should available in a running game?
-        String pOpponent = ((MenuItem) e.getSource()).getText();
-        opponent = opponentClasses.get(pOpponent);
+    public void selectOpponent(ActionEvent e) {
+        String Opponent = ((MenuItem) e.getSource()).getText();
+        opponent = opponentClasses.get(Opponent);
         controller.setOpponent(opponent);
     }
 
@@ -146,7 +146,6 @@ public class MainSceneController {
         surrender.setDisable(false);
         surrender.setStyle("-fx-text-fill:black");
 
-        //TODO: update controller
         for (Button button : allButtons()) {
             button.setDisable(false);
             button.setGraphic(null);
@@ -164,7 +163,6 @@ public class MainSceneController {
         surrender.setDisable(false);
         surrender.setStyle("-fx-text-fill:black");
 
-        //TODO: update controller
         for (Button button : allButtons()) {
             button.setDisable(false);
             button.setGraphic(null);
