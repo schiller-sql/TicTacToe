@@ -7,4 +7,4 @@
 
 # Maven
 log/
-target/
+GameLogic/target/test-classes/opponent/OpponentTest.class

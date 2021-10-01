@@ -5,7 +5,6 @@ import domain.*;
 import opponent.base_opponents.AdvancedBaseOpponent;
 import opponent.helper_classes.Node;
 import opponent.helper_classes.Tree;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -59,7 +58,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
      *
      * @param root the root tree
      */
-    private void addScoreToRootLeafs(@NotNull Tree<Node> root) {
+    private void addScoreToRootLeafs(Tree<Node> root) {
         final Collection<Tree<Node>> allTrees = root.locate.values();
         //for each layer of the Tree
         for (int i = 9; i > 0; i--) {
@@ -76,7 +75,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
      *
      * @param t the node which gives to score to the parent
      */
-    private void giveToParent(@NotNull Tree<Node> t) {
+    private void giveToParent(Tree<Node> t) {
         final int score = bestScore(t.getHead());
         final Tree<Node> parent = t.getParent();
         parent.getHead().addScore(score);
@@ -90,7 +89,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
      * @param player the actor that make the change
      * @param depth the current depth of the tree
      */
-    private void generateTreeForRoot(@NotNull Tree<Node> root, Mark player, int depth) {
+    private void generateTreeForRoot(Tree<Node> root, Mark player, int depth) {
         final Grid rootGrid = root.getHead().getGrid(); //gets the root grid
         Point[] markTypesNull = rootGrid.getAllOfMarkType(null); //get all empty points
 
@@ -119,7 +118,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
      * @param node the node to calculate for
      * @return the score
      */
-    private int calculateScore(@NotNull Node node) {
+    private int calculateScore(Node node) {
         final int i = calculateEmptyFields(node) + 1;
         if (node.getMinimax() == Mark.opponent) {
             return i;
@@ -133,7 +132,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
      * @param node the node to calculate for
      * @return the count of empty fields from the grid of the given node
      */
-    private int calculateEmptyFields(@NotNull Node node) {
+    private int calculateEmptyFields(Node node) {
         return node.getGrid().getAllOfMarkType(null).length;
     }
 
@@ -144,7 +143,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
      * @param node the node to calculate the best score for
      * @return the best score of the given node, if the MinimaxStatus is equal to Mark.opponent the method return the highest score otherwise the lowest
      */
-    private int bestScore(@NotNull Node node) {
+    private int bestScore(Node node) {
         if (node.getMinimax() == Mark.opponent) {
             return Collections.max(node.getScores());
         }
@@ -221,7 +220,7 @@ public class MinimaxOpponent extends AdvancedBaseOpponent {
      * @param grid the grid to test of
      * @return true if at least one diagonal line contains three marks of the same type else false
      */
-    private boolean checkForDiagonals(Mark mark, @NotNull Grid grid) {
+    private boolean checkForDiagonals(Mark mark, Grid grid) {
         final boolean middleIs = grid.getMark(1, 1) == mark;
         final boolean firstDiagonal = grid.getMark(0, 0) == mark && grid.getMark(2, 2) == mark;
         final boolean secondDiagonal = grid.getMark(0, 2) == mark && grid.getMark(2, 0) == mark;

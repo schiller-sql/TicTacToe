@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class GameController {
     private final List<Grid> historyList = new ArrayList<>();
-    private final Opponent opponent;
+    private Opponent opponent;
     private Grid grid;
     private GameState state;
 
@@ -62,18 +62,22 @@ public class GameController {
      * is updated inside the controller
      *
      * @param point The point where the player sets his cross
+     * @return The point which the opponent sets,
+     * is null when the opponent does not set a point,
+     * because of a tie or win by the player
      */
-    public void setPoint(Point point) {
+    public Point setPoint(Point point) {
         assert (state == GameState.running);
+        Point opponentPoint = null;
 
         setGridAndAddToHistory(grid.copyWith(point, Mark.self));
         state = calculateGameState();
-        if (state != GameState.running)
-            return;
-
-        final Point opponentPoint = opponent.move(grid);
-        setGridAndAddToHistory(grid.copyWith(opponentPoint, Mark.opponent));
-        state = calculateGameState();
+        if (state == GameState.running) {
+            opponentPoint = opponent.move(grid);
+            setGridAndAddToHistory(grid.copyWith(opponentPoint, Mark.opponent));
+            state = calculateGameState();
+        }
+        return opponentPoint;
     }
 
     /**
@@ -104,6 +108,10 @@ public class GameController {
      */
     public Opponent getOpponent() {
         return opponent;
+    }
+
+    public void setOpponent(Opponent opponent) {
+        this.opponent=opponent;
     }
 
     /**

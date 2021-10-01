@@ -4,7 +4,6 @@ import domain.Grid;
 import domain.Mark;
 import domain.Point;
 import opponent.Opponent;
-import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
