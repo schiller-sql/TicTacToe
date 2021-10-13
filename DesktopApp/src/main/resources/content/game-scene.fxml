@@ -36,7 +36,7 @@
         <buttons>
             <Button fx:id="restart" mnemonicParsing="false" onAction="#restartGame" text="Restart" />
           <Button fx:id="surrender" mnemonicParsing="false" onAction="#surrenderGame" text="Surrender" />
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="317.0" text="Menu" />
+            <Button fx:id="menu" mnemonicParsing="false" onAction="#backToMenu" prefHeight="25.0" prefWidth="317.0" text="Menu" />
         </buttons>
       </ButtonBar>
    </children>
