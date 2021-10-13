@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.scene.GameSceneController">
    <children>
       <GridPane layoutX="150.0" layoutY="50.0" prefHeight="300.0" prefWidth="300.0">
@@ -35,9 +34,8 @@
       </GridPane>
       <ButtonBar prefHeight="40.0" prefWidth="200.0">
         <buttons>
-            <Button mnemonicParsing="false" text="Start" />
-            <Button mnemonicParsing="false" text="Restart" />
-          <Button mnemonicParsing="false" text="Surrender" />
+            <Button fx:id="restart" mnemonicParsing="false" onAction="#restartGame" text="Restart" />
+          <Button fx:id="surrender" mnemonicParsing="false" onAction="#surrenderGame" text="Surrender" />
             <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="317.0" text="Menu" />
         </buttons>
       </ButtonBar>

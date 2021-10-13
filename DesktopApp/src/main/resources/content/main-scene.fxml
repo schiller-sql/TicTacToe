@@ -47,7 +47,7 @@
                 </Menu>
             </menus>
         </MenuBar>
-      <Button layoutX="274.0" layoutY="188.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Play">
+      <Button fx:id="play" layoutX="274.0" layoutY="188.0" mnemonicParsing="false" onAction="#playGame" prefHeight="50.0" prefWidth="70.0" text="Play">
          <font>
             <Font size="18.0" />
          </font>
