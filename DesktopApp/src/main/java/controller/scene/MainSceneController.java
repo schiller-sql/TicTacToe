@@ -36,6 +36,9 @@ public class MainSceneController {
     @FXML
     ListView listGames;
 
+    @FXML
+    Label lblTotalWins, lblTotalGames, lblWinChance;
+
     public MainSceneController() {
         final Opponent[] availableOpponents = Opponent.defaultOpponents();
         for (int i = 0; i < availableOpponents.length; i++) {
@@ -76,4 +79,13 @@ public class MainSceneController {
             listGames.getItems().add(s);
         }
     }
+
+    public void setStatistics(int wins, int games, int chance) {
+        lblTotalWins.setText(String.valueOf(wins));
+        lblTotalGames.setText(String.valueOf(games));
+        lblWinChance.setText(String.valueOf(chance));
+
+    }
+
+    //TODO: if gamestate is running, then can load the gameScene with these grid
 }

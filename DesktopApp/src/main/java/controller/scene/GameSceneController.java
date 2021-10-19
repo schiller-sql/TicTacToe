@@ -70,8 +70,9 @@ public class GameSceneController {
             button.setGraphic(null);
         }
 
-        games.add(getTime() + " : " + controller.getState().toString() + "\r\n" + controller.getGrid().toString(""));
-
+        if(controller.getState() == GameState.running) {
+            games.add(getTime() + " : " + controller.getState().toString() + "\r\n" + controller.getGrid().toString(""));
+        }
         controller = new GameController(new RandomOpponent()); //TODO opponent
     }
 
@@ -203,6 +204,24 @@ public class GameSceneController {
         String time = DateTimeFormatter.ofPattern("MM.dd-HH:mm").format(LocalDateTime.now());
         MainSceneController controller = loader.getController(); //to give attributes to the MainSceneController
         controller.addGame(games);
+        int winsTotal = 0, gamesTotal = 0, chance, lossesTotal = 0;
+        for(String s : games) {
+            s = s.substring(14);
+            //System.out.println(s.substring(0, s.indexOf("\r\n")));
+            switch (s.substring(0, s.indexOf("\r\n"))) {
+                case "won":
+                    winsTotal++;
+                case "lost":
+                    lossesTotal++;
+            }
+            gamesTotal++;
+        }
+        if(winsTotal>0) {
+            chance = gamesTotal / winsTotal;
+        } else {
+            chance = 0;
+        }
+        controller.setStatistics(winsTotal, gamesTotal, chance);
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
