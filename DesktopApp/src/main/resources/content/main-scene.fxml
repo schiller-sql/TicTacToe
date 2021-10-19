@@ -30,24 +30,30 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Settings">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Theme" />
+                  <Menu mnemonicParsing="false" text="Theme">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Dark" />
+                        <MenuItem mnemonicParsing="false" text="Light" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Profil">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Sign up" />
+                      <MenuItem mnemonicParsing="false" text="Sign In" />
+                        <MenuItem mnemonicParsing="false" text="Sign out" />
+                    </items>
+                  </Menu>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Tutorial" />
                         <MenuItem mnemonicParsing="false" text="About the Game" />
-                        <Menu mnemonicParsing="false" text="History">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="Save" />
-                                <MenuItem mnemonicParsing="false" text="Print" />
-                            </items>
-                        </Menu>
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
-      <Button fx:id="play" layoutX="274.0" layoutY="188.0" mnemonicParsing="false" onAction="#playGame" prefHeight="50.0" prefWidth="70.0" text="Play">
+      <Button fx:id="play" layoutX="250.0" layoutY="165.0" mnemonicParsing="false" onAction="#playGame" prefHeight="70.0" prefWidth="100.0" text="Play">
          <font>
             <Font size="18.0" />
          </font>
@@ -58,7 +64,7 @@
          </font>
       </Label>
       <Label layoutX="482.0" layoutY="48.0" text="Games" />
-      <ListView layoutX="401.0" layoutY="70.0" prefHeight="330.0" prefWidth="200.0" />
+      <ListView fx:id="listGames" layoutX="401.0" layoutY="70.0" prefHeight="330.0" prefWidth="200.0" />
     </children>
 
 </AnchorPane>

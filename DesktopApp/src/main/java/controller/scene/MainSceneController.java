@@ -1,21 +1,21 @@
 package controller.scene;
 
 import controller.GameController;
+import domain.Grid;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class MainSceneController {
@@ -32,6 +32,9 @@ public class MainSceneController {
 
     @FXML
     Button play;
+
+    @FXML
+    ListView listGames;
 
     public MainSceneController() {
         final Opponent[] availableOpponents = Opponent.defaultOpponents();
@@ -60,11 +63,17 @@ public class MainSceneController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/game-scene.fxml"));
         Parent root = loader.load();
 
-        //MainSceneController controller = loader.getController(); to give attributes to the MainSceneController
+        //MainSceneController controller = loader.getController(); //to give attributes to the MainSceneController
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void addGame(List<String> games) {
+        for(String s : games) {
+            listGames.getItems().add(s);
+        }
     }
 }

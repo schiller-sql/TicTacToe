@@ -16,6 +16,10 @@ import javafx.stage.Stage;
 import opponent.default_opponents.RandomOpponent;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameSceneController {
     /*TODO:
@@ -32,6 +36,7 @@ public class GameSceneController {
 
     private GameController controller;
     private Image crossImage, circleImage;
+    private List<String> games;
 
     @FXML
     Button restart, surrender;
@@ -65,7 +70,13 @@ public class GameSceneController {
             button.setGraphic(null);
         }
 
+        games.add(getTime() + " : " + controller.getState().toString() + "\r\n" + controller.getGrid().toString(""));
+
         controller = new GameController(new RandomOpponent()); //TODO opponent
+    }
+
+    public String getTime() {
+        return DateTimeFormatter.ofPattern("MM.dd-HH:mm").format(LocalDateTime.now());
     }
 
 
@@ -82,6 +93,8 @@ public class GameSceneController {
         for (Button button : allButtons()) {
             button.setDisable(true);
         }
+
+        games.add(getTime() + " : " + controller.getState().toString() + "\r\n" + controller.getGrid().toString(""));
     }
 
     @FXML
@@ -100,6 +113,8 @@ public class GameSceneController {
             button.setDisable(false);
             button.setGraphic(null);
         }
+
+        games = new ArrayList<>();
     }
 
     private ImageView imageViewFromImage(Image image) {
@@ -156,23 +171,39 @@ public class GameSceneController {
             opponentButton.setDisable(true);
             opponentButton.setStyle("-fx-opacity: 1;");
         }
+
         if (controller.getState() != GameState.running) {
             for (Button button : allButtons()) {
                 button.setDisable(true);
                 button.setStyle("-fx-opacity: 1;");
             }
-        }
+            restart.setDisable(false);
+            restart.setStyle("-fx-text-fill:black");
 
+            surrender.setDisable(true);
+            surrender.setStyle("-fx-text-fill:gray");
+
+            games.add(getTime() + " : " + controller.getState().toString() + "\r\n" + controller.getGrid().toString(""));
+
+        } else {
             restart.setDisable(false);
             restart.setStyle("-fx-text-fill:black");
 
             surrender.setDisable(false);
             surrender.setStyle("-fx-text-fill:black");
+        }
+
     }
 
     public void backToMenu(ActionEvent e) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/main-scene.fxml"));
         Parent root = loader.load();
+
+
+        String time = DateTimeFormatter.ofPattern("MM.dd-HH:mm").format(LocalDateTime.now());
+        MainSceneController controller = loader.getController(); //to give attributes to the MainSceneController
+        controller.addGame(games);
+
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
