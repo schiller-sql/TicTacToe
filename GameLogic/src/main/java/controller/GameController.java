@@ -50,6 +50,15 @@ public class GameController {
     }
 
     /**
+     * Same as before, but with a real Grid instead of just the gridData
+     */
+    public GameController(Opponent opponent, Grid startingGrid) {
+        this.opponent = opponent;
+        setGridAndAddToHistory(startingGrid);
+        state = calculateGameState();
+    }
+
+    /**
      * Updates the state of the gridData with the players cross
      * and the opponents response
      * <p>
@@ -111,7 +120,7 @@ public class GameController {
     }
 
     public void setOpponent(Opponent opponent) {
-        this.opponent=opponent;
+        this.opponent = opponent;
     }
 
     /**
