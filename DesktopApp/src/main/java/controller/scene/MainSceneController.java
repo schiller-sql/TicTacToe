@@ -1,7 +1,6 @@
 package controller.scene;
 
 import controller.GameController;
-import domain.Grid;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,8 +13,6 @@ import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class MainSceneController {
@@ -38,6 +35,7 @@ public class MainSceneController {
 
     @FXML
     Label lblTotalWins, lblTotalGames, lblWinChance;
+    private MainSceneController mainSceneController;
 
     public MainSceneController() {
         final Opponent[] availableOpponents = Opponent.defaultOpponents();
@@ -66,7 +64,14 @@ public class MainSceneController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/game-scene.fxml"));
         Parent root = loader.load();
 
-        //MainSceneController controller = loader.getController(); //to give attributes to the MainSceneController
+        GameSceneController gameSceneController = loader.getController();
+        gameSceneController.setStatistics(
+                getLblData(lblTotalWins.getText(), false).intValue(),
+                getLblData(lblTotalGames.getText(), false).intValue(),
+                getLblData(lblWinChance.getText(), true).doubleValue(),
+                listGames.getItems()
+        );
+        gameSceneController.setController(controller);
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
@@ -74,17 +79,37 @@ public class MainSceneController {
         stage.show();
     }
 
+    private Number getLblData(String s, boolean isDouble) {
+        if(!isDouble) {
+            if (s.matches("[0-9]")) {
+                return Integer.parseInt(s);
+            }
+            return 0;
+        } else {
+            if (s.matches("[0-9]")) {
+                return Double.parseDouble(s);
+            }
+            return 0;
+        }
+    }
+
     public void addGame(List<String> games) {
         for(String s : games) {
             listGames.getItems().add(s);
         }
+        //TODO: make listGames add playable option for running games
     }
 
-    public void setStatistics(int wins, int games, int chance) {
+    public void setStatistics(int wins, int games, double chance) {
         lblTotalWins.setText(String.valueOf(wins));
         lblTotalGames.setText(String.valueOf(games));
-        lblWinChance.setText(String.valueOf(chance));
+        lblWinChance.setText(String.valueOf(chance) + "%");
+        //TODO all loses & k/d
 
+    }
+
+    public void setController(MainSceneController mainSceneController) {
+        this.mainSceneController = mainSceneController;
     }
 
     //TODO: if gamestate is running, then can load the gameScene with these grid

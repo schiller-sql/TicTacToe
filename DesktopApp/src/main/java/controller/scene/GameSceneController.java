@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
 
 import java.io.IOException;
@@ -35,8 +36,12 @@ public class GameSceneController {
 
 
     private GameController controller;
+    private Opponent opponent;
     private Image crossImage, circleImage;
-    private List<String> games;
+    private List<String> games, newGames;
+    int winsTotal;
+    int gamesTotal;
+    double chance;
 
     @FXML
     Button restart, surrender;
@@ -52,9 +57,16 @@ public class GameSceneController {
             field12,
             field22;
 
-    public GameSceneController(/*Opponent opponent*/) {
-       // controller = new GameController(opponent);
+    public GameSceneController() {
         controller = new GameController(new RandomOpponent());
+        winsTotal = 0;
+        gamesTotal = 0;
+        chance = 0;
+    }
+
+    public void setController(GameController controller) {
+        this.controller = controller;
+        opponent = controller.getOpponent();
     }
 
     public void restartGame() {
@@ -70,10 +82,10 @@ public class GameSceneController {
             button.setGraphic(null);
         }
 
-        if(controller.getState() == GameState.running) {
-            games.add(getTime() + " : " + controller.getState().toString() + "\r\n" + controller.getGrid().toString(""));
-        }
-        controller = new GameController(new RandomOpponent()); //TODO opponent
+        //if(controller.getState() == GameState.running) {
+            //games.add(getTime() + " : " + controller.getState().toString() + "\r\n" + controller.getGrid().toString(""));
+        //}
+        controller = new GameController(opponent); //TODO opponent
     }
 
     public String getTime() {
@@ -95,7 +107,7 @@ public class GameSceneController {
             button.setDisable(true);
         }
 
-        games.add(getTime() + " : " + controller.getState().toString() + "\r\n" + controller.getGrid().toString(""));
+        //games.add(getTime() + " : " + controller.getState().toString() + "\r\n" + controller.getGrid().toString(""));
     }
 
     @FXML
@@ -116,6 +128,7 @@ public class GameSceneController {
         }
 
         games = new ArrayList<>();
+        newGames = new ArrayList<>();
     }
 
     private ImageView imageViewFromImage(Image image) {
@@ -184,7 +197,9 @@ public class GameSceneController {
             surrender.setDisable(true);
             surrender.setStyle("-fx-text-fill:gray");
 
-            games.add(getTime() + " : " + controller.getState().toString() + "\r\n" + controller.getGrid().toString(""));
+            //TODO: dave the opponent played against
+            System.out.println("Add: " + getTime() + " : " + controller.getState().toString() + "\r\n" + controller.getGrid().toString(""));
+            newGames.add(getTime() + " : " + controller.getState().toString() + "\r\n" + controller.getGrid().toString(""));
 
         } else {
             restart.setDisable(false);
@@ -200,32 +215,39 @@ public class GameSceneController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/main-scene.fxml"));
         Parent root = loader.load();
 
-
         String time = DateTimeFormatter.ofPattern("MM.dd-HH:mm").format(LocalDateTime.now());
         MainSceneController controller = loader.getController(); //to give attributes to the MainSceneController
+
         controller.addGame(games);
-        int winsTotal = 0, gamesTotal = 0, chance, lossesTotal = 0;
-        for(String s : games) {
+        controller.addGame(newGames);
+        for(String s : newGames) {
             s = s.substring(14);
-            //System.out.println(s.substring(0, s.indexOf("\r\n")));
+            System.out.println(s.substring(0, s.indexOf("\r\n")));
             switch (s.substring(0, s.indexOf("\r\n"))) {
                 case "won":
                     winsTotal++;
-                case "lost":
-                    lossesTotal++;
             }
             gamesTotal++;
         }
+
         if(winsTotal>0) {
-            chance = gamesTotal / winsTotal;
+            chance =  ((double) gamesTotal) / ((double) winsTotal);
         } else {
             chance = 0;
         }
+        System.out.println("winsTotal:" + winsTotal + ", gamesTotal:" + gamesTotal + ", winChance:" + chance);
         controller.setStatistics(winsTotal, gamesTotal, chance);
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void setStatistics(int parseInt, int parseInt1, double parseInt2, List<String> games) {
+        winsTotal =  parseInt;
+        gamesTotal =  parseInt1;
+        chance = parseInt2;
+        this.games.addAll(games);
     }
 }
