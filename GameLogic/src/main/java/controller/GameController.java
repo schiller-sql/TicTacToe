@@ -1,5 +1,6 @@
 package controller;
 
+import domain.GridHistory;
 import domain.Mark;
 import domain.Grid;
 import domain.Point;
