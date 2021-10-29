@@ -64,8 +64,8 @@ public class GameController {
      */
     public GameController(Opponent opponent, GridHistory startingHistory) {
         this.opponent = opponent;
-        state = calculateGameState();
         grid = startingHistory.getLastHistoryRecord();
+        state = calculateGameState();
         for (int i = 0; i < startingHistory.getLength(); i++) {
             historyList.add(startingHistory.getHistoryRecord(i));
         }
