@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStorage {
-    Connection connection;
+    final Connection connection;
     Statement statement;
+
     final boolean logInformation;
     private final List<GameRecord> data = new ArrayList<>();
+
 
     public SQLitePersistentGameRecordStorage(String fileName) throws SQLException {
         assert (fileName.matches("^(?!\\s).*\\.db$")) : "Filename must end with '.db'";
@@ -36,6 +38,7 @@ public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStora
 
         this.logInformation = logInformation;
     }
+
 
     private void initDB() throws SQLException {
         statement = connection.createStatement();
@@ -74,7 +77,7 @@ public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStora
 
         statement.executeUpdate("create table if not exists gameHistory (" +
                                 "gameId integer not null references games(id) on delete cascade," +
-                                "position int2 not null check (position > 0 and position <= 9)," +
+                                "position int2 not null check (position >= 0 and position <= 9)," +
                                 "data char not null check (length(data) <= 9)" +
                                 ")");
 
@@ -85,6 +88,7 @@ public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStora
 
         logInformation("Finished");
     }
+
 
     public GameRecord[] getCachedGameRecords() {
         return data.toArray(new GameRecord[0]);
@@ -106,8 +110,10 @@ public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStora
                                ")" +
                                "returning *";
             final ResultSet result = statement.executeQuery(sql);
-            final GameRecord newRecord = gameRecordFromSingleRowResult(result);
+            final GameRecord newRecord = gameRecordFromSingleRowResult(result, gridHistory);
             result.close();
+
+            setGridHistory(newRecord.getId(), gridHistory);
 
             data.add(0, newRecord);
 
@@ -133,6 +139,7 @@ public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStora
         }
     }
 
+
     @Override
     void updateGameRecord(GameRecord updatedRecord) throws GameRecordStorageException {
         try {
@@ -142,31 +149,73 @@ public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStora
                                     "gameState = '" + gameStateToString(updatedRecord.getCurrentState()) + "'," +
                                     "lastData = '" + gridToString(updatedRecord.getCurrentGrid()) + "'" +
                                     "where id = " + updatedRecord.getId());
+            for (int i = 0; i < data.size(); i++) {
+                if (i == updatedRecord.getId()) {
+                    data.remove(i);
+                    break;
+                }
+            }
+            data.add(0, updatedRecord);
         } catch (SQLException e) {
             throw new GameRecordStorageException(e.getMessage());
         }
     }
 
     @Override
-    GridHistory getGridHistory(int id) {
-        return null;
+    GridHistory getGridHistory(int id) throws GameRecordStorageException {
+        try {
+            final ResultSet result = statement.executeQuery("select * from gameHistory " +
+                                                            "where gameId = " + id + " " +
+                                                            "order by position");
+            return gridHistoryFromResult(result);
+        } catch (SQLException e) {
+            throw new GameRecordStorageException(e.getMessage());
+        }
     }
 
     @Override
-    void updateGridHistory(int id, GridHistory gridHistory) {
-        // TODO: update the list reihenfolge and the games with currentGrid
+    void updateGridHistory(int id, GridHistory gridHistory) throws GameRecordStorageException {
+        // Handling of first data done by GameRecord
+        try {
+            setGridHistory(id, gridHistory);
+        } catch (SQLException e) {
+            throw new GameRecordStorageException(e.getMessage());
+        }
     }
 
-    private GridHistory gridHistoryFromResult(ResultSet results) {
-        return null;
+    private void setGridHistory(int id, GridHistory gridHistory) throws SQLException {
+        statement.executeUpdate("delete from gameHistory where gameId = " + id);
+        for (int position = 0; position < gridHistory.getLength(); position++) {
+            final Grid data = gridHistory.getHistoryRecord(position);
+            statement.executeUpdate("insert into gameHistory " +
+                                    "values (" +
+                                    id + "," +
+                                    position + "," +
+                                    "'" + gridToString(data) + "'" +
+                                    ")");
+        }
+    }
+
+
+    private GridHistory gridHistoryFromResult(ResultSet results) throws SQLException {
+        List<Grid> gridHistoryData = new ArrayList<>();
+        while (results.next()) {
+            final String rawGrid = results.getString("data");
+            gridHistoryData.add(gridFromString(rawGrid));
+        }
+        return new GridHistory(gridHistoryData);
     }
 
     private GameRecord gameRecordFromSingleRowResult(ResultSet resultSet) throws SQLException {
+        return gameRecordFromSingleRowResult(resultSet, null);
+    }
+
+    private GameRecord gameRecordFromSingleRowResult(ResultSet resultSet, GridHistory gridHistory) throws SQLException {
         return new GameRecord(
                 this,
                 resultSet.getInt("id"),
                 resultSet.getDate("updatedAt"),
-                null,
+                gridHistory,
                 gridFromString(resultSet.getString("lastData")),
                 gameStateFromString(resultSet.getString("gameState")),
                 resultSet.getString("opponent")

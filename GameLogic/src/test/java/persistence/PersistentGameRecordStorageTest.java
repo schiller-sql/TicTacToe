@@ -4,12 +4,14 @@ import controller.GameController;
 import controller.GameState;
 import domain.Grid;
 import domain.GridHistory;
+import domain.Point;
 import opponent.Opponent;
 import opponent.default_opponents.MinimaxOpponent;
 import opponent.default_opponents.RandomOpponent;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static util.GridUtils.getGridFromString;
@@ -41,15 +43,68 @@ abstract class PersistentGameRecordStorageTest {
     }
 
     @Test
+    void addingUpdatingGridHistories() throws Exception {
+        final var startingGrid = getGridFromString("""
+                ∙ | ∙ | O
+                ∙ | X | ∙
+                X | O | X
+                """);
+        final var currentGrid = getGridFromString("""
+                O | X | O
+                ∙ | X | ∙
+                X | O | X
+                """);
+        final var expectedGrid1 = getGridFromString("""
+                O | X | O
+                X | X | ∙
+                X | O | X
+                """);
+        final var expectedGrid2 = getGridFromString("""
+                O | X | O
+                X | X | O
+                X | O | X
+                """);
+
+        // Add GameRecord with gridHistory of length two (startingGrid and currentGrid)
+        final var controller = new GameController(
+                new RandomOpponent(),
+                new GridHistory(List.of(startingGrid, currentGrid))
+        );
+        getPersistentGameRecordStorage().addGameRecord(controller);
+
+        controller.setPoint(new Point(0, 1));
+
+        final var records1 = getPersistentGameRecordStorage().getCachedGameRecords();
+        assertEquals(1, records1.length);
+
+        final var expectedHistory1 = new GridHistory(List.of(startingGrid, currentGrid));
+
+        final var firstRecord1 = records1[0];
+        assertEquals(expectedHistory1, firstRecord1.getHistory());
+
+        // Add GameRecord with gridHistory of length three
+        getPersistentGameRecordStorage().getCachedGameRecords()[0].updateWithController(controller);
+
+        final var expectedHistory2 = new GridHistory(List.of(startingGrid, currentGrid, expectedGrid1, expectedGrid2));
+
+        final var records2 = getPersistentGameRecordStorage().getCachedGameRecords();
+        assertEquals(1, records1.length);
+
+        final var firstRecord2 = records2[0];
+        assertEquals(expectedHistory2, firstRecord2.getHistory());
+    }
+
+    @Test
     void addingUpdatingDeletingGameRecordPersistsData() throws Exception {
         // First GameRecord
         final var firstExpectedOpponent = new RandomOpponent();
-        final var firstExpectedGameState = GameState.won;
         final var firstExpectedGrid = getGridFromString("""
                 O | X | ∙
                 X | ∙ | X
                 X | X | ∙
                 """);
+        final var firstExpectedGridHistory = new GridHistory(Collections.singletonList(firstExpectedGrid));
+        final var firstExpectedGameState = GameState.won;
 
         // Second GameRecord
         var secondUnfinishedExpectedGrid = getGridFromString("""
@@ -59,8 +114,9 @@ abstract class PersistentGameRecordStorageTest {
                 """);
         final var secondExpectedOpponent = new MinimaxOpponent();
         final var secondController = new GameController(secondExpectedOpponent, secondUnfinishedExpectedGrid);
-        final var secondExpectedGameState = secondController.getState();
+        final var secondExpectedGridHistory = secondController.getHistory();
         final var secondExpectedGrid = secondController.getGrid();
+        final var secondExpectedGameState = secondController.getState();
 
         // Insert and check first record
         final var firstRecordDirectly = getPersistentGameRecordStorage().addGameRecord(
@@ -68,25 +124,28 @@ abstract class PersistentGameRecordStorageTest {
                 firstExpectedGameState,
                 firstExpectedOpponent
         );
-        assertRecord(firstExpectedGrid, firstExpectedGameState, firstExpectedOpponent, firstRecordDirectly);
+        assertRecord(firstExpectedGridHistory, firstExpectedGrid, firstExpectedGameState, firstExpectedOpponent, firstRecordDirectly);
 
         final var records = getPersistentGameRecordStorage().getCachedGameRecords();
         assertEquals(1, records.length);
 
         final var firstRecord = records[0];
-        assertRecord(firstExpectedGrid, firstExpectedGameState, firstExpectedOpponent, firstRecord);
+        assertRecord(firstExpectedGridHistory, firstExpectedGrid, firstExpectedGameState, firstExpectedOpponent, firstRecord);
 
         // Insert second record and check both records
         final var secondRecordDirectly = getPersistentGameRecordStorage().addGameRecord(secondController);
-        assertRecord(secondExpectedGrid, secondExpectedGameState, secondExpectedOpponent, secondRecordDirectly);
+        assertRecord(secondExpectedGridHistory, secondExpectedGrid, secondExpectedGameState, secondExpectedOpponent, secondRecordDirectly);
 
         final var records2 = getPersistentGameRecordStorage().getCachedGameRecords();
         assertEquals(2, records2.length);
 
         final var firstRecord2 = records2[1]; // First record now on second spot
         final var secondRecord2 = records2[0];
-        assertRecord(firstExpectedGrid, firstExpectedGameState, firstExpectedOpponent, firstRecord2);
-        assertRecord(secondExpectedGrid, secondExpectedGameState, secondExpectedOpponent, secondRecord2);
+        assertRecord(firstExpectedGridHistory, firstExpectedGrid, firstExpectedGameState, firstExpectedOpponent, firstRecord2);
+        assertRecord(secondExpectedGridHistory, secondExpectedGrid, secondExpectedGameState, secondExpectedOpponent, secondRecord2);
+        // repeat assertion to test multiple reads effecting anything
+        assertRecord(firstExpectedGridHistory, firstExpectedGrid, firstExpectedGameState, firstExpectedOpponent, firstRecord2);
+        assertRecord(secondExpectedGridHistory, secondExpectedGrid, secondExpectedGameState, secondExpectedOpponent, secondRecord2);
 
         // Update gameState and grid of firstRecord
         final var newFirstExpectedGameState = GameState.lost;
@@ -94,15 +153,15 @@ abstract class PersistentGameRecordStorageTest {
         firstRecord2.setCurrentState(newFirstExpectedGameState);
         firstRecord2.setCurrentGrid(newFirstExpectedGrid);
 
-        assertRecord(newFirstExpectedGrid, newFirstExpectedGameState, firstExpectedOpponent, firstRecord2);
+        assertRecord(firstExpectedGridHistory, newFirstExpectedGrid, newFirstExpectedGameState, firstExpectedOpponent, firstRecord2);
 
         final var records3 = getPersistentGameRecordStorage().getCachedGameRecords();
         assertEquals(2, records3.length);
 
         final var firstRecord3 = records3[1]; // First record now on second spot
         final var secondRecord3 = records3[0];
-        assertRecord(newFirstExpectedGrid, newFirstExpectedGameState, firstExpectedOpponent, firstRecord3);
-        assertRecord(secondExpectedGrid, secondExpectedGameState, secondExpectedOpponent, secondRecord3);
+        assertRecord(firstExpectedGridHistory, newFirstExpectedGrid, newFirstExpectedGameState, firstExpectedOpponent, firstRecord3);
+        assertRecord(secondExpectedGridHistory, secondExpectedGrid, secondExpectedGameState, secondExpectedOpponent, secondRecord3);
 
         // Delete first record
         getPersistentGameRecordStorage().deleteGameRecord(firstRecord2);
@@ -110,7 +169,7 @@ abstract class PersistentGameRecordStorageTest {
         final var records4 = getPersistentGameRecordStorage().getCachedGameRecords();
         assertEquals(1, records4.length);
 
-        assertRecord(secondExpectedGrid, secondExpectedGameState, secondExpectedOpponent, records4[0]);
+        assertRecord(secondExpectedGridHistory, secondExpectedGrid, secondExpectedGameState, secondExpectedOpponent, records4[0]);
 
         // Delete second record
         getPersistentGameRecordStorage().deleteGameRecord(secondRecord2);
@@ -120,11 +179,13 @@ abstract class PersistentGameRecordStorageTest {
     }
 
     static void assertRecord(
+            GridHistory expectedHistory,
             Grid expectedGrid,
             GameState expectedGameState,
             Opponent expectedOpponent,
             GameRecord actual
-    ) {
+    ) throws GameRecordStorageException {
+        assertEquals(expectedHistory, actual.getHistory());
         assertEquals(expectedGrid, actual.getCurrentGrid());
         assertEquals(expectedGameState, actual.getCurrentState());
         assertEquals(expectedOpponent.getName(), actual.getOpponent().getName());

@@ -52,6 +52,9 @@ public abstract class PersistentGameRecordStorage {
 
     abstract GridHistory getGridHistory(int id) throws GameRecordStorageException;
 
+    /**
+     * @implSpec The lastData is handled inside the GameRecord by it calling the updateGameRecord
+     */
     abstract void updateGridHistory(int id, GridHistory gridHistory) throws GameRecordStorageException;
 
     public int countRecordsWithGameState(GameState gameState) {
