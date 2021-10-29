@@ -15,8 +15,8 @@ public class LoadingSceneController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/main-scene.fxml"));
         Parent root = loader.load();
 
-        MainSceneController controller = loader.getController(); //to give attributes to the MainSceneController
-        controller.setController(controller);
+        //MainSceneController controller = loader.getController(); //to give attributes to the MainSceneController
+
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
