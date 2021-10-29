@@ -47,21 +47,6 @@ public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStora
         statement = connection.createStatement();
         statement.setQueryTimeout(20);
 
-        // Stats
-//        statement.executeUpdate("create table if not exists stats (" +
-//                                "wins integer not null," +
-//                                "loses integer not null," +
-//                                "ties integer not null" +
-//                                ")");
-//        statement.executeUpdate("insert into stats values (0, 0, 0)");
-
-//        final ResultSet statsResult = statement.executeQuery("select * from stats");
-//        winAmount = statsResult.getInt("wins");
-//        loseAmount = statsResult.getInt("loses");
-//        tieAmount = statsResult.getInt("ties");
-//        statsResult.close();
-
-        // Games
         statement.executeUpdate("create table if not exists games (" +
                                 "id integer primary key autoincrement," +
                                 "updatedAt timestamp not null default current_timestamp," +
