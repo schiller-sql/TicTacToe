@@ -1,26 +1,24 @@
 package controller.scene;
 
 import controller.GameController;
-import controller.GameState;
-import domain.Point;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
 
+import java.io.IOException;
 import java.util.*;
 
 public class MainSceneController {
 
     private GameController controller;
     private Opponent opponent;
-    private Image crossImage, circleImage;
     private HashMap<String, Opponent> opponentClasses = new HashMap();
 
     @FXML
@@ -30,18 +28,14 @@ public class MainSceneController {
     ToggleGroup opponents = new ToggleGroup();
 
     @FXML
-    MenuItem start, restart, surrender;
+    Button play;
 
     @FXML
-    Button field00,
-            field10,
-            field20,
-            field01,
-            field11,
-            field21,
-            field02,
-            field12,
-            field22;
+    ListView listGames;
+
+    @FXML
+    Label lblTotalWins, lblTotalGames, lblWinChance, lblTotalLosses, lblKD;
+    private MainSceneController mainSceneController;
 
     public MainSceneController() {
         final Opponent[] availableOpponents = Opponent.defaultOpponents();
@@ -54,78 +48,10 @@ public class MainSceneController {
 
     @FXML
     public void initialize() {
-        crossImage = new Image(getClass().getResource("/images/cross.png").toExternalForm());
-
-        circleImage = new Image(getClass().getResource("/images/circle.png").toExternalForm());
-
         RandomOpponent.setToggleGroup(opponents);
         RandomOpponent.setSelected(true);
-
-        start.setStyle("-fx-text-fill:gray");
-        start.setDisable(true);
     }
 
-    private ImageView imageViewFromImage(Image image) {
-        final ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(50);
-        imageView.setFitWidth(50);
-        return imageView;
-    }
-
-    private Button[] allButtons() {
-        return new Button[]{field00, field10, field20, field01, field11, field21, field02, field12, field22};
-    }
-
-    private Point getPointForButton(Button button) {
-        final Button[] allButtons = allButtons();
-        int i = 0;
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
-                if (allButtons[i] == button) {
-                    return new Point(x, y);
-                }
-                i++;
-            }
-        }
-        throw new Error("Button not inside the grid");
-    }
-
-    private Button getButtonForPoint(Point point) {
-        final Button[] allButtons = allButtons();
-        int i = 0;
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
-                if (x == point.x() && y == point.y()) {
-                    return allButtons[i];
-                }
-                i++;
-            }
-        }
-        throw new Error("Button not found");
-    }
-
-    public void selectButton(ActionEvent e) {
-        final Button playerButton = (Button) e.getSource();
-        final Point playerPoint = getPointForButton(playerButton);
-
-        playerButton.setGraphic(imageViewFromImage(crossImage));
-        playerButton.setDisable(true);
-        playerButton.setStyle("-fx-opacity: 1;");
-
-        final Point opponentPoint = controller.setPoint(playerPoint);
-        if(opponentPoint!=null) {
-            final Button opponentButton = getButtonForPoint(opponentPoint); //sometimes null
-            opponentButton.setGraphic(imageViewFromImage(circleImage));
-            opponentButton.setDisable(true);
-            opponentButton.setStyle("-fx-opacity: 1;");
-        }
-        if (controller.getState() != GameState.running) {
-            for (Button button : allButtons()) {
-                button.setDisable(true);
-                button.setStyle("-fx-opacity: 1;");
-            }
-        }
-    }
 
     public void selectOpponent(ActionEvent e) {
         String Opponent = ((MenuItem) e.getSource()).getText();
@@ -133,59 +59,59 @@ public class MainSceneController {
         controller.setOpponent(opponent);
     }
 
-    public void startGame() {
-        if(controller.getState()==GameState.running) {
-            return;
-        }
-        start.setStyle("-fx-text-fill:gray");
-        start.setDisable(true);
+    public void playGame(ActionEvent e) throws IOException {
+        //TODO: give attributes to game scene controller
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/game-scene.fxml"));
+        Parent root = loader.load();
 
-        restart.setDisable(false);
-        restart.setStyle("-fx-text-fill:black");
+        GameSceneController gameSceneController = loader.getController();
+        gameSceneController.setStatistics(
+                getLblData(lblTotalWins.getText(), false).intValue(),
+                getLblData(lblTotalGames.getText(), false).intValue(),
+                getLblData(lblWinChance.getText(), true).doubleValue(),
+                listGames.getItems()
+        );
+        gameSceneController.setController(controller);
 
-        surrender.setDisable(false);
-        surrender.setStyle("-fx-text-fill:black");
-
-        for (Button button : allButtons()) {
-            button.setDisable(false);
-            button.setGraphic(null);
-        }
-        controller = new GameController(opponent);
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public void restartGame() {
-        start.setDisable(false);
-        start.setStyle("-fx-text-fill:black");
-
-        restart.setDisable(false);
-        restart.setStyle("-fx-text-fill:black");
-
-        surrender.setDisable(false);
-        surrender.setStyle("-fx-text-fill:black");
-
-        for (Button button : allButtons()) {
-            button.setDisable(false);
-            button.setGraphic(null);
-        }
-        controller = new GameController(opponent);
-    }
-
-
-    public void surrenderGame() {
-        if(controller.getState()!=GameState.running) {
-            return;
-        }
-        start.setDisable(false);
-        start.setStyle("-fx-text-fill:black");
-
-        restart.setDisable(true);
-        restart.setStyle("-fx-text-fill:gray");
-
-        surrender.setDisable(true);
-        surrender.setStyle("-fx-text-fill:gray");
-        for (Button button : allButtons()) {
-            button.setDisable(true);
+    private Number getLblData(String s, boolean isDouble) {
+        if(!isDouble) {
+            if (s.matches("[0-9]")) {
+                return Integer.parseInt(s);
+            }
+            return 0;
+        } else {
+            if (s.matches("[0-9]")) {
+                return Double.parseDouble(s);
+            }
+            return 0;
         }
     }
 
+    public void addGame(List<String> games) {
+        for(String s : games) {
+            listGames.getItems().add(s);
+        }
+        //TODO: make listGames add playable option for running games
+    }
+
+    public void setStatistics(int wins, int games, int losses, double chance, double KD) {
+        lblTotalWins.setText(String.valueOf(wins)); //plus percent tag
+        lblTotalGames.setText(String.valueOf(games)); //minus running games
+        lblWinChance.setText(chance + "%");
+        lblTotalLosses.setText(String.valueOf(losses)); //plus percent tag
+        lblKD.setText(KD + "%");
+
+    }
+
+    public void setController(MainSceneController mainSceneController) {
+        this.mainSceneController = mainSceneController;
+    }
+
+    //TODO: if gamestate is running, then can load the gameScene with these grid
 }
