@@ -1,7 +1,7 @@
 package controller.scene;
 
 import controller.GameController;
-import javafx.collections.ListChangeListener;
+import controller.GameState;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,7 +40,7 @@ public class MainSceneController {
     ListView listGames = new ListView();
 
     @FXML
-    Label lblTotalWins, lblTotalGames, lblWinChance, lblTotalLosses, lblKD;
+    Label lblTotalWins, lblTotalGames, lblTotalLosses, lblKD;
 
     public MainSceneController() {
         final Opponent[] availableOpponents = Opponent.defaultOpponents();
@@ -62,7 +62,9 @@ public class MainSceneController {
         RandomOpponent.setToggleGroup(opponents);
         RandomOpponent.setSelected(true);
         updateList();
+        updateScores();
     }
+
     public List<String> gameRecordsToString() {
         List<String> records = new ArrayList<String>();
         for(GameRecord record : storage.getCachedGameRecords()) {
@@ -102,5 +104,44 @@ public class MainSceneController {
         }
     }
 
-    //TODO: if gamestate is running, then can load the gameScene with these grid
+    public void updateScores() {
+        int games = 0, wins = 0, loses = 0;
+        games = storage.total();
+        wins = storage.wins();
+        loses = storage.loses();
+        double KD, winChance, losesChance;
+        if(loses > 0) {
+            KD = ((double) wins / (double) loses);
+            KD = round(KD, 2);
+        } else {
+            KD = wins;
+        }
+        if(wins > 0) {
+            winChance = ((double) wins / (double) games);
+            winChance = round(winChance, 2);
+        } else {
+            winChance = 0;
+        }
+        if(loses > 0) {
+            losesChance = ((double) loses / (double) games);
+            losesChance = round(losesChance, 2);
+        } else {
+            losesChance = 0;
+        }
+        lblTotalGames.setText(String.valueOf(games));
+        lblTotalWins.setText(wins + " (" + winChance + "%)");
+        lblTotalLosses.setText(loses + " (" + losesChance +  "%)");
+        lblKD.setText(String.valueOf(KD));
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+        return (double) Math.round(
+                value * (
+                        (long) Math.pow(10, places))
+        )
+                / (
+                        (long) Math.pow(10, places)
+        );
+    }
 }
