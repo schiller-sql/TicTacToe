@@ -1,6 +1,6 @@
 import controller.GameController;
 import controller.GameState;
-import controller.GridHistory;
+import domain.GridHistory;
 import domain.Mark;
 import domain.Point;
 import exceptions.TicTacToeMenuException;

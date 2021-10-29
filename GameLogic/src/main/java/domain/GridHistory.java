@@ -1,15 +1,23 @@
-package controller;
-
-import domain.Grid;
-import domain.Mark;
+package domain;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents the History of a tic-tac-toe game,
  * by owning each Grid in the game's timeline
  */
 public record GridHistory(List<Grid> gridList) {
+    /**
+     * @param gridList The gridList can contain max. 10 Grids,
+     *                 including an empty one from the start,
+     *                 it should also contain at least one Grid
+     */
+    public GridHistory {
+        assert (gridList.size() <= 10);
+        assert (gridList.size() >= 1);
+    }
+
     /**
      * @return How many Grids are contained in this class
      */
@@ -26,6 +34,16 @@ public record GridHistory(List<Grid> gridList) {
      */
     public Grid getHistoryRecord(int historyPosition) {
         return gridList.get(historyPosition);
+    }
+
+    /**
+     * @return Last history record, null if non-existent
+     */
+    public Grid getLastHistoryRecord() {
+        if(gridList.isEmpty()) {
+            return null;
+        }
+        return gridList.get(gridList.size() - 1);
     }
 
     /**
@@ -49,5 +67,18 @@ public record GridHistory(List<Grid> gridList) {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GridHistory that = (GridHistory) o;
+        return gridList.equals(that.gridList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gridList);
     }
 }

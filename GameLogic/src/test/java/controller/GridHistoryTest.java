@@ -1,6 +1,7 @@
 package controller;
 
 import domain.Grid;
+import domain.GridHistory;
 import domain.Mark;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

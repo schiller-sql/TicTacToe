@@ -1,5 +1,6 @@
 package controller;
 
+import domain.GridHistory;
 import domain.Mark;
 import domain.Grid;
 import domain.Point;
@@ -50,12 +51,24 @@ public class GameController {
     }
 
     /**
-     * Same as before, but with a real Grid instead of just the gridData
+     * @param startingGrid A real Grid instead of just the gridData
      */
     public GameController(Opponent opponent, Grid startingGrid) {
         this.opponent = opponent;
         setGridAndAddToHistory(startingGrid);
         state = calculateGameState();
+    }
+
+    /**
+     * @param startingHistory The already past history of the game
+     */
+    public GameController(Opponent opponent, GridHistory startingHistory) {
+        this.opponent = opponent;
+        grid = startingHistory.getLastHistoryRecord();
+        state = calculateGameState();
+        for (int i = 0; i < startingHistory.getLength(); i++) {
+            historyList.add(startingHistory.getHistoryRecord(i));
+        }
     }
 
     /**
