@@ -1,8 +1,8 @@
 package controller.scene;
 
 import controller.GameController;
-import controller.GameState;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
 import persistence.GameRecord;
@@ -22,9 +23,9 @@ import java.util.*;
 
 public class MainSceneController {
 
-    private GameController controller;
+    private final GameController controller;
     private Opponent opponent;
-    private HashMap<String, Opponent> opponentClasses = new HashMap();
+    private final HashMap<String, Opponent> opponentClasses = new HashMap();
     SQLitePersistentGameRecordStorage storage;
 
     @FXML
@@ -44,8 +45,8 @@ public class MainSceneController {
 
     public MainSceneController() {
         final Opponent[] availableOpponents = Opponent.defaultOpponents();
-        for (int i = 0; i < availableOpponents.length; i++) {
-            opponentClasses.put(availableOpponents[i].getClass().getSimpleName(), availableOpponents[i]);
+        for (Opponent availableOpponent : availableOpponents) {
+            opponentClasses.put(availableOpponent.getClass().getSimpleName(), availableOpponent);
         }
         opponent = new RandomOpponent();
         controller = new GameController(opponent);
@@ -66,7 +67,7 @@ public class MainSceneController {
     }
 
     public List<String> gameRecordsToString() {
-        List<String> records = new ArrayList<String>();
+        List<String> records = new ArrayList<>();
         for(GameRecord record : storage.getCachedGameRecords()) {
             records.add(
                     new SimpleDateFormat("MM.dd-HH:mm").format(record.getLastUpdate())
@@ -105,10 +106,7 @@ public class MainSceneController {
     }
 
     public void updateScores() {
-        int games = 0, wins = 0, loses = 0;
-        games = storage.total();
-        wins = storage.wins();
-        loses = storage.loses();
+        int games = storage.total(), wins = storage.wins(), loses = storage.loses();
         double KD, winChance, losesChance;
         if(loses > 0) {
             KD = ((double) wins / (double) loses);
@@ -142,6 +140,55 @@ public class MainSceneController {
         )
                 / (
                         (long) Math.pow(10, places)
+        );
+    }
+
+    public static class ContextMenuListCell<T> extends ListCell<T> {
+        public static <T> Callback<ListView<T>,ListCell<T>> forListView(ContextMenu contextMenu) {
+            return forListView(contextMenu, null);
+        }
+        public static <T> Callback<ListView<T>,ListCell<T>> forListView(final ContextMenu contextMenu, final Callback<ListView<T>, ListCell<T>> cellFactory) {
+            return listView -> {
+                ListCell<T> cell = cellFactory == null ? new DefaultListCell<>() : cellFactory.call(listView);
+                cell.setContextMenu(contextMenu);
+                return cell;
+            };
+        }
+        public ContextMenuListCell(ContextMenu contextMenu) {
+            setContextMenu(contextMenu);
+        }
+    }
+
+    public static class DefaultListCell<T> extends ListCell<T> {
+        @Override public void updateItem(T item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty) {
+                setText(null);
+                setGraphic(null);
+            } else if (item instanceof Node newNode) {
+                setText(null);
+                Node currentNode = getGraphic();
+                if (currentNode == null || ! currentNode.equals(newNode)) {
+                    setGraphic(newNode);
+                }
+            } else {
+                setText(item == null ? "null" : item.toString());
+                setGraphic(null);
+            }
+        }
+    }
+
+    public void execute() {
+        ListView<String> listView = new ListView<>();
+        // Create a MenuItem and place it in a ContextMenu
+        MenuItem helloWorld = new MenuItem("Hello World!");
+        ContextMenu contextMenu = new ContextMenu(helloWorld);
+
+        // sets a cell factory on the ListView telling it to use the previously-created ContextMenu (uses default cell factory)
+        listView.setCellFactory(ContextMenuListCell.forListView(contextMenu));
+
+        helloWorld.setOnAction(
+                e -> System.out.println("Selected item: " + listView.getSelectionModel().getSelectedItem())
         );
     }
 }
