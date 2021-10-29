@@ -31,7 +31,6 @@ public class GameSceneController {
     format code
     clean up code
     add confirm popups to restart button and menu button
-
      */
 
 
@@ -39,9 +38,9 @@ public class GameSceneController {
     private Opponent opponent;
     private Image crossImage, circleImage;
     private List<String> games, newGames;
-    int winsTotal;
+    int winsTotal, lossesTotal;
     int gamesTotal;
-    double chance;
+    double chance, KD;
 
     @FXML
     Button restart, surrender;
@@ -226,6 +225,8 @@ public class GameSceneController {
             switch (s.substring(0, s.indexOf("\r\n"))) {
                 case "won":
                     winsTotal++;
+                case "lost":
+                    lossesTotal++;
             }
             gamesTotal++;
         }
@@ -235,8 +236,13 @@ public class GameSceneController {
         } else {
             chance = 0;
         }
+        if(lossesTotal>0) {
+            KD =  ((double) winsTotal) / ((double) lossesTotal);
+        } else {
+            KD = winsTotal;
+        }
         System.out.println("winsTotal:" + winsTotal + ", gamesTotal:" + gamesTotal + ", winChance:" + chance);
-        controller.setStatistics(winsTotal, gamesTotal, chance);
+        controller.setStatistics(winsTotal, gamesTotal, lossesTotal, chance, KD);
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);

@@ -34,7 +34,7 @@ public class MainSceneController {
     ListView listGames;
 
     @FXML
-    Label lblTotalWins, lblTotalGames, lblWinChance;
+    Label lblTotalWins, lblTotalGames, lblWinChance, lblTotalLosses, lblKD;
     private MainSceneController mainSceneController;
 
     public MainSceneController() {
@@ -100,11 +100,12 @@ public class MainSceneController {
         //TODO: make listGames add playable option for running games
     }
 
-    public void setStatistics(int wins, int games, double chance) {
-        lblTotalWins.setText(String.valueOf(wins));
-        lblTotalGames.setText(String.valueOf(games));
-        lblWinChance.setText(String.valueOf(chance) + "%");
-        //TODO all loses & k/d
+    public void setStatistics(int wins, int games, int losses, double chance, double KD) {
+        lblTotalWins.setText(String.valueOf(wins)); //plus percent tag
+        lblTotalGames.setText(String.valueOf(games)); //minus running games
+        lblWinChance.setText(chance + "%");
+        lblTotalLosses.setText(String.valueOf(losses)); //plus percent tag
+        lblKD.setText(KD + "%");
 
     }
 
