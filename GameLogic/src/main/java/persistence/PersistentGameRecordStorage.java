@@ -6,10 +6,25 @@ import domain.Grid;
 import domain.GridHistory;
 import opponent.Opponent;
 
+/**
+ * An abstract class for storing GameRecords,
+ * which represent a TicTacToe game
+ */
 public abstract class PersistentGameRecordStorage {
 
+    /**
+     * Gives back all GameRecords currently in the storage
+     *
+     * @return The ordered GameRecords
+     */
     public abstract GameRecord[] getCachedGameRecords();
 
+    /**
+     * Create a GameRecord
+     * from a GridHistory, a GameState, and an Opponent
+     *
+     * @return The newly created GameRecord
+     */
     public GameRecord addGameRecord(
             GridHistory gridHistory,
             GameState currentState,
@@ -23,6 +38,11 @@ public abstract class PersistentGameRecordStorage {
         );
     }
 
+    /**
+     * Create a GameRecord from a GameController
+     *
+     * @return The newly created GameRecord
+     */
     public GameRecord addGameRecord(GameController controller) throws GameRecordStorageException {
         return addGameRecord(
                 controller.getHistory(),
@@ -31,6 +51,11 @@ public abstract class PersistentGameRecordStorage {
         );
     }
 
+    /**
+     * Delete a GameRecord from the storage permanently
+     *
+     * @param gameRecord which gameRecord to delete
+     */
     public void deleteGameRecord(GameRecord gameRecord) throws GameRecordStorageException {
         deleteGameRecord(gameRecord.getId());
     }
@@ -57,6 +82,11 @@ public abstract class PersistentGameRecordStorage {
      */
     abstract void updateGridHistory(int id, GridHistory gridHistory) throws GameRecordStorageException;
 
+    /**
+     * Count the amount of GameRecords in a certain GameState
+     *
+     * @param gameState Which GameState to count
+     */
     public int countRecordsWithGameState(GameState gameState) {
         int i = 0;
         for (GameRecord record : getCachedGameRecords()) {
@@ -65,5 +95,25 @@ public abstract class PersistentGameRecordStorage {
             }
         }
         return i;
+    }
+
+    public int wins() {
+        return countRecordsWithGameState(GameState.won);
+    }
+
+    public int loses() {
+        return countRecordsWithGameState(GameState.lost);
+    }
+
+    public int ties() {
+        return countRecordsWithGameState(GameState.tie);
+    }
+
+    public int running() {
+        return countRecordsWithGameState(GameState.running);
+    }
+
+    public int total() {
+        return getCachedGameRecords().length;
     }
 }

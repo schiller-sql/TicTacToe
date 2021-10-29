@@ -9,6 +9,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An SQLite implementation of the PersistentGameRecordStorage
+ */
 public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStorage {
     final Connection connection;
     Statement statement;

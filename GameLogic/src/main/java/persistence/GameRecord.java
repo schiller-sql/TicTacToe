@@ -8,6 +8,9 @@ import opponent.Opponent;
 
 import java.util.Date;
 
+/**
+ * Represents a TicTacToe game for the PersistentGameRecordStorage
+ */
 public final class GameRecord {
     private final PersistentGameRecordStorage storage;
     private final int id;
