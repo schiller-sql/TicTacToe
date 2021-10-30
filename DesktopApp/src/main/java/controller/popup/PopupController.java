@@ -34,7 +34,7 @@ public class PopupController{
                 scrollContent.getViewportBounds().getWidth(),
                 scrollContent.viewportBoundsProperty()));
         scrollContent.prefHeightProperty().bind(scrollContent.heightProperty());
-        lbl.setAlignment(Pos.CENTER);
+        lbl.setAlignment(Pos.CENTER); //TODO: do this only on History Input
         scrollContent.setContent(lbl);
     }
 

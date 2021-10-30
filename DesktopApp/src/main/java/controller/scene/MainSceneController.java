@@ -34,6 +34,9 @@ public class MainSceneController {
     ContextMenu contextMenu;
 
     @FXML
+    MenuItem itemAbout;
+
+    @FXML
     RadioMenuItem RandomOpponent = new RadioMenuItem(); //Default Opponent
 
     @FXML
@@ -215,6 +218,24 @@ public class MainSceneController {
                / (
                        (long) Math.pow(10, places)
                );
+    }
+
+    public void showInfo(ActionEvent actionEvent) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/popup/popup.fxml"));
+        Scene newScene = null;
+        Stage inputStage, primaryStage;
+        primaryStage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
+        try {
+            newScene = new Scene(loader.load());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        PopupController popupController = loader.getController();
+        popupController.addContent("This is a Sample Text from line 234 in MainSceneController.java");
+        inputStage = new Stage();
+        inputStage.initOwner(primaryStage);
+        inputStage.setScene(newScene);
+        inputStage.showAndWait();
     }
 
     public static class ContextMenuListCell<T> extends ListCell<T> {
