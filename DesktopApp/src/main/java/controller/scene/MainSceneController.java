@@ -1,18 +1,27 @@
 package controller.scene;
 
 import controller.GameController;
+import controller.GameState;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Callback;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
+import org.controlsfx.control.PropertySheet;
 import persistence.GameRecord;
 import persistence.GameRecordStorageException;
 import persistence.SQLitePersistentGameRecordStorage;
@@ -64,11 +73,11 @@ public class MainSceneController {
     public void initialize() {
         RandomOpponent.setToggleGroup(opponents);
         RandomOpponent.setSelected(true);
+        MenuItem showHistory, playGame, deleteGame;
         updateList();
         updateScores();
 
         // Create MenuItems and place them in a ContextMenu
-        final MenuItem showHistory, playGame, deleteGame;
         showHistory = new MenuItem("show history");
         playGame = new MenuItem("play");
         deleteGame = new MenuItem("delete");
@@ -89,6 +98,19 @@ public class MainSceneController {
                 storage.deleteGameRecord(listGames.getSelectionModel().getSelectedItem());
             } catch (GameRecordStorageException ex) {
                 ex.printStackTrace();
+            }
+        });
+
+        listGames.setOnMouseClicked(event -> {
+            MouseButton button = event.getButton();
+            if (button == MouseButton.SECONDARY) {
+                if (listGames.getSelectionModel().getSelectedItem().getCurrentState() == GameState.running) {
+                    playGame.setDisable(false);
+                } else if (listGames.getSelectionModel().getSelectedItem().getCurrentState() != GameState.running) {
+                    playGame.setDisable(true);
+                } else {
+                    throw new IllegalArgumentException();
+                }
             }
         });
     }
