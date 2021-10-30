@@ -26,9 +26,8 @@ public class MainSceneController {
 
     private final GameController controller;
     private Opponent opponent;
-    private final HashMap<String, Opponent> opponentClasses = new HashMap();
+    private final HashMap<String, Opponent> opponentClasses = new HashMap<>();
     private SQLitePersistentGameRecordStorage storage;
-    private MenuItem showHistory, playGame, deleteGame;
     ContextMenu contextMenu;
 
     @FXML
@@ -41,7 +40,7 @@ public class MainSceneController {
     Button play;
 
     @FXML
-    ListView listGames = new ListView();
+    ListView<GameRecord> listGames = new ListView<>();
 
     @FXML
     Label lblTotalWins, lblTotalGames, lblTotalLosses, lblKD;
@@ -69,26 +68,25 @@ public class MainSceneController {
         updateScores();
 
         // Create MenuItems and place them in a ContextMenu
+        final MenuItem showHistory, playGame, deleteGame;
         showHistory = new MenuItem("show history");
         playGame = new MenuItem("play");
         deleteGame = new MenuItem("delete");
         contextMenu = new ContextMenu(showHistory, playGame, deleteGame);
         // sets a cell factory on the ListView telling it to use the previously-created ContextMenu (uses default cell factory)
-        listGames.setCellFactory(ContextMenuListCell.forListView(contextMenu));
+        listGames.setCellFactory(ContextMenuListCell.forListView(contextMenu, (listView) -> new GameRecordListCell()));
         //set the actions to the MenuItems
-        showHistory.setOnAction(e -> {
-            showHistory((GameRecord) listGames.getSelectionModel().getSelectedItem());
-        });
+        showHistory.setOnAction(e -> showHistory(listGames.getSelectionModel().getSelectedItem()));
         playGame.setOnAction(e -> {
             try {
-                playGame((GameRecord) listGames.getSelectionModel().getSelectedItem());
+                playGame(listGames.getSelectionModel().getSelectedItem());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         });
         deleteGame.setOnAction(e -> {
             try {
-                storage.deleteGameRecord((GameRecord) listGames.getSelectionModel().getSelectedItem());
+                storage.deleteGameRecord(listGames.getSelectionModel().getSelectedItem());
             } catch (GameRecordStorageException ex) {
                 ex.printStackTrace();
             }
@@ -97,18 +95,6 @@ public class MainSceneController {
 
     private void showHistory(GameRecord gameRecord) {
         //shows the game history
-    }
-
-    public List<String> gameRecordsToString() {
-        List<String> records = new ArrayList<>();
-        for(GameRecord record : storage.getCachedGameRecords()) {
-            records.add(
-                    new SimpleDateFormat("MM.dd-HH:mm").format(record.getLastUpdate())
-                            + " State:" + record.getCurrentState()
-                            + " Opponent:" + record.getOpponent().getName()
-                            + "\r\n" + record.getCurrentGrid().asString());
-        }
-        return records;
     }
 
     public void selectOpponent(ActionEvent e) {
@@ -137,7 +123,11 @@ public class MainSceneController {
 
         GameSceneController gameSceneController = loader.getController();
         gameSceneController.setStorage(storage);
-        gameSceneController.setController(gameRecord.getController());
+        try {
+            gameSceneController.setController(gameRecord.getController());
+        } catch (GameRecordStorageException e) {
+            e.printStackTrace();
+        }
 
         Stage stage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
         Scene scene = new Scene(root);
@@ -145,16 +135,9 @@ public class MainSceneController {
         stage.show();
     }
 
-    /*public void updateList() {
-        listGames.getItems().clear();
-        for(String s : gameRecordsToString()) {
-            listGames.getItems().add(s);
-        }
-    }*/
-
     public void updateList() {
         listGames.getItems().clear();
-        for(GameRecord record : storage.getCachedGameRecords()) {
+        for (GameRecord record : storage.getCachedGameRecords()) {
             listGames.getItems().add(record);
         }
     }
@@ -162,19 +145,19 @@ public class MainSceneController {
     public void updateScores() {
         int games = storage.total(), wins = storage.wins(), loses = storage.loses();
         double KD, winChance, losesChance;
-        if(loses > 0) {
+        if (loses > 0) {
             KD = ((double) wins / (double) loses);
             KD = round(KD, 2);
         } else {
             KD = wins;
         }
-        if(wins > 0) {
+        if (wins > 0) {
             winChance = ((double) wins / (double) games);
             winChance = round(winChance, 2);
         } else {
             winChance = 0;
         }
-        if(loses > 0) {
+        if (loses > 0) {
             losesChance = ((double) loses / (double) games);
             losesChance = round(losesChance, 2);
         } else {
@@ -182,7 +165,7 @@ public class MainSceneController {
         }
         lblTotalGames.setText(String.valueOf(games));
         lblTotalWins.setText(wins + " (" + winChance + "%)");
-        lblTotalLosses.setText(loses + " (" + losesChance +  "%)");
+        lblTotalLosses.setText(loses + " (" + losesChance + "%)");
         lblKD.setText(String.valueOf(KD));
     }
 
@@ -192,20 +175,16 @@ public class MainSceneController {
                 value * (
                         (long) Math.pow(10, places))
         )
-                / (
-                        (long) Math.pow(10, places)
-        );
+               / (
+                       (long) Math.pow(10, places)
+               );
     }
 
     public static class ContextMenuListCell<T> extends ListCell<T> {
 
-        public static <T> Callback<ListView<T>,ListCell<T>> forListView(ContextMenu contextMenu) {
-            return forListView(contextMenu, null);
-        }
-
-        public static <T> Callback<ListView<T>,ListCell<T>> forListView(final ContextMenu contextMenu, final Callback<ListView<T>, ListCell<T>> cellFactory) {
+        public static <T> Callback<ListView<T>, ListCell<T>> forListView(final ContextMenu contextMenu, final Callback<ListView<T>, ListCell<T>> cellFactory) {
             return listView -> {
-                ListCell<T> cell = cellFactory == null ? new DefaultListCell<>() : cellFactory.call(listView);
+                ListCell<T> cell = cellFactory.call(listView);
                 cell.setContextMenu(contextMenu);
                 return cell;
             };
@@ -217,23 +196,18 @@ public class MainSceneController {
 
     }
 
-    public static class DefaultListCell<T> extends ListCell<T> {
-        @Override public void updateItem(T item, boolean empty) {
-            super.updateItem(item, empty);
-            if (empty) {
-                setText(null);
-                setGraphic(null);
-            } else if (item instanceof Node newNode) {
-                setText(null);
-                Node currentNode = getGraphic();
-                if (currentNode == null || ! currentNode.equals(newNode)) {
-                    setGraphic(newNode);
-                }
-            } else {
-                setText(item == null ? "null" : item.toString());
-                setGraphic(null);
+    private static class GameRecordListCell extends ListCell<GameRecord> {
+        @Override
+        protected void updateItem(GameRecord gameRecord, boolean isEmpty) {
+            super.updateItem(gameRecord, isEmpty);
+            if (!isEmpty) {
+                setText(
+                        new SimpleDateFormat("MM.dd-HH:mm").format(gameRecord.getLastUpdate())
+                        + " State:" + gameRecord.getCurrentState()
+                        + " Opponent:" + gameRecord.getOpponent().getName()
+                        + "\r\n" + gameRecord.getCurrentGrid().asString()
+                );
             }
         }
-
     }
 }
