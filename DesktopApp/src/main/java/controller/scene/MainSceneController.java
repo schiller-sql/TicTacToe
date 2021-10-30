@@ -121,6 +121,12 @@ public class MainSceneController {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        PopupController popupController = loader.getController();
+        try {
+            popupController.addContent(gameRecord.getHistory().toString());
+        } catch (GameRecordStorageException e) {
+            e.printStackTrace();
+        }
         inputStage = new Stage();
         inputStage.initOwner(primaryStage);
         inputStage.setScene(newScene);
