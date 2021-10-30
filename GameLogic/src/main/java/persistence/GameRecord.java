@@ -112,7 +112,7 @@ public final class GameRecord {
         lastUpdate = new Date();
     }
 
-    public GameController getController() {
-        return new GameController(opponent, currentGrid);
+    public GameController getController() throws GameRecordStorageException {
+        return new GameController(opponent, getHistory());
     }
 }
