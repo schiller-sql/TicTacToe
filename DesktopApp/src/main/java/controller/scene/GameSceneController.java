@@ -19,6 +19,7 @@ import persistence.GameRecordStorageException;
 import persistence.SQLitePersistentGameRecordStorage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class GameSceneController {
     /*TODO:
@@ -49,8 +50,8 @@ public class GameSceneController {
 
     @FXML
     public void initialize() {
-        crossImage = new Image(getClass().getResource("/images/cross.png").toExternalForm());
-        circleImage = new Image(getClass().getResource("/images/circle.png").toExternalForm());
+        crossImage = new Image(Objects.requireNonNull(getClass().getResource("/images/cross.png")).toExternalForm());
+        circleImage = new Image(Objects.requireNonNull(getClass().getResource("/images/circle.png")).toExternalForm());
         restart.setDisable(true);
         restart.setStyle("-fx-text-fill:gray");
         surrender.setDisable(true);
@@ -88,7 +89,7 @@ public class GameSceneController {
     public void restartGame() {
 
         restart.setDisable(true);
-        restart.setStyle("-fx-text-fill:gray");;
+        restart.setStyle("-fx-text-fill:gray");
 
         surrender.setDisable(true);
         surrender.setStyle("-fx-text-fill:gray");
@@ -198,5 +199,8 @@ public class GameSceneController {
             }
         }
         throw new Error("Button not found");
+    }
+
+    public void displayGame() {
     }
 }

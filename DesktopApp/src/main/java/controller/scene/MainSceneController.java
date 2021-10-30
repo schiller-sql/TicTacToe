@@ -2,12 +2,7 @@ package controller.scene;
 
 import controller.GameController;
 import controller.GameState;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -15,13 +10,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Callback;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
-import org.controlsfx.control.PropertySheet;
 import persistence.GameRecord;
 import persistence.GameRecordStorageException;
 import persistence.SQLitePersistentGameRecordStorage;
@@ -96,6 +89,8 @@ public class MainSceneController {
         deleteGame.setOnAction(e -> {
             try {
                 storage.deleteGameRecord(listGames.getSelectionModel().getSelectedItem());
+                updateList();
+                updateScores();
             } catch (GameRecordStorageException ex) {
                 ex.printStackTrace();
             }
@@ -116,7 +111,7 @@ public class MainSceneController {
     }
 
     private void showHistory(GameRecord gameRecord) {
-        //shows the game history
+        //TODO: shows the game history
     }
 
     public void selectOpponent(ActionEvent e) {
@@ -132,6 +127,7 @@ public class MainSceneController {
         GameSceneController gameSceneController = loader.getController();
         gameSceneController.setStorage(storage);
         gameSceneController.setController(controller);
+        gameSceneController.displayGame(); //TODO
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
