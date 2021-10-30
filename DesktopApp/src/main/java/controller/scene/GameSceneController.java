@@ -2,6 +2,7 @@ package controller.scene;
 
 import controller.GameController;
 import controller.GameState;
+import domain.Mark;
 import domain.Point;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -202,5 +203,20 @@ public class GameSceneController {
     }
 
     public void displayGame() {
+        Button btn;
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 3; x++) {
+                btn = getButtonForPoint(new Point(x,y));
+                if(controller.getGrid().getMark(x,y) == Mark.self) {
+                    btn.setGraphic(imageViewFromImage(crossImage));
+                    btn.setDisable(true);
+                    btn.setStyle("-fx-opacity: 1;");
+                } else if(controller.getGrid().getMark(x,y) == Mark.opponent) {
+                    btn.setGraphic(imageViewFromImage(circleImage));
+                    btn.setDisable(true);
+                    btn.setStyle("-fx-opacity: 1;");
+                }
+            }
+        }
     }
 }

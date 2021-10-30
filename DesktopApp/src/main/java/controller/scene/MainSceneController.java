@@ -2,6 +2,7 @@ package controller.scene;
 
 import controller.GameController;
 import controller.GameState;
+import controller.popup.PopupController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -111,7 +112,19 @@ public class MainSceneController {
     }
 
     private void showHistory(GameRecord gameRecord) {
-        //TODO: shows the game history
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/popup/popup.fxml"));
+        Scene newScene = null;
+        Stage inputStage, primaryStage;
+        primaryStage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
+        try {
+            newScene = new Scene(loader.load());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        inputStage = new Stage();
+        inputStage.initOwner(primaryStage);
+        inputStage.setScene(newScene);
+        inputStage.showAndWait();
     }
 
     public void selectOpponent(ActionEvent e) {
@@ -127,7 +140,6 @@ public class MainSceneController {
         GameSceneController gameSceneController = loader.getController();
         gameSceneController.setStorage(storage);
         gameSceneController.setController(controller);
-        gameSceneController.displayGame(); //TODO
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
@@ -146,6 +158,7 @@ public class MainSceneController {
         } catch (GameRecordStorageException e) {
             e.printStackTrace();
         }
+        gameSceneController.displayGame();
 
         Stage stage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
         Scene scene = new Scene(root);

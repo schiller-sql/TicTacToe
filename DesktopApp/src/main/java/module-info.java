@@ -12,6 +12,8 @@ module com.DesktopApp{
 
     opens application to javafx.fxml;
     opens controller.scene to javafx.fxml;
+    opens controller.popup to javafx.fxml;
     exports application;
     exports controller.scene;
+    exports controller.popup;
 }
