@@ -69,7 +69,7 @@ public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStora
                                 "data char not null check (length(data) <= 9)" +
                                 ")");
 
-        final ResultSet result = statement.executeQuery("select * from games order by updatedAt, id desc");
+        final ResultSet result = statement.executeQuery("select * from games order by updatedAt desc, id");
         while (result.next()) {
             data.add(gameRecordFromSingleRowResult(result));
         }
