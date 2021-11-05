@@ -21,7 +21,7 @@ public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStora
 
 
     public SQLitePersistentGameRecordStorage(String fileName) throws SQLException {
-        assert (fileName.matches("^(?!\\s).*\\.db$")) : "Filename must end with '.db'";
+        assert (fileName.matches("^\\S+\\.db$")) : "Filename must end with '.db'";
 
         connection = DriverManager.getConnection("jdbc:sqlite:" + fileName);
         initDB();

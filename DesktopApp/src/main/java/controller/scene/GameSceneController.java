@@ -1,5 +1,6 @@
 package controller.scene;
 
+import application.Main;
 import controller.GameController;
 import controller.GameState;
 import domain.Mark;
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
 import persistence.GameRecordStorageException;
+import persistence.PersistentGameRecordStorage;
 import persistence.SQLitePersistentGameRecordStorage;
 
 import java.io.IOException;
@@ -32,8 +34,6 @@ public class GameSceneController {
     clean up code
     add confirm popups to restart button and menu button
      */
-    SQLitePersistentGameRecordStorage storage = null;
-
     private GameController controller;
     private Opponent opponent;
     private Image crossImage, circleImage;
@@ -66,10 +66,6 @@ public class GameSceneController {
     public void setController(GameController controller) {
         this.controller = controller;
         opponent = controller.getOpponent();
-    }
-
-    public void setStorage(SQLitePersistentGameRecordStorage storage) {
-        this.storage = storage;
     }
 
     public void backToMenu(ActionEvent e) throws IOException {
@@ -155,7 +151,7 @@ public class GameSceneController {
 
     public boolean uploadGame() {
         try {
-            storage.addGameRecord(controller);
+            Main.persistentGameRecordStorage.addGameRecord(controller);
         } catch (GameRecordStorageException e) {
             e.printStackTrace();
             return false;
