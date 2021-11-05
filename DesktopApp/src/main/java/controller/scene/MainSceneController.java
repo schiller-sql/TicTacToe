@@ -82,6 +82,7 @@ public class MainSceneController {
         contextMenu = new ContextMenu(showHistory, playGame, deleteGame);
         // sets a cell factory on the ListView telling it to use the previously-created ContextMenu (uses default cell factory)
         listGames.setCellFactory(ContextMenuListCell.forListView(contextMenu, (listView) -> new GameRecordListCell()));
+
         //set the actions to the MenuItems
         showHistory.setOnAction(e -> showHistory(listGames.getSelectionModel().getSelectedItem()));
         playGame.setOnAction(e -> {
@@ -113,29 +114,6 @@ public class MainSceneController {
                 }
             }
         });
-    }
-
-    private void showHistory(GameRecord gameRecord) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/popup/popup.fxml"));
-        Scene newScene = null;
-        Stage inputStage, primaryStage;
-        primaryStage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
-        try {
-            newScene = new Scene(loader.load());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        PopupController popupController = loader.getController();
-        try {
-            popupController.addContent(gameRecord.getHistory().toString());
-        } catch (GameRecordStorageException e) {
-            e.printStackTrace();
-        }
-        inputStage = new Stage();
-        inputStage.initStyle(StageStyle.UNDECORATED);
-        inputStage.initOwner(primaryStage);
-        inputStage.setScene(newScene);
-        inputStage.showAndWait();
     }
 
     public void selectOpponent(ActionEvent e) {
@@ -175,6 +153,50 @@ public class MainSceneController {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void showInfo(ActionEvent actionEvent) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/popup/popup.fxml"));
+        Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        SceneController.submitPopup(loader, primaryStage, "This is a Sample Text from line 216 in MainSceneController.java");
+    }
+
+    private void showHistory(GameRecord gameRecord) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/popup/popup.fxml"));
+        Stage primaryStage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
+        try {
+            SceneController.submitPopup(loader, primaryStage, gameRecord.getHistory().toString());
+        } catch (GameRecordStorageException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static class ContextMenuListCell<T> extends ListCell<T> {
+        public static <T> Callback<ListView<T>, ListCell<T>> forListView(final ContextMenu contextMenu, final Callback<ListView<T>, ListCell<T>> cellFactory) {
+            return listView -> {
+                ListCell<T> cell = cellFactory.call(listView);
+                cell.setContextMenu(contextMenu);
+                return cell;
+            };
+        }
+        public ContextMenuListCell(ContextMenu contextMenu) {
+            setContextMenu(contextMenu);
+        }
+    }
+
+    private static class GameRecordListCell extends ListCell<GameRecord> {
+        @Override
+        protected void updateItem(GameRecord gameRecord, boolean isEmpty) {
+            super.updateItem(gameRecord, isEmpty);
+            if (!isEmpty) {
+                setText(
+                        new SimpleDateFormat("MM.dd-HH:mm").format(gameRecord.getLastUpdate())
+                        + " State:" + gameRecord.getCurrentState()
+                        + " Opponent:" + gameRecord.getOpponent().getName()
+                        + "\r\n" + gameRecord.getCurrentGrid().asString()
+                );
+            }
+        }
     }
 
     public void updateList() {
@@ -217,58 +239,8 @@ public class MainSceneController {
                 value * (
                         (long) Math.pow(10, places))
         )
-               / (
-                       (long) Math.pow(10, places)
-               );
-    }
-
-    public void showInfo(ActionEvent actionEvent) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/popup/popup.fxml"));
-        Scene newScene = null;
-        Stage inputStage, primaryStage;
-        primaryStage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
-        try {
-            newScene = new Scene(loader.load());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        PopupController popupController = loader.getController();
-        popupController.addContent("This is a Sample Text from line 234 in MainSceneController.java");
-        inputStage = new Stage();
-        inputStage.initStyle(StageStyle.UNDECORATED);
-        inputStage.initOwner(primaryStage);
-        inputStage.setScene(newScene);
-        inputStage.showAndWait();
-    }
-
-    public static class ContextMenuListCell<T> extends ListCell<T> {
-
-        public static <T> Callback<ListView<T>, ListCell<T>> forListView(final ContextMenu contextMenu, final Callback<ListView<T>, ListCell<T>> cellFactory) {
-            return listView -> {
-                ListCell<T> cell = cellFactory.call(listView);
-                cell.setContextMenu(contextMenu);
-                return cell;
-            };
-        }
-
-        public ContextMenuListCell(ContextMenu contextMenu) {
-            setContextMenu(contextMenu);
-        }
-
-    }
-
-    private static class GameRecordListCell extends ListCell<GameRecord> {
-        @Override
-        protected void updateItem(GameRecord gameRecord, boolean isEmpty) {
-            super.updateItem(gameRecord, isEmpty);
-            if (!isEmpty) {
-                setText(
-                        new SimpleDateFormat("MM.dd-HH:mm").format(gameRecord.getLastUpdate())
-                        + " State:" + gameRecord.getCurrentState()
-                        + " Opponent:" + gameRecord.getOpponent().getName()
-                        + "\r\n" + gameRecord.getCurrentGrid().asString()
-                );
-            }
-        }
+                / (
+                (long) Math.pow(10, places)
+        );
     }
 }
