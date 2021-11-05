@@ -1,5 +1,6 @@
 package controller.scene;
 
+import application.Main;
 import controller.GameController;
 import controller.GameState;
 import domain.Mark;
@@ -19,7 +20,6 @@ import java.util.Objects;
 
 public class GameSceneController {
 
-    private SQLitePersistentGameRecordStorage storage = null;
     private GameController controller;
     private Opponent opponent;
     private Image crossImage, circleImage;
@@ -54,7 +54,7 @@ public class GameSceneController {
     }
 
     public void setStorage(SQLitePersistentGameRecordStorage storage) {
-        this.storage = storage;
+        Main.persistentGameRecordStorage = storage;
     }
 
     public void backToMenu(ActionEvent e) throws IOException {
@@ -130,7 +130,7 @@ public class GameSceneController {
 
     public boolean uploadGame() {
         try {
-            storage.addGameRecord(controller);
+            Main.persistentGameRecordStorage.addGameRecord(controller);
         } catch (GameRecordStorageException e) {
             e.printStackTrace();
             return false;

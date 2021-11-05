@@ -3,7 +3,6 @@ package controller.scene;
 import application.Main;
 import controller.GameController;
 import controller.GameState;
-import controller.popup.PopupController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,26 +12,24 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.util.Callback;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
 import persistence.GameRecord;
 import persistence.GameRecordStorageException;
+import persistence.PersistentGameRecordStorage;
 import persistence.SQLitePersistentGameRecordStorage;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MainSceneController {
-
     private final GameController controller;
     private Opponent opponent;
     private final HashMap<String, Opponent> opponentClasses = new HashMap<>();
-    ContextMenu contextMenu;
+    private ContextMenu contextMenu;
 
     @FXML
     MenuItem itemAbout;
