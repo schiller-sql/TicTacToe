@@ -23,6 +23,7 @@ public class PopupController{
     private Button btnClose;
 
     public void closePopup(ActionEvent actionEvent) {
+        btnClose.setDisable(true);
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.close();
     }
@@ -39,9 +40,10 @@ public class PopupController{
     }
 
     public void clearContent() {
-
+        scrollContent.setContent(null);
     }
 
+    /*
     public void deleteContent(String content) {
 
     }
@@ -53,4 +55,5 @@ public class PopupController{
     public void deleteContent(int depth) {
 
     }
+    */
 }

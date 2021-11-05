@@ -6,4 +6,8 @@ public class SceneController {
         //TODO: call this in LoadingSceneController and GameSceneController
     }
 
+    public void submitPopup() {
+        //TODO:
+    }
+
 }

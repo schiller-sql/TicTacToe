@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.util.Callback;
 import opponent.Opponent;
@@ -131,6 +132,7 @@ public class MainSceneController {
             e.printStackTrace();
         }
         inputStage = new Stage();
+        inputStage.initStyle(StageStyle.UNDECORATED);
         inputStage.initOwner(primaryStage);
         inputStage.setScene(newScene);
         inputStage.showAndWait();
@@ -233,6 +235,7 @@ public class MainSceneController {
         PopupController popupController = loader.getController();
         popupController.addContent("This is a Sample Text from line 234 in MainSceneController.java");
         inputStage = new Stage();
+        inputStage.initStyle(StageStyle.UNDECORATED);
         inputStage.initOwner(primaryStage);
         inputStage.setScene(newScene);
         inputStage.showAndWait();
