@@ -1,6 +1,8 @@
 package controller.scene;
 
+import application.Main;
 import controller.GameController;
+import controller.GameState;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,18 +10,29 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.util.Callback;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
+import persistence.GameRecord;
+import persistence.GameRecordStorageException;
+import persistence.PersistentGameRecordStorage;
+import persistence.SQLitePersistentGameRecordStorage;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MainSceneController {
-
-    private GameController controller;
+    private final GameController controller;
     private Opponent opponent;
-    private HashMap<String, Opponent> opponentClasses = new HashMap();
+    private final HashMap<String, Opponent> opponentClasses = new HashMap<>();
+    private ContextMenu contextMenu;
+
+    @FXML
+    MenuItem itemAbout;
 
     @FXML
     RadioMenuItem RandomOpponent = new RadioMenuItem(); //Default Opponent
@@ -31,16 +44,15 @@ public class MainSceneController {
     Button play;
 
     @FXML
-    ListView listGames;
+    ListView<GameRecord> listGames = new ListView<>();
 
     @FXML
-    Label lblTotalWins, lblTotalGames, lblWinChance, lblTotalLosses, lblKD;
-    private MainSceneController mainSceneController;
+    Label lblTotalWins, lblTotalGames, lblTotalLosses, lblKD;
 
     public MainSceneController() {
         final Opponent[] availableOpponents = Opponent.defaultOpponents();
-        for (int i = 0; i < availableOpponents.length; i++) {
-            opponentClasses.put(availableOpponents[i].getClass().getSimpleName(), availableOpponents[i]);
+        for (Opponent availableOpponent : availableOpponents) {
+            opponentClasses.put(availableOpponent.getClass().getSimpleName(), availableOpponent);
         }
         opponent = new RandomOpponent();
         controller = new GameController(opponent);
@@ -50,8 +62,50 @@ public class MainSceneController {
     public void initialize() {
         RandomOpponent.setToggleGroup(opponents);
         RandomOpponent.setSelected(true);
-    }
+        MenuItem showHistory, playGame, deleteGame;
+        updateList();
+        updateScores();
 
+        // Create MenuItems and place them in a ContextMenu
+        showHistory = new MenuItem("show history");
+        playGame = new MenuItem("play");
+        deleteGame = new MenuItem("delete");
+        contextMenu = new ContextMenu(showHistory, playGame, deleteGame);
+        // sets a cell factory on the ListView telling it to use the previously-created ContextMenu (uses default cell factory)
+        listGames.setCellFactory(ContextMenuListCell.forListView(contextMenu, (listView) -> new GameRecordListCell()));
+
+        //set the actions to the MenuItems
+        showHistory.setOnAction(e -> showHistory(listGames.getSelectionModel().getSelectedItem()));
+        playGame.setOnAction(e -> {
+            try {
+                playGame(listGames.getSelectionModel().getSelectedItem());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        deleteGame.setOnAction(e -> {
+            try {
+                Main.persistentGameRecordStorage.deleteGameRecord(listGames.getSelectionModel().getSelectedItem());
+                updateList();
+                updateScores();
+            } catch (GameRecordStorageException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        listGames.setOnMouseClicked(event -> {
+            MouseButton button = event.getButton();
+            if (button == MouseButton.SECONDARY) {
+                if (listGames.getSelectionModel().getSelectedItem().getCurrentState() == GameState.running) {
+                    playGame.setDisable(false);
+                } else if (listGames.getSelectionModel().getSelectedItem().getCurrentState() != GameState.running) {
+                    playGame.setDisable(true);
+                } else {
+                    throw new IllegalArgumentException();
+                }
+            }
+        });
+    }
 
     public void selectOpponent(ActionEvent e) {
         String Opponent = ((MenuItem) e.getSource()).getText();
@@ -60,17 +114,10 @@ public class MainSceneController {
     }
 
     public void playGame(ActionEvent e) throws IOException {
-        //TODO: give attributes to game scene controller
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/game-scene.fxml"));
         Parent root = loader.load();
 
         GameSceneController gameSceneController = loader.getController();
-        gameSceneController.setStatistics(
-                getLblData(lblTotalWins.getText(), false).intValue(),
-                getLblData(lblTotalGames.getText(), false).intValue(),
-                getLblData(lblWinChance.getText(), true).doubleValue(),
-                listGames.getItems()
-        );
         gameSceneController.setController(controller);
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
@@ -79,39 +126,111 @@ public class MainSceneController {
         stage.show();
     }
 
-    private Number getLblData(String s, boolean isDouble) {
-        if(!isDouble) {
-            if (s.matches("[0-9]")) {
-                return Integer.parseInt(s);
+    public void playGame(GameRecord gameRecord) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/game-scene.fxml"));
+        Parent root = loader.load();
+
+        GameSceneController gameSceneController = loader.getController();
+        try {
+            gameSceneController.setController(gameRecord.getController());
+        } catch (GameRecordStorageException e) {
+            e.printStackTrace();
+        }
+        gameSceneController.displayGame();
+
+        Stage stage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void showInfo(ActionEvent actionEvent) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/popup/popup.fxml"));
+        Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        SceneController.submitPopup(loader, primaryStage, "This is a Sample Text from line 216 in MainSceneController.java");
+    }
+
+    private void showHistory(GameRecord gameRecord) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/popup/popup.fxml"));
+        Stage primaryStage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
+        try {
+            SceneController.submitPopup(loader, primaryStage, gameRecord.getHistory().toString());
+        } catch (GameRecordStorageException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static class ContextMenuListCell<T> extends ListCell<T> {
+        public static <T> Callback<ListView<T>, ListCell<T>> forListView(final ContextMenu contextMenu, final Callback<ListView<T>, ListCell<T>> cellFactory) {
+            return listView -> {
+                ListCell<T> cell = cellFactory.call(listView);
+                cell.setContextMenu(contextMenu);
+                return cell;
+            };
+        }
+        public ContextMenuListCell(ContextMenu contextMenu) {
+            setContextMenu(contextMenu);
+        }
+    }
+
+    private static class GameRecordListCell extends ListCell<GameRecord> {
+        @Override
+        protected void updateItem(GameRecord gameRecord, boolean isEmpty) {
+            super.updateItem(gameRecord, isEmpty);
+            if (!isEmpty) {
+                setText(
+                        new SimpleDateFormat("MM.dd-HH:mm").format(gameRecord.getLastUpdate())
+                        + " State:" + gameRecord.getCurrentState()
+                        + " Opponent:" + gameRecord.getOpponent().getName()
+                        + "\r\n" + gameRecord.getCurrentGrid().asString()
+                );
             }
-            return 0;
+        }
+    }
+
+    public void updateList() {
+        listGames.getItems().clear();
+        for (GameRecord record : Main.persistentGameRecordStorage.getCachedGameRecords()) {
+            listGames.getItems().add(record);
+        }
+    }
+
+    public void updateScores() {
+        final var storage = Main.persistentGameRecordStorage;
+        int games = storage.total(), wins = storage.wins(), loses = storage.loses();
+        double KD, winChance, losesChance;
+        if (loses > 0) {
+            KD = ((double) wins / (double) loses);
+            KD = round(KD, 2);
         } else {
-            if (s.matches("[0-9]")) {
-                return Double.parseDouble(s);
-            }
-            return 0;
+            KD = wins;
         }
-    }
-
-    public void addGame(List<String> games) {
-        for(String s : games) {
-            listGames.getItems().add(s);
+        if (wins > 0) {
+            winChance = ((double) wins / (double) games);
+            winChance = round(winChance, 2);
+        } else {
+            winChance = 0;
         }
-        //TODO: make listGames add playable option for running games
+        if (loses > 0) {
+            losesChance = ((double) loses / (double) games);
+            losesChance = round(losesChance, 2);
+        } else {
+            losesChance = 0;
+        }
+        lblTotalGames.setText(String.valueOf(games));
+        lblTotalWins.setText(wins + " (" + winChance + "%)");
+        lblTotalLosses.setText(loses + " (" + losesChance + "%)");
+        lblKD.setText(String.valueOf(KD));
     }
 
-    public void setStatistics(int wins, int games, int losses, double chance, double KD) {
-        lblTotalWins.setText(String.valueOf(wins)); //plus percent tag
-        lblTotalGames.setText(String.valueOf(games)); //minus running games
-        lblWinChance.setText(chance + "%");
-        lblTotalLosses.setText(String.valueOf(losses)); //plus percent tag
-        lblKD.setText(KD + "%");
-
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+        return (double) Math.round(
+                value * (
+                        (long) Math.pow(10, places))
+        )
+                / (
+                (long) Math.pow(10, places)
+        );
     }
-
-    public void setController(MainSceneController mainSceneController) {
-        this.mainSceneController = mainSceneController;
-    }
-
-    //TODO: if gamestate is running, then can load the gameScene with these grid
 }

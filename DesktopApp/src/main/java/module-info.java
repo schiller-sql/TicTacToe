@@ -7,11 +7,13 @@ module com.DesktopApp{
     requires com.dlsc.formsfx;
     requires validatorfx;
     requires org.kordamp.ikonli.javafx;
-    requires eu.hansolo.tilesfx;
     requires GameLogic;
+    requires java.sql;
 
     opens application to javafx.fxml;
     opens controller.scene to javafx.fxml;
+    opens controller.popup to javafx.fxml;
     exports application;
     exports controller.scene;
+    exports controller.popup;
 }

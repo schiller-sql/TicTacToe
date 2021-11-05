@@ -111,4 +111,8 @@ public final class GameRecord {
         storage.updateGameRecord(this);
         lastUpdate = new Date();
     }
+
+    public GameController getController() throws GameRecordStorageException {
+        return new GameController(opponent, getHistory());
+    }
 }

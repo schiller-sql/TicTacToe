@@ -21,7 +21,7 @@ public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStora
 
 
     public SQLitePersistentGameRecordStorage(String fileName) throws SQLException {
-        assert (fileName.matches("^(?!\\s).*\\.db$")) : "Filename must end with '.db'";
+        assert (fileName.matches("^\\S+\\.db$")) : "Filename must end with '.db'";
 
         connection = DriverManager.getConnection("jdbc:sqlite:" + fileName);
         initDB();
@@ -69,7 +69,7 @@ public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStora
                                 "data char not null check (length(data) <= 9)" +
                                 ")");
 
-        final ResultSet result = statement.executeQuery("select * from games order by updatedAt, id desc");
+        final ResultSet result = statement.executeQuery("select * from games order by updatedAt desc, id desc");
         while (result.next()) {
             data.add(gameRecordFromSingleRowResult(result));
         }

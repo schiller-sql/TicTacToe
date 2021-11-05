@@ -81,4 +81,15 @@ public record GridHistory(List<Grid> gridList) {
     public int hashCode() {
         return Objects.hash(gridList);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for(Grid grid : gridList) {
+            String gridString = grid.toString("");
+            s.append(gridString).append('\n');
+        }
+        return s.toString();
+    }
+
 }
