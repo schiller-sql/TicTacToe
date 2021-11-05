@@ -1,5 +1,6 @@
 package controller.scene;
 
+import application.Main;
 import controller.GameController;
 import controller.GameState;
 import controller.popup.PopupController;
@@ -31,19 +32,23 @@ public class MainSceneController {
     private final GameController controller;
     private Opponent opponent;
     private final HashMap<String, Opponent> opponentClasses = new HashMap<>();
-    private SQLitePersistentGameRecordStorage storage;
-    private ContextMenu contextMenu;
+    ContextMenu contextMenu;
 
     @FXML
     MenuItem itemAbout;
+
     @FXML
     RadioMenuItem RandomOpponent = new RadioMenuItem(); //Default Opponent
+
     @FXML
     ToggleGroup opponents = new ToggleGroup();
+
     @FXML
     Button play;
+
     @FXML
     ListView<GameRecord> listGames = new ListView<>();
+
     @FXML
     Label lblTotalWins, lblTotalGames, lblTotalLosses, lblKD;
 
@@ -54,12 +59,6 @@ public class MainSceneController {
         }
         opponent = new RandomOpponent();
         controller = new GameController(opponent);
-
-        try {
-            storage = new SQLitePersistentGameRecordStorage("userdata");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML
@@ -89,7 +88,7 @@ public class MainSceneController {
         });
         deleteGame.setOnAction(e -> {
             try {
-                storage.deleteGameRecord(listGames.getSelectionModel().getSelectedItem());
+                Main.persistentGameRecordStorage.deleteGameRecord(listGames.getSelectionModel().getSelectedItem());
                 updateList();
                 updateScores();
             } catch (GameRecordStorageException ex) {
@@ -122,7 +121,6 @@ public class MainSceneController {
         Parent root = loader.load();
 
         GameSceneController gameSceneController = loader.getController();
-        gameSceneController.setStorage(storage);
         gameSceneController.setController(controller);
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
@@ -136,7 +134,6 @@ public class MainSceneController {
         Parent root = loader.load();
 
         GameSceneController gameSceneController = loader.getController();
-        gameSceneController.setStorage(storage);
         try {
             gameSceneController.setController(gameRecord.getController());
         } catch (GameRecordStorageException e) {
@@ -196,12 +193,13 @@ public class MainSceneController {
 
     public void updateList() {
         listGames.getItems().clear();
-        for (GameRecord record : storage.getCachedGameRecords()) {
+        for (GameRecord record : Main.persistentGameRecordStorage.getCachedGameRecords()) {
             listGames.getItems().add(record);
         }
     }
 
     public void updateScores() {
+        final var storage = Main.persistentGameRecordStorage;
         int games = storage.total(), wins = storage.wins(), loses = storage.loses();
         double KD, winChance, losesChance;
         if (loses > 0) {
