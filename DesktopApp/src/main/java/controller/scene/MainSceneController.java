@@ -32,23 +32,18 @@ public class MainSceneController {
     private Opponent opponent;
     private final HashMap<String, Opponent> opponentClasses = new HashMap<>();
     private SQLitePersistentGameRecordStorage storage;
-    ContextMenu contextMenu;
+    private ContextMenu contextMenu;
 
     @FXML
     MenuItem itemAbout;
-
     @FXML
     RadioMenuItem RandomOpponent = new RadioMenuItem(); //Default Opponent
-
     @FXML
     ToggleGroup opponents = new ToggleGroup();
-
     @FXML
     Button play;
-
     @FXML
     ListView<GameRecord> listGames = new ListView<>();
-
     @FXML
     Label lblTotalWins, lblTotalGames, lblTotalLosses, lblKD;
 

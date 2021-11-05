@@ -2,13 +2,11 @@ package controller.scene;
 
 import controller.popup.PopupController;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import persistence.GameRecordStorageException;
 
 import java.io.IOException;
 

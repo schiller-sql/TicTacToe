@@ -6,14 +6,9 @@ import domain.Mark;
 import domain.Point;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
 import persistence.GameRecordStorageException;
@@ -23,17 +18,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class GameSceneController {
-    /*TODO:
-    disable restart Button if the Game field is empty
-    disable surrender button if the game field is empty
-    enable restart after surrender
-    make menu button return back to the main menu
-    format code
-    clean up code
-    add confirm popups to restart button and menu button
-     */
-    SQLitePersistentGameRecordStorage storage = null;
 
+    private SQLitePersistentGameRecordStorage storage = null;
     private GameController controller;
     private Opponent opponent;
     private Image crossImage, circleImage;
@@ -41,7 +27,6 @@ public class GameSceneController {
 
     @FXML
     Button restart, surrender;
-
     @FXML
     Button  field00, field10, field20, field01, field11, field21, field02, field12, field22;
 
@@ -94,7 +79,6 @@ public class GameSceneController {
         controller = new GameController(opponent); //TODO opponent
         isUploaded = false;
     }
-
 
     public void surrenderGame() { //TODO: something weird happens
         if(controller.getState()!=GameState.running) {

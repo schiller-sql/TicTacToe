@@ -3,22 +3,17 @@ package controller.popup;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 
-import java.util.List;
-
 public class PopupController{
 
     @FXML
     private ScrollPane scrollContent;
-
     @FXML
     private Button btnClose;
 
@@ -42,18 +37,4 @@ public class PopupController{
     public void clearContent() {
         scrollContent.setContent(null);
     }
-
-    /*
-    public void deleteContent(String content) {
-
-    }
-
-    public void deleteContent(List<String> content) {
-
-    }
-
-    public void deleteContent(int depth) {
-
-    }
-    */
 }
