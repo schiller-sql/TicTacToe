@@ -18,8 +18,6 @@ import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
 import persistence.GameRecord;
 import persistence.GameRecordStorageException;
-import persistence.PersistentGameRecordStorage;
-import persistence.SQLitePersistentGameRecordStorage;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -29,7 +27,6 @@ public class MainSceneController {
     private final GameController controller;
     private Opponent opponent;
     private final HashMap<String, Opponent> opponentClasses = new HashMap<>();
-    private ContextMenu contextMenu;
 
     @FXML
     MenuItem itemAbout;
@@ -63,6 +60,7 @@ public class MainSceneController {
         RandomOpponent.setToggleGroup(opponents);
         RandomOpponent.setSelected(true);
         MenuItem showHistory, playGame, deleteGame;
+        ContextMenu contextMenu;
         updateList();
         updateScores();
 
@@ -140,6 +138,7 @@ public class MainSceneController {
 
         Stage stage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
         Scene scene = new Scene(root);
+        assert stage != null;
         stage.setScene(scene);
         stage.show();
     }
