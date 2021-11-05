@@ -11,6 +11,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Callback;
@@ -29,22 +31,28 @@ public class MainSceneController {
     private final HashMap<String, Opponent> opponentClasses = new HashMap<>();
 
     @FXML
-    MenuItem itemAbout;
+    private HBox boxHead, boxScoreGames, boxScoreWins, boxScoreLosses, boxScoreKD;
 
     @FXML
-    RadioMenuItem RandomOpponent = new RadioMenuItem(); //Default Opponent
+    private ToggleGroup opponents;
 
     @FXML
-    ToggleGroup opponents = new ToggleGroup();
+    private RadioMenuItem RandomOpponent, QuandaryOpponent, MinimaxOpponent, NoobOpponent, TonyRandomOpponent;
 
     @FXML
-    Button play;
+    private MenuItem itemAbout;
 
     @FXML
-    ListView<GameRecord> listGames = new ListView<>();
+    private ListView<GameRecord> listGames;
 
     @FXML
-    Label lblTotalWins, lblTotalGames, lblTotalLosses, lblKD;
+    private VBox boxScores, boxGames;
+
+    @FXML
+    private Label lblTotalWins, lblTotalGames, lblTotalLosses, lblKD;
+
+    @FXML
+    private Button play;
 
     public MainSceneController() {
         final Opponent[] availableOpponents = Opponent.defaultOpponents();
@@ -63,6 +71,9 @@ public class MainSceneController {
         ContextMenu contextMenu;
         updateList();
         updateScores();
+
+        //liquid design
+
 
         // Create MenuItems and place them in a ContextMenu
         showHistory = new MenuItem("show history");
