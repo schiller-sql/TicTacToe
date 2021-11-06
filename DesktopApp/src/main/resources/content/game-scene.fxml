@@ -7,9 +7,10 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.scene.GameSceneController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.scene.GameSceneController">
    <center>
       <GridPane alignment="CENTER" gridLinesVisible="true" maxHeight="300.0" maxWidth="300.0" minHeight="300.0" minWidth="300.0" prefHeight="300.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <columnConstraints>
@@ -39,18 +40,37 @@
       </GridPane>
    </center>
    <top>
-      <ButtonBar maxHeight="-Infinity" maxWidth="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0">
-        <buttons>
-            <Button fx:id="restart" alignment="CENTER" mnemonicParsing="false" onAction="#restartGame" text="Restart" />
-          <Button fx:id="surrender" alignment="CENTER" mnemonicParsing="false" onAction="#surrenderGame" text="Surrender" />
-            <Button fx:id="menu" alignment="CENTER" mnemonicParsing="false" onAction="#backToMenu" prefHeight="25.0" prefWidth="317.0" text="Menu" />
-        </buttons>
-         <padding>
-            <Insets right="20.0" />
-         </padding>
-         <cursor>
-            <Cursor fx:constant="DEFAULT" />
-         </cursor>
-      </ButtonBar>
+      <HBox fx:id="boxHead" prefHeight="27.0" prefWidth="601.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="491.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <ButtonBar maxHeight="-Infinity" maxWidth="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" prefHeight="25.0">
+                    <buttons>
+                        <Button fx:id="restart" alignment="CENTER" mnemonicParsing="false" onAction="#restartGame" text="Restart" />
+                      <Button fx:id="surrender" alignment="CENTER" mnemonicParsing="false" onAction="#surrenderGame" text="Surrender" />
+                        <Button fx:id="menu" alignment="CENTER" mnemonicParsing="false" onAction="#backToMenu" prefHeight="25.0" prefWidth="317.0" text="Menu" />
+                    </buttons>
+                     <padding>
+                        <Insets right="20.0" />
+                     </padding>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </ButtonBar>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="125.0">
+               <children>
+                  <ButtonBar buttonMinWidth="16.0" prefHeight="25.0" prefWidth="120.0" HBox.hgrow="NEVER">
+                     <buttons>
+                        <Button mnemonicParsing="false" text="O" />
+                        <Button mnemonicParsing="false" text="_" />
+                        <Button mnemonicParsing="false" text="X" />
+                     </buttons>
+                  </ButtonBar>
+               </children>
+            </HBox>
+         </children>
+      </HBox>
    </top>
 </BorderPane>
