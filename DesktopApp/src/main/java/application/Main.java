@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import listener.ResizeHelper;
+import listener.WindowMoveHelper;
 import persistence.PersistentGameRecordStorage;
 import persistence.SQLitePersistentGameRecordStorage;
 
@@ -49,7 +50,7 @@ public class Main extends Application {
 
         stage.setScene(scene);
         stage.show();
-        ResizeHelper.addResizeListener(stage);
+        WindowMoveHelper.addMoveListener(stage); //TODO:
     }
 
     private class WindowsHack {
