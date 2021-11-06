@@ -6,16 +6,20 @@ import controller.GameState;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Callback;
+import listener.ResizeHelper;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
 import persistence.GameRecord;
@@ -29,6 +33,7 @@ public class MainSceneController {
     private final GameController controller;
     private Opponent opponent;
     private final HashMap<String, Opponent> opponentClasses = new HashMap<>();
+    private double lastX = 0.0d, lastY = 0.0d, lastWidth = 0.0d, lastHeight = 0.0d;
 
     @FXML
     private HBox boxHead, boxScoreGames, boxScoreWins, boxScoreLosses, boxScoreKD;
@@ -71,9 +76,6 @@ public class MainSceneController {
         ContextMenu contextMenu;
         updateList();
         updateScores();
-
-        //liquid design
-
 
         // Create MenuItems and place them in a ContextMenu
         showHistory = new MenuItem("show history");
@@ -132,6 +134,7 @@ public class MainSceneController {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        ResizeHelper.addResizeListener(stage);
         stage.show();
     }
 
@@ -151,6 +154,7 @@ public class MainSceneController {
         Scene scene = new Scene(root);
         assert stage != null;
         stage.setScene(scene);
+        ResizeHelper.addResizeListener(stage);
         stage.show();
     }
 
@@ -169,6 +173,62 @@ public class MainSceneController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    public void minimize(ActionEvent actionEvent) {
+
+        Stage stage = (Stage)((Button)actionEvent.getSource()).getScene().getWindow();
+
+        stage.setIconified(true);
+    }
+
+    @FXML
+    public void maximize(ActionEvent actionEvent) {
+
+        Node n = (Node)actionEvent.getSource();
+
+        Window w = n.getScene().getWindow();
+
+        double currentX = w.getX(), currentY = w.getY(), currentWidth = w.getWidth(), currentHeight = w.getHeight();
+
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        if( currentX != bounds.getMinX() &&
+                currentY != bounds.getMinY() &&
+                currentWidth != bounds.getWidth() &&
+                currentHeight != bounds.getHeight() ) {
+
+            w.setX(bounds.getMinX());
+            w.setY(bounds.getMinY());
+            w.setWidth(bounds.getWidth());
+            w.setHeight(bounds.getHeight());
+
+            lastX = currentX;  // save old dimensions
+            lastY = currentY;
+            lastWidth = currentWidth;
+            lastHeight = currentHeight;
+
+        } else {
+
+            // de-maximize the window (not same as minimize)
+
+            w.setX(lastX);
+            w.setY(lastY);
+            w.setWidth(lastWidth);
+            w.setHeight(lastHeight);
+        }
+
+        actionEvent.consume();  // don't bubble up to title bar
+    }
+
+    @FXML
+    public void close(ActionEvent actionEvent) {
+        ((Button)actionEvent.getSource()).getScene().getWindow().hide();
+    }
+
+
+
 
     public static class ContextMenuListCell<T> extends ListCell<T> {
         public static <T> Callback<ListView<T>, ListCell<T>> forListView(final ContextMenu contextMenu, final Callback<ListView<T>, ListCell<T>> cellFactory) {

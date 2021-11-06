@@ -63,9 +63,9 @@
                <children>
                   <ButtonBar buttonMinWidth="16.0" prefHeight="25.0" prefWidth="120.0" HBox.hgrow="NEVER">
                      <buttons>
-                        <Button mnemonicParsing="false" text="O" />
-                        <Button mnemonicParsing="false" text="_" />
-                        <Button mnemonicParsing="false" text="X" />
+                        <Button mnemonicParsing="false" onAction="#maximize" text="O" />
+                        <Button mnemonicParsing="false" onAction="#minimize" text="_" />
+                        <Button mnemonicParsing="false" onAction="#close" text="X" />
                      </buttons>
                   </ButtonBar>
                </children>

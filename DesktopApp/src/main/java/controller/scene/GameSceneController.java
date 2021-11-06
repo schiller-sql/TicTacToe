@@ -7,9 +7,16 @@ import domain.Mark;
 import domain.Point;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
 import persistence.GameRecordStorageException;
@@ -24,6 +31,7 @@ public class GameSceneController {
     private Opponent opponent;
     private Image crossImage, circleImage;
     private boolean isUploaded = false;
+    private double lastX = 0.0d, lastY = 0.0d, lastWidth = 0.0d, lastHeight = 0.0d;
 
     @FXML
     Button restart, surrender;
@@ -126,6 +134,59 @@ public class GameSceneController {
             surrender.setStyle("-fx-text-fill:black");
         }
 
+    }
+
+    @FXML
+    public void minimize(ActionEvent actionEvent) {
+
+        Stage stage = (Stage)((Button)actionEvent.getSource()).getScene().getWindow();
+
+        stage.setIconified(true);
+    }
+
+    @FXML
+    public void maximize(ActionEvent actionEvent) {
+
+        Node n = (Node)actionEvent.getSource();
+
+        Window w = n.getScene().getWindow();
+
+        double currentX = w.getX(), currentY = w.getY(), currentWidth = w.getWidth(), currentHeight = w.getHeight();
+
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        if( currentX != bounds.getMinX() &&
+                currentY != bounds.getMinY() &&
+                currentWidth != bounds.getWidth() &&
+                currentHeight != bounds.getHeight() ) {
+
+            w.setX(bounds.getMinX());
+            w.setY(bounds.getMinY());
+            w.setWidth(bounds.getWidth());
+            w.setHeight(bounds.getHeight());
+
+            lastX = currentX;  // save old dimensions
+            lastY = currentY;
+            lastWidth = currentWidth;
+            lastHeight = currentHeight;
+
+        } else {
+
+            // de-maximize the window (not same as minimize)
+
+            w.setX(lastX);
+            w.setY(lastY);
+            w.setWidth(lastWidth);
+            w.setHeight(lastHeight);
+        }
+
+        actionEvent.consume();  // don't bubble up to title bar
+    }
+
+    @FXML
+    public void close(ActionEvent actionEvent) {
+        ((Button)actionEvent.getSource()).getScene().getWindow().hide();
     }
 
     public boolean uploadGame() {
