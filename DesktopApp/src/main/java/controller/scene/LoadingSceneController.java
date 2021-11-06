@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import listener.ResizeHelper;
 
 import java.io.IOException;
 
@@ -17,6 +18,7 @@ public class LoadingSceneController {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        ResizeHelper.addResizeListener(stage);
         stage.show();
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
@@ -9,15 +10,17 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.scene.MainSceneController">
-    <children>
-      <HBox layoutY="7.0" prefHeight="27.0" prefWidth="601.0">
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.scene.MainSceneController">
+   <top>
+      <HBox fx:id="boxHead" prefHeight="27.0" prefWidth="601.0" BorderPane.alignment="CENTER">
          <children>
-              <MenuBar prefHeight="27.0" prefWidth="600.0">
+              <MenuBar style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
                   <menus>
                       <Menu mnemonicParsing="false" text="Opponent">
                           <items>
@@ -40,13 +43,6 @@
                               <MenuItem mnemonicParsing="false" text="Light" />
                           </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Profil">
-                          <items>
-                              <MenuItem mnemonicParsing="false" text="Sign up" />
-                            <MenuItem mnemonicParsing="false" text="Sign In" />
-                              <MenuItem mnemonicParsing="false" text="Sign out" />
-                          </items>
-                        </Menu>
                           </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="Help">
@@ -57,62 +53,104 @@
                       </Menu>
                   </menus>
               </MenuBar>
-            <ButtonBar prefHeight="27.0" prefWidth="260.0">
+            <ButtonBar buttonMinWidth="16.0" prefHeight="16.0" prefWidth="120.0" HBox.hgrow="NEVER">
               <buttons>
-                <Button minWidth="27.0" mnemonicParsing="false" prefHeight="25.0" text="O" />
-                  <Button mnemonicParsing="false" text="_" />
-                  <Button mnemonicParsing="false" text="X" />
+                <Button mnemonicParsing="false" onAction="#maximize" text="O" />
+                  <Button mnemonicParsing="false" onAction="#minimize" text="_" />
+                  <Button mnemonicParsing="false" onAction="#close" text="X" />
               </buttons>
             </ButtonBar>
          </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" />
+         </BorderPane.margin>
       </HBox>
-      <Button fx:id="play" layoutX="250.0" layoutY="165.0" mnemonicParsing="false" onAction="#playGame" prefHeight="70.0" prefWidth="100.0" text="Play">
+   </top>
+   <right>
+      <VBox fx:id="boxGames" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="373.0" prefWidth="325.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Games" />
+            <ListView fx:id="listGames" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ListView>
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+      </VBox>
+   </right>
+   <left>
+      <VBox fx:id="boxScores" maxHeight="1.7976931348623157E308" prefHeight="363.0" prefWidth="196.0" spacing="50.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox fx:id="boxScoreWins">
+               <children>
+                  <Label prefWidth="110.0" text="Total Wins:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblTotalWins" prefHeight="27.0" prefWidth="100.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox fx:id="boxScoreGames">
+               <children>
+                  <Label prefHeight="27.0" prefWidth="110.0" text="Total Games:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblTotalGames" prefHeight="27.0" prefWidth="100.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox fx:id="boxScoreLosses">
+               <children>
+                  <Label prefHeight="27.0" prefWidth="110.0" text="Total Losses:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblTotalLosses" prefHeight="27.0" prefWidth="100.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox fx:id="boxScoreKD">
+               <children>
+                  <Label prefWidth="110.0" text="K/D:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblKD" prefHeight="27.0" prefWidth="100.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+      </VBox>
+   </left>
+   <center>
+      <Button fx:id="play" mnemonicParsing="false" onAction="#playGame" text="Play" BorderPane.alignment="CENTER">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Label layoutX="14.0" layoutY="30.0" prefHeight="27.0" prefWidth="100.0" text="Total Wins:">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="482.0" layoutY="48.0" text="Games" />
-      <ListView fx:id="listGames" layoutX="401.0" layoutY="70.0" prefHeight="330.0" prefWidth="200.0" />
-      <Label layoutX="14.0" layoutY="70.0" prefHeight="27.0" prefWidth="107.0" text="Total Games:">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblTotalWins" layoutX="121.0" layoutY="30.0" prefHeight="27.0" prefWidth="100.0">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblTotalGames" layoutX="121.0" layoutY="70.0" prefHeight="27.0" prefWidth="100.0">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="18.0" layoutY="110.0" prefHeight="27.0" prefWidth="100.0" text="Total Losses:">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="18.0" layoutY="146.0" prefHeight="27.0" prefWidth="100.0" text="K/D:">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblTotalLosses" layoutX="121.0" layoutY="110.0" prefHeight="27.0" prefWidth="100.0">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblKD" layoutX="121.0" layoutY="146.0" prefHeight="27.0" prefWidth="100.0">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-    </children>
-
-</AnchorPane>
+   </center>
+</BorderPane>

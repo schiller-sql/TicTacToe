@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+import listener.ResizeHelper;
 
 import java.io.IOException;
 
@@ -26,6 +27,7 @@ public class SceneController {
         Stage stage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        ResizeHelper.addResizeListener(stage);
         stage.show();
     }
 
@@ -43,6 +45,7 @@ public class SceneController {
         inputStage.initStyle(StageStyle.UNDECORATED);
         inputStage.initOwner(primaryStage);
         inputStage.setScene(newScene);
+        ResizeHelper.addResizeListener(inputStage);
         inputStage.showAndWait();
     }
 }
