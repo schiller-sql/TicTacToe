@@ -36,11 +36,9 @@ public class GameSceneController {
     Button restart, surrender;
     @FXML
     Button  field00, field10, field20, field01, field11, field21, field02, field12, field22;
-    private boolean isExisting;
 
     public GameSceneController() {
         controller = new GameController(new RandomOpponent());
-        isExisting = false;
         gameRecord = null;
     }
 
@@ -81,13 +79,15 @@ public class GameSceneController {
             button.setDisable(false);
             button.setGraphic(null);
         }
+
         isUploaded = uploadGame();
         controller = new GameController(opponent); //TODO opponent
         isUploaded = false;
+        gameRecord = null;
     }
 
     public void surrenderGame() { //TODO: something weird happens
-        if(controller.getState()!=GameState.running) {
+        if(controller.getState() != GameState.running) {
             return;
         }
 
@@ -100,6 +100,38 @@ public class GameSceneController {
             button.setDisable(true);
         }
         isUploaded = uploadGame();
+    }
+
+    public boolean uploadGame() {
+        System.out.print("Upload Game: ");
+        if(gameRecord != null) {
+            System.out.println("Existing record in List");
+            try {
+                gameRecord.updateWithController(controller);
+            } catch (GameRecordStorageException ex) {
+                ex.printStackTrace();
+                return false;
+            }
+        } else {
+            System.out.println("New record in List");
+            try {
+                Main.persistentGameRecordStorage.addGameRecord(controller);
+            } catch (GameRecordStorageException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        System.out.println();
+        return true;
+    }
+
+    public void setGameRecord(GameRecord gameRecord) {
+        this.gameRecord = gameRecord;
+        try {
+            setController(gameRecord.getController());
+        } catch (GameRecordStorageException e) {
+            e.printStackTrace();
+        }
     }
 
     public void selectButton(ActionEvent e) {
@@ -187,29 +219,6 @@ public class GameSceneController {
         ((Button)actionEvent.getSource()).getScene().getWindow().hide();
     }
 
-    public boolean uploadGame() {
-        System.out.print("Upload Game: ");
-        if(isExisting) {
-            System.out.println("Existing record in List");
-            try {
-                gameRecord.updateWithController(controller);
-            } catch (GameRecordStorageException ex) {
-                ex.printStackTrace();
-                return false;
-            }
-        } else {
-            System.out.println("New record in List");
-            try {
-                Main.persistentGameRecordStorage.addGameRecord(controller);
-            } catch (GameRecordStorageException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        System.out.println();
-        return true;
-    }
-
     private ImageView imageViewFromImage(Image image) {
         final ImageView imageView = new ImageView(image);
         imageView.setFitHeight(50);
@@ -267,16 +276,4 @@ public class GameSceneController {
         }
     }
 
-    public void setGameRecord(GameRecord gameRecord) {
-        this.gameRecord = gameRecord;
-        try {
-            setController(gameRecord.getController());
-        } catch (GameRecordStorageException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setExisting(boolean isExisting) {
-        this.isExisting = isExisting;
-    }
 }

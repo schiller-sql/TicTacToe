@@ -143,7 +143,6 @@ public class SQLitePersistentGameRecordStorage extends PersistentGameRecordStora
                     break;
                 }
             }
-            data.add(0, updatedRecord);
         } catch (SQLException e) {
             throw new GameRecordStorageException(e.getMessage());
         }

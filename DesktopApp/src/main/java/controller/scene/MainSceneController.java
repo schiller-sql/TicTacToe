@@ -145,7 +145,6 @@ public class MainSceneController {
 
         GameSceneController gameSceneController = loader.getController();
         gameSceneController.setGameRecord(gameRecord);
-        gameSceneController.setExisting(true);
         gameSceneController.displayGame();
 
         Stage stage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
