@@ -10,17 +10,15 @@ import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import opponent.Opponent;
 import opponent.default_opponents.RandomOpponent;
+import persistence.GameRecord;
 import persistence.GameRecordStorageException;
-import persistence.SQLitePersistentGameRecordStorage;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -32,14 +30,18 @@ public class GameSceneController {
     private Image crossImage, circleImage;
     private boolean isUploaded = false;
     private double lastX = 0.0d, lastY = 0.0d, lastWidth = 0.0d, lastHeight = 0.0d;
+    private GameRecord gameRecord;
 
     @FXML
     Button restart, surrender;
     @FXML
     Button  field00, field10, field20, field01, field11, field21, field02, field12, field22;
+    private boolean isExisting;
 
     public GameSceneController() {
         controller = new GameController(new RandomOpponent());
+        isExisting = false;
+        gameRecord = null;
     }
 
     @FXML
@@ -59,10 +61,6 @@ public class GameSceneController {
     public void setController(GameController controller) {
         this.controller = controller;
         opponent = controller.getOpponent();
-    }
-
-    public void setStorage(SQLitePersistentGameRecordStorage storage) {
-        Main.persistentGameRecordStorage = storage;
     }
 
     public void backToMenu(ActionEvent e) throws IOException {
@@ -190,12 +188,25 @@ public class GameSceneController {
     }
 
     public boolean uploadGame() {
-        try {
-            Main.persistentGameRecordStorage.addGameRecord(controller);
-        } catch (GameRecordStorageException e) {
-            e.printStackTrace();
-            return false;
+        System.out.print("Upload Game: ");
+        if(isExisting) {
+            System.out.println("Existing record in List");
+            try {
+                gameRecord.updateWithController(controller);
+            } catch (GameRecordStorageException ex) {
+                ex.printStackTrace();
+                return false;
+            }
+        } else {
+            System.out.println("New record in List");
+            try {
+                Main.persistentGameRecordStorage.addGameRecord(controller);
+            } catch (GameRecordStorageException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
+        System.out.println();
         return true;
     }
 
@@ -254,5 +265,18 @@ public class GameSceneController {
                 }
             }
         }
+    }
+
+    public void setGameRecord(GameRecord gameRecord) {
+        this.gameRecord = gameRecord;
+        try {
+            setController(gameRecord.getController());
+        } catch (GameRecordStorageException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setExisting(boolean isExisting) {
+        this.isExisting = isExisting;
     }
 }

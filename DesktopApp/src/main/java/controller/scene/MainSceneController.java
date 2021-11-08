@@ -12,7 +12,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -90,6 +89,7 @@ public class MainSceneController {
         playGame.setOnAction(e -> {
             try {
                 playGame(listGames.getSelectionModel().getSelectedItem());
+                listGames.getSelectionModel().clearSelection();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -97,6 +97,7 @@ public class MainSceneController {
         deleteGame.setOnAction(e -> {
             try {
                 Main.persistentGameRecordStorage.deleteGameRecord(listGames.getSelectionModel().getSelectedItem());
+                //listGames.getSelectionModel().clearSelection();
                 updateList();
                 updateScores();
             } catch (GameRecordStorageException ex) {
@@ -143,11 +144,8 @@ public class MainSceneController {
         Parent root = loader.load();
 
         GameSceneController gameSceneController = loader.getController();
-        try {
-            gameSceneController.setController(gameRecord.getController());
-        } catch (GameRecordStorageException e) {
-            e.printStackTrace();
-        }
+        gameSceneController.setGameRecord(gameRecord);
+        gameSceneController.setExisting(true);
         gameSceneController.displayGame();
 
         Stage stage = (Stage) Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
@@ -227,9 +225,6 @@ public class MainSceneController {
         ((Button)actionEvent.getSource()).getScene().getWindow().hide();
     }
 
-
-
-
     public static class ContextMenuListCell<T> extends ListCell<T> {
         public static <T> Callback<ListView<T>, ListCell<T>> forListView(final ContextMenu contextMenu, final Callback<ListView<T>, ListCell<T>> cellFactory) {
             return listView -> {
@@ -247,18 +242,21 @@ public class MainSceneController {
         @Override
         protected void updateItem(GameRecord gameRecord, boolean isEmpty) {
             super.updateItem(gameRecord, isEmpty);
-            if (!isEmpty) {
-                setText(
-                        new SimpleDateFormat("MM.dd-HH:mm").format(gameRecord.getLastUpdate())
-                        + " State:" + gameRecord.getCurrentState()
-                        + " Opponent:" + gameRecord.getOpponent().getName()
-                        + "\r\n" + gameRecord.getCurrentGrid().asString()
-                );
+            if(gameRecord!=null) {
+                if (!isEmpty) {
+                    setText(
+                            new SimpleDateFormat("MM.dd-HH:mm").format(gameRecord.getLastUpdate())
+                                    + " State:" + gameRecord.getCurrentState()
+                                    + " Opponent:" + gameRecord.getOpponent().getName()
+                                    + "\r\n" + gameRecord.getCurrentGrid().asString()
+                    );
+                }
             }
         }
     }
 
     public void updateList() {
+        System.out.println("Update List");
         listGames.getItems().clear();
         for (GameRecord record : Main.persistentGameRecordStorage.getCachedGameRecords()) {
             listGames.getItems().add(record);
