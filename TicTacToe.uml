@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>C:/Users/lenni/Documents/Progammieren/IdeaProjects/IdeaProjects/TicTacToe</OriginalElement>
+  <nodes>
+    <node x="2277.0" y="3167.0">util.GridUtils</node>
+    <node x="0.0" y="2104.0">opponent.default_opponents.AlgorithmOpponentTest</node>
+    <node x="0.0" y="2459.0">listener.ResizeHelper</node>
+    <node x="2485.0" y="2459.0">domain.GridHistory</node>
+    <node x="1665.0" y="2879.0">opponent.base_opponents.AdvancedBaseOpponentTest</node>
+    <node x="694.0" y="1211.0">opponent.base_opponents.AdvancedBaseOpponent.Field</node>
+    <node x="1219.0" y="2081.0">opponent.default_opponents.NoobOpponentTest</node>
+    <node x="466.5" y="3263.0">exceptions.TicTacToeException</node>
+    <node x="0.0" y="3167.0">exceptions.TicTacToeMenuException</node>
+    <node x="777.0" y="2104.0">opponent.default_opponents.RandomOpponentTest</node>
+    <node x="1486.0" y="3167.0">controller.GridHistoryTest</node>
+    <node x="1111.0" y="1080.0">opponent.default_opponents.MinimaxOpponent</node>
+    <node x="2533.0" y="3167.0">controller.scene.LoadingSceneController</node>
+    <node x="635.0" y="3167.0">exceptions.TicTacToeRestartException</node>
+    <node x="1939.0" y="3167.0">controller.scene.SceneController</node>
+    <node x="2400.0" y="1080.0">domain.Grid</node>
+    <node x="2292.0" y="2879.0">domain.Mark</node>
+    <node x="1909.0" y="2459.0">persistence.GameRecord</node>
+    <node x="647.0" y="2879.0">utils.TerminalColors</node>
+    <node x="1588.5" y="2600.0">listener.WindowMoveHelper.MoveListener</node>
+    <node x="1396.0" y="0.0">controller.scene.GameSceneController</node>
+    <node x="622.0" y="1550.0">opponent.default_opponents.TonyRandomOpponent</node>
+    <node x="415.0" y="2879.0">Game</node>
+    <node x="1989.0" y="2104.0">opponent.default_opponents.OleOpponentTest</node>
+    <node x="0.0" y="1573.0">opponent.default_opponents.AIOpponent</node>
+    <node x="929.0" y="1366.0">opponent.default_opponents.OleOpponent</node>
+    <node x="261.0" y="3167.0">exceptions.TicTacToeRestartSameOpponentException</node>
+    <node x="1464.0" y="1344.0">fixtures.TestableAdvancedBaseOpponent</node>
+    <node x="2038.0" y="2879.0">controller.popup.PopupController</node>
+    <node x="927.0" y="428.0">persistence.SQLitePersistentGameRecordStorage</node>
+    <node x="412.0" y="2459.0">persistence.PersistentGameRecordStorageTest</node>
+    <node x="77.5" y="3043.0">application.Main.WindowsHack</node>
+    <node x="527.0" y="2104.0">opponent.default_opponents.QuandaryOpponentTest</node>
+    <node x="844.0" y="2879.0">utils.TicTacToeUtils</node>
+    <node x="1794.0" y="1366.0">opponent.default_opponents.RandomOpponent</node>
+    <node x="2830.0" y="3167.0">persistence.GameRecordStorageException</node>
+    <node x="2869.0" y="1861.0">controller.GameController</node>
+    <node x="301.0" y="0.0">controller.scene.MainSceneController.ContextMenuListCell</node>
+    <node x="2579.0" y="1972.0">opponent.helper_classes.Node</node>
+    <node x="3178.0" y="1861.0">domain.Row</node>
+    <node x="905.0" y="3167.0">exceptions.TicTacToeQuitException</node>
+    <node x="2009.0" y="1441.0">opponent.default_opponents.NoobOpponent</node>
+    <node x="180.0" y="1573.0">opponent.default_opponents.ExampleOpponent</node>
+    <node x="1213.0" y="2879.0">domain.Point</node>
+    <node x="869.0" y="1528.0">fixtures.FakeOpponent</node>
+    <node x="1497.0" y="2459.0">listener.WindowMoveHelper</node>
+    <node x="1443.0" y="2104.0">opponent.default_opponents.ExampleOpponentTest</node>
+    <node x="444.5" y="2667.0">persistence.SQLitePersistentGameRecordStorageTest</node>
+    <node x="471.0" y="1366.0">opponent.default_opponents.QuandaryOpponent</node>
+    <node x="837.0" y="2223.0">opponent.OpponentTest</node>
+    <node x="1430.0" y="2879.0">controller.GameState</node>
+    <node x="2431.5" y="2334.0">opponent.helper_classes.Tree.TreePrintable</node>
+    <node x="1686.0" y="1861.0">opponent.default_opponents.MinimaxOpponentTest</node>
+    <node x="1068.5" y="1692.0">opponent.Opponent</node>
+    <node x="0.0" y="2879.0">application.Main</node>
+    <node x="2765.0" y="2459.0">utils.TerminalUtils</node>
+    <node x="2203.0" y="1861.0">opponent.helper_classes.Tree</node>
+    <node x="892.0" y="2459.0">domain.GridTest</node>
+    <node x="396.0" y="1573.0">opponent.default_opponents.AlgorithmOpponent</node>
+    <node x="1019.0" y="2104.0">opponent.default_opponents.AIOpponentTest</node>
+    <node x="937.0" y="0.0">persistence.PersistentGameRecordStorage</node>
+    <node x="0.0" y="0.0">controller.scene.MainSceneController.GameRecordListCell</node>
+    <node x="253.0" y="2104.0">opponent.default_opponents.TonyRandomOpponentTest</node>
+    <node x="1162.0" y="3167.0">util.MarkUtils</node>
+    <node x="91.5" y="2600.0">listener.ResizeHelper.ResizeListener</node>
+    <node x="2497.0" y="2879.0">controller.ControllerTest</node>
+    <node x="1075.0" y="1485.0">opponent.base_opponents.AdvancedBaseOpponent</node>
+    <node x="291.0" y="119.0">controller.scene.MainSceneController</node>
+    <node x="2969.0" y="2879.0">Main</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="controller.scene.MainSceneController.ContextMenuListCell" target="controller.scene.MainSceneController" relationship="INNER_CLASS">
+      <point x="0.0" y="-0.0" />
+      <point x="591.5" y="99.0" />
+      <point x="441.0" y="99.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="listener.ResizeHelper.ResizeListener" target="listener.ResizeHelper" relationship="INNER_CLASS">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="fixtures.FakeOpponent" target="opponent.Opponent" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="952.0" y="1672.0" />
+      <point x="1177.5" y="1672.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="fixtures.TestableAdvancedBaseOpponent" target="opponent.base_opponents.AdvancedBaseOpponent" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="1609.0" y="1465.0" />
+      <point x="1220.0" y="1465.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.ExampleOpponent" target="opponent.Opponent" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="268.0" y="1672.0" />
+      <point x="1177.5" y="1672.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.QuandaryOpponentTest" target="opponent.OpponentTest" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="632.0" y="2203.0" />
+      <point x="1079.0" y="2203.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="application.Main.WindowsHack" target="application.Main" relationship="INNER_CLASS">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.helper_classes.Node" target="opponent.helper_classes.Tree.TreePrintable" relationship="REALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="2701.5" y="2314.0" />
+      <point x="2513.5" y="2314.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="exceptions.TicTacToeRestartSameOpponentException" target="exceptions.TicTacToeException" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="428.0" y="3243.0" />
+      <point x="558.5" y="3243.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.RandomOpponent" target="opponent.base_opponents.AdvancedBaseOpponent" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="1881.5" y="1465.0" />
+      <point x="1220.0" y="1465.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="persistence.SQLitePersistentGameRecordStorageTest" target="persistence.PersistentGameRecordStorageTest" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.NoobOpponent" target="opponent.Opponent" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="2182.0" y="1672.0" />
+      <point x="1177.5" y="1672.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.AlgorithmOpponentTest" target="opponent.OpponentTest" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="106.5" y="2203.0" />
+      <point x="1079.0" y="2203.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="controller.scene.MainSceneController.GameRecordListCell" target="controller.scene.MainSceneController" relationship="INNER_CLASS">
+      <point x="0.0" y="-0.0" />
+      <point x="130.5" y="99.0" />
+      <point x="441.0" y="99.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.RandomOpponentTest" target="opponent.OpponentTest" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="878.0" y="2203.0" />
+      <point x="1079.0" y="2203.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.NoobOpponentTest" target="opponent.OpponentTest" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="1311.0" y="2203.0" />
+      <point x="1079.0" y="2203.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.helper_classes.Tree.TreePrintable" target="opponent.helper_classes.Tree" relationship="INNER_CLASS">
+      <point x="5.0" y="-0.0" />
+      <point x="2518.5" y="2309.0" />
+      <point x="2376.0" y="2309.0" />
+      <point x="5.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.MinimaxOpponent" target="opponent.base_opponents.AdvancedBaseOpponent" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="1267.5" y="1465.0" />
+      <point x="1220.0" y="1465.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.MinimaxOpponentTest" target="opponent.OpponentTest" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="1817.5" y="2203.0" />
+      <point x="1079.0" y="2203.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.QuandaryOpponent" target="opponent.base_opponents.AdvancedBaseOpponent" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="562.5" y="1465.0" />
+      <point x="1220.0" y="1465.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.base_opponents.AdvancedBaseOpponent" target="opponent.Opponent" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="1220.0" y="1672.0" />
+      <point x="1177.5" y="1672.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.base_opponents.AdvancedBaseOpponent.Field" target="opponent.base_opponents.AdvancedBaseOpponent" relationship="INNER_CLASS">
+      <point x="0.0" y="-0.0" />
+      <point x="791.5" y="1465.0" />
+      <point x="1220.0" y="1465.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="persistence.SQLitePersistentGameRecordStorage" target="persistence.PersistentGameRecordStorage" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.AlgorithmOpponent" target="opponent.Opponent" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="489.0" y="1672.0" />
+      <point x="1177.5" y="1672.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.helper_classes.Tree" target="opponent.helper_classes.Tree.TreePrintable" relationship="DEPENDENCY">
+      <point x="-5.0" y="-0.0" />
+      <point x="2366.0" y="2319.0" />
+      <point x="2508.5" y="2319.0" />
+      <point x="-5.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.OleOpponentTest" target="opponent.OpponentTest" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="2073.5" y="2203.0" />
+      <point x="1079.0" y="2203.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.AIOpponent" target="opponent.Opponent" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="70.0" y="1672.0" />
+      <point x="1177.5" y="1672.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="exceptions.TicTacToeMenuException" target="exceptions.TicTacToeException" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="110.5" y="3243.0" />
+      <point x="558.5" y="3243.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.OleOpponent" target="opponent.base_opponents.AdvancedBaseOpponent" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="1000.0" y="1465.0" />
+      <point x="1220.0" y="1465.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.TonyRandomOpponent" target="opponent.Opponent" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="725.5" y="1672.0" />
+      <point x="1177.5" y="1672.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="listener.WindowMoveHelper.MoveListener" target="listener.WindowMoveHelper" relationship="INNER_CLASS">
+      <point x="0.0" y="-0.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.ExampleOpponentTest" target="opponent.OpponentTest" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="1544.5" y="2203.0" />
+      <point x="1079.0" y="2203.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="exceptions.TicTacToeRestartException" target="exceptions.TicTacToeException" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="750.0" y="3243.0" />
+      <point x="558.5" y="3243.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.AIOpponentTest" target="opponent.OpponentTest" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="1099.0" y="2203.0" />
+      <point x="1079.0" y="2203.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="exceptions.TicTacToeQuitException" target="exceptions.TicTacToeException" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="1011.0" y="3243.0" />
+      <point x="558.5" y="3243.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="opponent.default_opponents.TonyRandomOpponentTest" target="opponent.OpponentTest" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="370.0" y="2203.0" />
+      <point x="1079.0" y="2203.0" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+  </edges>
+  <settings layout="Generic" zoom="0.2767295597484276" showDependencies="false" x="1702.0" y="1659.5" />
+  <SelectedNodes>
+    <node>opponent.default_opponents.MinimaxOpponentTest</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

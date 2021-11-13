@@ -10,7 +10,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import listener.ResizeHelper;
 import listener.WindowMoveHelper;
 import persistence.PersistentGameRecordStorage;
 import persistence.SQLitePersistentGameRecordStorage;
@@ -36,10 +35,6 @@ public class Main extends Application {
         Scene scene;
         String osName = System.getProperty("os.name");
         if( osName != null && osName.startsWith("Windows") ) {
-
-            //
-            // Windows hack b/c unlike Mac and Linux, UNDECORATED doesn't include a shadow
-            //
             scene = (new WindowsHack()).getShadowScene(root);
             stage.initStyle(StageStyle.TRANSPARENT);
 
