@@ -1,6 +1,6 @@
 import controller.GameController;
 import controller.GameState;
-import controller.GridHistory;
+import domain.GridHistory;
 import domain.Mark;
 import domain.Point;
 import exceptions.TicTacToeMenuException;
@@ -15,7 +15,6 @@ import utils.TicTacToeUtils;
 import java.util.HashMap;
 
 public class Game {
-
 
     private final GameController controller;
 
@@ -73,18 +72,13 @@ public class Game {
 
 
     private Opponent getOpponentInput() throws TicTacToeQuitException, TicTacToeRestartSameOpponentException, TicTacToeRestartException, TicTacToeMenuException {
-        final Opponent[] opponents = new Opponent[]{
-                new TonyRandomOpponent(),
-                new OleOpponent(),
-                new RandomOpponent(),
-                new QuandaryOpponent(),
-        };
+        final Opponent[] availableOpponents = Opponent.defaultOpponents();
 
-        for (int i = 0; i < opponents.length; i++) {
-            System.out.println(i + 1 + ": " + opponents[i].getClass().getSimpleName());
+        for (int i = 0; i < availableOpponents.length; i++) {
+            System.out.println(i + 1 + ": " + availableOpponents[i].getClass().getSimpleName());
         }
-        final int choice = TerminalUtils.getIntInputWithAllExits(1, opponents.length);
-        return opponents[choice - 1];
+        final int choice = TerminalUtils.getIntInputWithAllExits(1, availableOpponents.length);
+        return availableOpponents[choice - 1];
     }
 
     private Point getPointInput() throws TicTacToeQuitException, TicTacToeRestartException, TicTacToeRestartSameOpponentException, TicTacToeMenuException {

@@ -3,7 +3,7 @@ package fixtures;
 import domain.Grid;
 import domain.Mark;
 import domain.Point;
-import opponent.AdvancedBaseOpponent;
+import opponent.base_opponents.AdvancedBaseOpponent;
 
 public class TestableAdvancedBaseOpponent extends AdvancedBaseOpponent {
     @Override

@@ -1,5 +1,6 @@
 package controller;
 
+import domain.GridHistory;
 import domain.Mark;
 import domain.Grid;
 import domain.Point;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class GameController {
     private final List<Grid> historyList = new ArrayList<>();
-    private final Opponent opponent;
+    private Opponent opponent;
     private Grid grid;
     private GameState state;
 
@@ -36,7 +37,7 @@ public class GameController {
 
     /**
      * @param opponent     The opponent responsible for the countermove
-     * @param startingGrid The starting grid data, the grid should have
+     * @param startingGrid The starting gridData data, the gridData should have
      */
     public GameController(Opponent opponent, Mark[][] startingGrid) {
         assert (startingGrid.length == 3);
@@ -50,7 +51,28 @@ public class GameController {
     }
 
     /**
-     * Updates the state of the grid with the players cross
+     * @param startingGrid A real Grid instead of just the gridData
+     */
+    public GameController(Opponent opponent, Grid startingGrid) {
+        this.opponent = opponent;
+        setGridAndAddToHistory(startingGrid);
+        state = calculateGameState();
+    }
+
+    /**
+     * @param startingHistory The already past history of the game
+     */
+    public GameController(Opponent opponent, GridHistory startingHistory) {
+        this.opponent = opponent;
+        grid = startingHistory.getLastHistoryRecord();
+        state = calculateGameState();
+        for (int i = 0; i < startingHistory.getLength(); i++) {
+            historyList.add(startingHistory.getHistoryRecord(i));
+        }
+    }
+
+    /**
+     * Updates the state of the gridData with the players cross
      * and the opponents response
      * <p>
      * Also finds out if anyone has won,
@@ -62,24 +84,28 @@ public class GameController {
      * is updated inside the controller
      *
      * @param point The point where the player sets his cross
+     * @return The point which the opponent sets,
+     * is null when the opponent does not set a point,
+     * because of a tie or win by the player
      */
-    public void setPoint(Point point) {
+    public Point setPoint(Point point) {
         assert (state == GameState.running);
+        Point opponentPoint = null;
 
         setGridAndAddToHistory(grid.copyWith(point, Mark.self));
         state = calculateGameState();
-        if (state != GameState.running)
-            return;
-
-        final Point opponentPoint = opponent.move(grid);
-        setGridAndAddToHistory(grid.copyWith(opponentPoint, Mark.opponent));
-        state = calculateGameState();
+        if (state == GameState.running) {
+            opponentPoint = opponent.move(grid);
+            setGridAndAddToHistory(grid.copyWith(opponentPoint, Mark.opponent));
+            state = calculateGameState();
+        }
+        return opponentPoint;
     }
 
     /**
      * Get the Grid
      *
-     * @return The current grid of this Opponent
+     * @return The current gridData of this Opponent
      */
     public Grid getGrid() {
         return grid;
@@ -106,8 +132,12 @@ public class GameController {
         return opponent;
     }
 
+    public void setOpponent(Opponent opponent) {
+        this.opponent = opponent;
+    }
+
     /**
-     * Add a new Grid to the history and set the current grid to it
+     * Add a new Grid to the history and set the current gridData to it
      *
      * @param grid The new Grid
      */

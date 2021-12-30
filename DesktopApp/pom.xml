@@ -11,9 +11,77 @@
 
     <artifactId>DesktopApp</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>GameLogic</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>17.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>17.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>17.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dlsc.formsfx</groupId>
+            <artifactId>formsfx-core</artifactId>
+            <version>11.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>net.synedra</groupId>
+            <artifactId>validatorfx</artifactId>
+            <version>0.1.13</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-javafx</artifactId>
+            <version>12.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.hansolo</groupId>
+            <artifactId>tilesfx</artifactId>
+            <version>17.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>5.8.1</junit.version>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
     </properties>
-
 </project>
