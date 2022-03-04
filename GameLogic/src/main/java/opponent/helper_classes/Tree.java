@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class Tree<T> {
+public class Tree<T extends Tree.TreePrintable> {
 
     private final T root;
     private final int depth;
     private Tree<T> parent;
     private final ArrayList<Tree<T>> leafs = new ArrayList<>(9);
     private final HashMap<T, Tree<T>> locate = new HashMap<>();
+
+    public interface TreePrintable {
+        String toString(String padding);
+    }
 
     public Tree(T root, int depth) {
         this.root = root;
@@ -63,16 +67,41 @@ public class Tree<T> {
         return successors;
     }
 
-    @Override
-    public String toString() {
-        return printTree(0);
-    }
-
-    private String printTree(int increment) {
+    /*private String printTree(int increment) {
         StringBuilder s;
         s = new StringBuilder(" ".repeat(Math.max(0, increment)) + getRoot());
         for (Tree<T> child : getSubTrees()) {
-            s.append("\n").append(child.printTree(increment + 4 /*indent*/)); }
+            s.append("\n").append(child.printTree(increment + 4));
+        }
+        return s.toString();
+    }*/
+
+
+    @Override
+    public String toString() {
+        return "Tree: " + "\n\n" + printTree(0) + "\n" + "---------------------------------";
+    }
+
+    /*private String printTree(int increment) {
+        StringBuilder s;
+        StringBuilder inc = new StringBuilder();
+        for (int i = 0; i < increment; ++i) {
+            inc.append(" ");
+        }
+        s = new StringBuilder(root.toString(inc.toString()));
+        for (Tree<T> child : leafs) {
+            s.append("\n").append(child.printTree(increment + 4));
+        }
+        return s.toString();
+    }*/
+
+    private String printTree(int increment) {
+        StringBuilder s;
+        StringBuilder inc = new StringBuilder(" ".repeat(Math.max(0, increment)));
+        s = new StringBuilder(root.toString(inc.toString()));
+        for (Tree<T> child : leafs) {
+            s.append("\n").append(child.printTree(increment + 4));
+        }
         return s.toString();
     }
 }

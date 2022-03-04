@@ -462,10 +462,12 @@ public final class Grid {
         return stringBuffer.toString();
     }
 
-    public String asString() {
+    public String asString(String padding) {
         StringBuilder stringBuffer = new StringBuilder();
         for (int y = 0; y < 3; y++) {
-            stringBuffer.append(y).append(1).append(". ");
+            if(y > 0) {
+                stringBuffer.append(padding);
+            }
             for (int x = 0; x < 3; x++) {
                 final Mark mark = this.getMark(x, y);
                 final String markAsString = mark == null ? "-" : mark == Mark.self ? "X" : "O";
@@ -474,7 +476,7 @@ public final class Grid {
                         .append("|");
             }
             stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-            stringBuffer.append("; ");
+            stringBuffer.append("\n");
         }
         return stringBuffer.toString();
     }

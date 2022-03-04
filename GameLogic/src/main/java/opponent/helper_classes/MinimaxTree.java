@@ -124,7 +124,7 @@ public class MinimaxTree<T extends MinimaxTree.TreePrintable> {
 
     @Override
     public String toString() {
-        return printTree(0);
+        return printTree(4);
     }
 
     private static final int indent = 4;
@@ -132,7 +132,6 @@ public class MinimaxTree<T extends MinimaxTree.TreePrintable> {
     private String printTree(int increment) {
         StringBuilder s;
         StringBuilder inc = new StringBuilder();
-
         for (int i = 0; i < increment; ++i) {
             inc.append(" ");
         }

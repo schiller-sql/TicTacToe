@@ -1,6 +1,5 @@
 package opponent.default_opponents;
 
-import controller.GameController;
 import controller.GameState;
 import domain.Grid;
 import domain.Mark;
@@ -9,43 +8,16 @@ import opponent.Opponent;
 import opponent.helper_classes.Node;
 import opponent.helper_classes.Tree;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 public class GodOpponent extends Opponent {
-
-    /*
-    function minimax(node, depth, isMaximizingPlayer, alpha, beta):
-    if node is a leaf node :
-        return value of the node
-    if isMaximizingPlayer :
-        bestVal = -INFINITY
-        for each child node :
-            value = minimax(node, depth+1, false, alpha, beta)
-            bestVal = max( bestVal, value)
-            alpha = max( alpha, bestVal)
-            if beta <= alpha:
-                break
-        return bestVal
-    else :
-        bestVal = +INFINITY
-        for each child node :
-            value = minimax(node, depth+1, true, alpha, beta)
-            bestVal = min( bestVal, value)
-            beta = min( beta, bestVal)
-            if beta <= alpha:
-                break
-        return bestVal
-// Calling the function for the first time.
-minimax(0, 0, true, -INFINITY, +INFINITY)
-     */
 
     @Override
     public Point move(Grid grid) {
         Tree<Node> tree = new Tree<>(new Node(grid, Mark.self, GameState.running), 0);
         generate(tree, Mark.opponent);
-        Node bestMove = minimax(tree, 0, Mark.opponent, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        System.out.println(tree);
+        Node bestMove = minimax(tree, 0, Mark.opponent, Integer.MIN_VALUE, Integer.MAX_VALUE); //TODO: put in for-loop and call with root-childs
         return compareGrids(tree.getRoot().grid(), bestMove.grid());
     }
 
@@ -62,7 +34,7 @@ minimax(0, 0, true, -INFINITY, +INFINITY)
                 generate(childTree, Mark.invert(actor));
             } else {
                 node.calculateScore();
-                node.setLastChild(true);
+                node.setLeaf(true);
             }
         }
     }
@@ -71,12 +43,11 @@ minimax(0, 0, true, -INFINITY, +INFINITY)
 
     }
 
-    private void evaluateScores() {
-
-    }
-
+    //TODO: test for GodOpponentTest.move2, with println's
     private Node minimax(Tree<Node> tree, int depth, Mark actor, int alpha, int beta) {
-        if(tree.getRoot().lastChild()) {
+        if(tree.getRoot().leaf()) {
+            System.out.println("Current best aim node:");
+            System.out.println(tree.getRoot().toString(""));
             return tree.getRoot();
         }
         int bestScore;
@@ -102,9 +73,13 @@ minimax(0, 0, true, -INFINITY, +INFINITY)
             beta = Integer.min(beta, bestScore);
             if(beta <= alpha) {
                 bestMove.setScore(bestScore);
+                System.out.println("Current best aim node:");
+                System.out.println(tree.getRoot().toString(""));
                 return bestMove;
             }
         }
+        System.out.println("Current best aim node:");
+        System.out.println(tree.getRoot().toString(""));
         return bestMove;
     }
 

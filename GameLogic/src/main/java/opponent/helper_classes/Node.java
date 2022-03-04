@@ -3,19 +3,21 @@ package opponent.helper_classes;
 import controller.GameState;
 import domain.Grid;
 import domain.Mark;
-import opponent.default_opponents.GodOpponent;
 
-public record Node(Grid grid, Mark mark, GameState gameState) {
+import java.util.Objects;
 
-    private static boolean lastChild = false;
-    private static int score;
+public final class Node implements Tree.TreePrintable {
 
-    public void setLastChild(boolean isLastChild) {
-        lastChild = isLastChild;
-    }
+    private final Grid grid;
+    private final Mark mark;
+    private final GameState gameState;
+    private boolean leaf;
+    private int score;
 
-    public boolean lastChild() {
-        return lastChild;
+    public Node(Grid grid, Mark mark, GameState gameState) {
+        this.grid = grid;
+        this.mark = mark;
+        this.gameState = gameState;
     }
 
     public void setScore(int score) {
@@ -26,15 +28,76 @@ public record Node(Grid grid, Mark mark, GameState gameState) {
         return score;
     }
 
-    public int calculateScore() {
-        final int i = this.grid.getAllOfMarkType(null).length;
-        if (this.mark == Mark.opponent) {
-            return i;
-        }
-        if(i == 0) {
-            return i;
+    public void calculateScore() {
+        final int i = this.grid.getAllMarkPositions(null).size();
+        if (mark.equals(Mark.opponent) || gameState.equals(GameState.lost)) {
+            score = i;
+        } else if(i == 0){
+            score = -1;
         } else {
-            return -i;
+            score = -i;
         }
+    }
+
+    public String toString(String padding) {
+        StringBuilder s = new StringBuilder();
+        s.append(padding);
+        s.append(grid.asString(padding));
+        s.append(padding);
+        s.append("mark = " + mark.toString()).append("\n");
+        s.append(padding);
+        s.append("GameState = " + gameState.toString()).append("\n");
+        s.append(padding);
+        s.append("score = " + score).append("\n");
+        s.append(padding);
+        s.append("isLeaf = " + leaf).append("\n");
+        return s.toString();
+    }
+
+    public Grid grid() {
+        return grid;
+    }
+
+    public Mark mark() {
+        return mark;
+    }
+
+    public GameState gameState() {
+        return gameState;
+    }
+
+    public boolean leaf() {
+        return leaf;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (Node) obj;
+        return Objects.equals(this.grid, that.grid) &&
+                Objects.equals(this.mark, that.mark) &&
+                Objects.equals(this.gameState, that.gameState) &&
+                this.leaf == that.leaf &&
+                this.score == that.score;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(grid, mark, gameState, leaf, score);
+    }
+
+    @Override
+    public String toString() {
+        return "Node[" +
+                "grid=" + grid + ", " +
+                "mark=" + mark + ", " +
+                "gameState=" + gameState + ", " +
+                "leaf=" + leaf + ", " +
+                "score=" + score + ']';
+    }
+
+    public void setLeaf(boolean leaf) {
+        this.leaf = leaf;
     }
 }

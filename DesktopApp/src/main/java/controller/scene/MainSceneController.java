@@ -247,7 +247,7 @@ public class MainSceneController {
                             new SimpleDateFormat("MM.dd-HH:mm").format(gameRecord.getLastUpdate())
                                     + " State:" + gameRecord.getCurrentState()
                                     + " Opponent:" + gameRecord.getOpponent().getName()
-                                    + "\r\n" + gameRecord.getCurrentGrid().asString()
+                                    + "\r\n" + gameRecord.getCurrentGrid().asString("")
                     );
                 }
             }

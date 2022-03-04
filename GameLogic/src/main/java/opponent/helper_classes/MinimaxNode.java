@@ -95,7 +95,7 @@ public class MinimaxNode implements MinimaxTree.TreePrintable {
                 +"MinimaxStatus: " + minimax + " + "
                 +"GameState: " + gameState + " + "
                 +"Depth: " +  getDepth() + " + "
-                +"Grid: " +  grid.asString();
+                +"Grid: " +  grid.asString("");
     }
 
     public MinimaxTree<MinimaxNode> getParent(MinimaxTree<MinimaxNode> tree) {
