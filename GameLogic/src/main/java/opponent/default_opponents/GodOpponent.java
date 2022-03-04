@@ -10,6 +10,7 @@ import opponent.helper_classes.Node;
 import opponent.helper_classes.Tree;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 public class GodOpponent extends Opponent {
@@ -42,8 +43,10 @@ minimax(0, 0, true, -INFINITY, +INFINITY)
 
     @Override
     public Point move(Grid grid) {
-
-        return null;
+        Tree<Node> tree = new Tree<>(new Node(grid, Mark.self, GameState.running), 0);
+        generate(tree, Mark.opponent);
+        Node bestMove = minimax(tree, 0, Mark.opponent, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        return compareGrids(tree.getRoot().grid(), bestMove.grid());
     }
 
     private void generate(Tree<Node> root, Mark actor) {
@@ -58,7 +61,7 @@ minimax(0, 0, true, -INFINITY, +INFINITY)
             if (node.gameState() == GameState.running) {
                 generate(childTree, Mark.invert(actor));
             } else {
-                final int score = calculateScore(node);
+                node.calculateScore();
                 node.setLastChild(true);
             }
         }
@@ -72,41 +75,48 @@ minimax(0, 0, true, -INFINITY, +INFINITY)
 
     }
 
-    private int minimax(Node node, int depth, Mark actor, int alpha, int beta) {
-        if(node.lastChild()) {
-            return node.score();
+    private Node minimax(Tree<Node> tree, int depth, Mark actor, int alpha, int beta) {
+        if(tree.getRoot().lastChild()) {
+            return tree.getRoot();
         }
+        int bestScore;
+        Node bestMove = null;
         if(actor == Mark.opponent) {
-            bestVal = -INFINITY
-            for each child node :
-            value = minimax(node, depth+1, false, alpha, beta)
-            bestVal = max( bestVal, value)
-            alpha = max( alpha, bestVal)
-            if beta <= alpha:
-            break
-            return bestVal
+            bestScore = Integer.MIN_VALUE;
+            Collection<Tree<Node>> c = tree.getSubTrees();
+            for(Tree<Node> t : c) {
+                bestMove = minimax(t, depth+1, Mark.self, alpha, beta);
+            }
+            bestScore = Integer.max(bestScore, bestMove.score());
+            alpha = Integer.max(alpha, bestScore);
+            if(beta <= alpha) {
+                bestMove.setScore(bestScore);
+            }
         } else {
-            bestVal = +INFINITY
-            for each child node :
-            value = minimax(node, depth+1, true, alpha, beta)
-            bestVal = min( bestVal, value)
-            beta = min( beta, bestVal)
-            if beta <= alpha:
-            break
-            return bestVal
+            bestScore = Integer.MAX_VALUE;
+            Collection<Tree<Node>> c = tree.getSubTrees();
+            for(Tree<Node> t : c) {
+                bestMove = minimax(t, depth+1, Mark.opponent, alpha, beta);
+            }
+            bestScore = Integer.min(bestScore, bestMove.score());
+            beta = Integer.min(beta, bestScore);
+            if(beta <= alpha) {
+                bestMove.setScore(bestScore);
+                return bestMove;
+            }
         }
+        return bestMove;
     }
 
-    public int calculateScore(Node node) {
-        final int i = node.grid().getAllOfMarkType(null).length;
-        if (node.mark() == Mark.opponent) {
-            return i;
+    public Point compareGrids(Grid root, Grid leaf) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (leaf.getMark(i, j) != root.getMark(i, j)) {
+                    return new Point(i, j);
+                }
+            }
         }
-        if(i == 0) {
-            return i;
-        } else {
-            return -i;
-        }
+        return null;
     }
 
     private GameState calculateGameState(Grid grid) {
@@ -118,17 +128,6 @@ minimax(0, 0, true, -INFINITY, +INFINITY)
             return GameState.tie;
         }
         return GameState.running;
-    }
-
-    private boolean getTie(Grid grid) {
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 3; y++) {
-                if (grid.markIsEmpty(x, y)) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     private boolean checkTie(Grid grid) {

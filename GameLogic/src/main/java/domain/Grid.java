@@ -112,7 +112,6 @@ public final class Grid {
      * @return All found positions as a Point array
      * @deprecated Use getAllMarkPositions instead
      */
-    @Deprecated
     public Point[] getAllOfMarkType(Mark type) {
         ArrayList<Point> foundPoints = new ArrayList<>();
         for (int y = 0; y < 3; y++) {

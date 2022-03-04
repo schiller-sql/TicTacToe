@@ -5,15 +5,12 @@ import domain.Grid;
 import domain.Mark;
 import opponent.default_opponents.GodOpponent;
 
-public record Node(Grid grid, Mark mark, GameState gameState, int score) {
+public record Node(Grid grid, Mark mark, GameState gameState) {
 
     private static boolean lastChild = false;
+    private static int score;
 
-    public Node(Grid grid, Mark mark, GameState gameState) {
-        this(grid, mark, gameState, calculateScore(grid, mark));
-    }
-
-        public void setLastChild(boolean isLastChild) {
+    public void setLastChild(boolean isLastChild) {
         lastChild = isLastChild;
     }
 
@@ -21,9 +18,17 @@ public record Node(Grid grid, Mark mark, GameState gameState, int score) {
         return lastChild;
     }
 
-    private static int calculateScore(Grid grid, Mark mark) {
-        final int i = grid.getAllOfMarkType(null).length;
-        if (mark == Mark.opponent) {
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int score() {
+        return score;
+    }
+
+    public int calculateScore() {
+        final int i = this.grid.getAllOfMarkType(null).length;
+        if (this.mark == Mark.opponent) {
             return i;
         }
         if(i == 0) {
