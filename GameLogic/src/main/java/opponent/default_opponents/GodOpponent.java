@@ -8,14 +8,13 @@ import opponent.Opponent;
 import opponent.helper_classes.Node;
 import opponent.helper_classes.Tree;
 
-import java.util.Collection;
-
 public class GodOpponent extends Opponent {
 
     @Override
     public Point move(Grid grid) {
         Tree<Node> tree = new Tree<>(new Node(grid, Mark.self, GameState.running), 0);
         generate(tree, Mark.opponent);
+        sortTree();
         System.out.println(tree);
         Node bestMove = minimax(tree, 0, Mark.opponent, Integer.MIN_VALUE, Integer.MAX_VALUE); //TODO: put in for-loop and call with root-childs
         System.out.println("Aim Child from Root" + "\n" + bestMove.toString(""));
@@ -24,7 +23,7 @@ public class GodOpponent extends Opponent {
 
     private void generate(Tree<Node> root, Mark actor) {
         final Grid rootGrid = root.getRoot().grid();
-        for (Point point : rootGrid.getAllOfMarkType(null)) {
+        for (Point point : rootGrid.getAllMarkPositions(null)) {
             final Node node = new Node(
                     rootGrid.copyWith(point, actor),
                     actor,
@@ -41,7 +40,19 @@ public class GodOpponent extends Opponent {
     }
 
     private void sortTree() {
+        //tree erst ab "rootGrid.getAllMarkPositions(null).size()==5" betrachten,
+        //da erst dann ein spiel beendet sein kann
 
+        //wenn ein Folgezug ein "GameState==won" liefert erfolgt ein `cutoff`,
+        //unter dem punkt, wo ein subtree weiter oben im pfad,
+        //eine subnode mit einem positiven score vorweisen kann
+
+        //-depth-first search
+        //wenn leaf gefunden wird, wird nach dem GameState entschieden:
+        //bei einem win wird nach oben gegangen,
+        //dabei wird jedes mal an einer node mit dem actor opponent geprüft,
+        //ob ein sich ein einem subtree ein leaf mit lost, auf einer höheren ebende befindet
+        //solange dies nicht der fall ist wird nicht abgebrochen
     }
 
     //TODO: test for GodOpponentTest.move2, with println's
@@ -66,9 +77,11 @@ public class GodOpponent extends Opponent {
                 break
         return bestVal
      */
+    //TODO: test for GodOpponentTest.move1()
     private Node minimax(Tree<Node> tree, int depth, Mark actor, int alpha, int beta) {
         System.out.println("Run minimax("+tree.getRoot().toString()+","+depth+","+actor+","+alpha+","+beta+")");
         if(tree.getRoot().leaf()) {
+            System.out.println();
             System.out.println("return: (case1)");
             System.out.println(tree.getRoot().toString(""));
             return tree.getRoot();
@@ -78,7 +91,16 @@ public class GodOpponent extends Opponent {
         if(actor == Mark.opponent) {
             bestVal = Integer.MIN_VALUE;
             for(Tree<Node> t : tree.getSubTrees()) {
+                System.out.println("call minimax(max) (" +
+                        t.getRoot().toString() + "," +
+                        (depth+1) + "," +
+                        Mark.self + "," +
+                        alpha + "," +
+                        beta +")"
+                );
                 Node value = minimax(t, depth+1, Mark.self, alpha, beta);
+                System.out.println("got :" + value.toString());
+                System.out.println();
                 bestVal = Integer.max(bestVal, value.score());
                 alpha = Integer.max(alpha, bestVal);
                 bestMove = value;
@@ -87,11 +109,20 @@ public class GodOpponent extends Opponent {
                     break;
                 }
             }
+            System.out.println();
             System.out.println("return: (case2)");
         } else {
             bestVal = Integer.MAX_VALUE;
             for(Tree<Node> t : tree.getSubTrees()) {
+                System.out.println("call minimax(min) (" +
+                        t.getRoot().toString() + "," +
+                        (depth+1) + "," +
+                        Mark.opponent + "," +
+                        alpha + "," +
+                        beta +")"
+                );
                 Node value = minimax(t, depth + 1, Mark.opponent, alpha, beta);
+                System.out.println("got :" + value.toString());
                 bestVal = Integer.min(bestVal, value.score());
                 beta = Integer.min(beta, bestVal);
                 bestMove = value;
@@ -100,8 +131,10 @@ public class GodOpponent extends Opponent {
                     break;
                 }
             }
+            System.out.println();
             System.out.println("return: (case3)");
         }
+        assert bestMove != null;
         System.out.println(bestMove.toString(""));
         return bestMove;
     }
