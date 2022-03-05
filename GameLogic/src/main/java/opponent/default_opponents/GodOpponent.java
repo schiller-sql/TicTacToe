@@ -8,8 +8,6 @@ import opponent.Opponent;
 import opponent.helper_classes.Node;
 import opponent.helper_classes.Tree;
 
-import java.util.List;
-
 public class GodOpponent extends Opponent {
 
     @Override
@@ -59,90 +57,6 @@ public class GodOpponent extends Opponent {
         //ob ein sich ein einem subtree ein leaf mit lost, auf einer höheren ebende befindet
         //solange dies nicht der fall ist wird nicht abgebrochen
     }
-
-    //TODO: test for GodOpponentTest.move2, with println's
-    /*
-    if isMaximizingPlayer :
-        bestVal = -INFINITY
-        for each child node :
-            value = minimax(node, depth+1, false, alpha, beta)
-            bestVal = max( bestVal, value)
-            alpha = max( alpha, bestVal)
-            if beta <= alpha:
-                break
-        return bestVal
-
-    else :
-        bestVal = +INFINITY
-        for each child node :
-            value = minimax(node, depth+1, true, alpha, beta)
-            bestVal = min( bestVal, value)
-            beta = min( beta, bestVal)
-            if beta <= alpha:
-                break
-        return bestVal
-     */
-    //TODO: test for GodOpponentTest.move1()
-    /*private Node minimax(Tree<Node> tree, int depth, Mark actor, int alpha, int beta) {
-        System.out.println("Run minimax("+tree.getRoot().toString()+","+depth+","+actor+","+alpha+","+beta+")");
-        if(tree.getRoot().leaf()) {
-            System.out.println();
-            System.out.println("return: (case1)");
-            System.out.println(tree.getRoot().toString(""));
-            return tree.getRoot();
-        }
-        Node bestMove = null;
-        int bestVal;
-        if(actor == Mark.opponent) {
-            bestVal = Integer.MIN_VALUE;
-            for(Tree<Node> t : tree.getSubTrees()) {
-                System.out.println("call minimax(max) (" +
-                        t.getRoot().toString() + "," +
-                        (depth+1) + "," +
-                        Mark.self + "," +
-                        alpha + "," +
-                        beta +")"
-                );
-                Node value = minimax(t, depth+1, Mark.self, alpha, beta);
-                System.out.println("got :" + value.toString());
-                System.out.println();
-                bestVal = Integer.max(bestVal, value.score());
-                alpha = Integer.max(alpha, bestVal);
-                bestMove = value;
-                bestMove.setScore(bestVal);
-                if(beta <= alpha) {
-                    break;
-                }
-            }
-            System.out.println();
-            System.out.println("return: (case2)");
-        } else {
-            bestVal = Integer.MAX_VALUE;
-            for(Tree<Node> t : tree.getSubTrees()) {
-                System.out.println("call minimax(min) (" +
-                        t.getRoot().toString() + "," +
-                        (depth+1) + "," +
-                        Mark.opponent + "," +
-                        alpha + "," +
-                        beta +")"
-                );
-                Node value = minimax(t, depth + 1, Mark.opponent, alpha, beta);
-                System.out.println("got :" + value.toString());
-                bestVal = Integer.min(bestVal, value.score());
-                beta = Integer.min(beta, bestVal);
-                bestMove = value;
-                bestMove.setScore(bestVal);
-                if (beta <= alpha) {
-                    break;
-                }
-            }
-            System.out.println();
-            System.out.println("return: (case3)");
-        }
-        assert bestMove != null;
-        System.out.println(bestMove);
-        return bestMove;
-    }*/
 
     private Node minimax(Tree<Node> tree, int depth, Mark actor, int alpha, int beta) {
         System.out.println("Run minimax("+tree.getRoot().toString()+","+depth+","+actor+","+alpha+","+beta+")");
