@@ -48,15 +48,15 @@ class GodOpponentTest extends OpponentTest {
     void move3() { //generates a simple sized Tree
         final var grid = getGridFromString( //check
                 """
-                        O | X | X
-                        O | O | X
-                        ∙ | X | ∙
+                        X | ∙ | ∙
+                        ∙ | O | ∙
+                        X | ∙ | O
                         """
         ); //Output should be: 2,2 (0,2 has the same score)
 
         final var result = opponent.move(grid);
 
-        assertEquals(new Point(2, 2), result);
+        assertEquals(new Point(0, 2), result);
     }
 
     @Test
@@ -85,7 +85,7 @@ class GodOpponentTest extends OpponentTest {
 
         final var result = opponent.move(grid);
 
-        assertEquals(new Point(2, 2), result);
+        assertEquals(new Point(1, 0), result);
     }
 
     @Test

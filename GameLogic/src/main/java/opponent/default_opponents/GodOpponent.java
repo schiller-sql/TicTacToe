@@ -8,6 +8,8 @@ import opponent.Opponent;
 import opponent.helper_classes.Node;
 import opponent.helper_classes.Tree;
 
+import java.util.List;
+
 public class GodOpponent extends Opponent {
 
     @Override
@@ -17,6 +19,9 @@ public class GodOpponent extends Opponent {
         sortTree();
         System.out.println(tree);
         Node bestMove = minimax(tree, 0, Mark.opponent, Integer.MIN_VALUE, Integer.MAX_VALUE); //TODO: put in for-loop and call with root-childs
+        //int bestScore = minimax(tree, 9, Mark.opponent, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        //System.out.println(bestScore);
+        //return null;
         System.out.println("Aim Child from Root" + "\n" + bestMove.toString(""));
         return compareGrids(tree.getRoot().grid(), bestMove.grid());
     }
@@ -78,7 +83,7 @@ public class GodOpponent extends Opponent {
         return bestVal
      */
     //TODO: test for GodOpponentTest.move1()
-    private Node minimax(Tree<Node> tree, int depth, Mark actor, int alpha, int beta) {
+    /*private Node minimax(Tree<Node> tree, int depth, Mark actor, int alpha, int beta) {
         System.out.println("Run minimax("+tree.getRoot().toString()+","+depth+","+actor+","+alpha+","+beta+")");
         if(tree.getRoot().leaf()) {
             System.out.println();
@@ -135,8 +140,64 @@ public class GodOpponent extends Opponent {
             System.out.println("return: (case3)");
         }
         assert bestMove != null;
-        System.out.println(bestMove.toString(""));
+        System.out.println(bestMove);
         return bestMove;
+    }*/
+
+    private Node minimax(Tree<Node> tree, int depth, Mark actor, int alpha, int beta) {
+        System.out.println("Run minimax("+tree.getRoot().toString()+","+depth+","+actor+","+alpha+","+beta+")");
+        if(tree.getRoot().leaf()) {
+            System.out.println("return: (case1)");
+            System.out.println(tree.getRoot().toString());
+            return tree.getRoot();
+        }
+        Node bestVal = new Node(tree.getRoot().grid(), tree.getRoot().mark(), tree.getRoot().gameState());
+        if(actor == Mark.opponent) {
+            bestVal.setScore(Integer.MIN_VALUE);
+            for(Tree<Node> t : tree.getSubTrees()) {
+                System.out.println("call minimax(max) (" +
+                        t.getRoot().toString() + "," +
+                        (depth+1) + "," +
+                        Mark.self + "," +
+                        alpha + "," +
+                        beta +")"
+                );
+                Node value = minimax(t, depth+1, Mark.self, alpha, beta);
+                if(bestVal.score() < value.score()) {
+                    bestVal = value;
+                    //bestVal.setScore(value.score());
+                }
+                alpha = Integer.max(alpha, bestVal.score());
+                if(beta <= alpha) {
+                    break;
+                }
+            }
+            System.out.println("return: (case2)");
+            System.out.println(bestVal);
+        } else {
+            bestVal.setScore(Integer.MAX_VALUE);
+            for(Tree<Node> t : tree.getSubTrees()) {
+                System.out.println("call minimax(min) (" +
+                        t.getRoot().toString() + "," +
+                        (depth+1) + "," +
+                        Mark.opponent + "," +
+                        alpha + "," +
+                        beta +")"
+                );
+                Node value = minimax(t, depth + 1, Mark.opponent, alpha, beta);
+                if(bestVal.score() > value.score()) {
+                    //bestVal.setScore(value.score());
+                    bestVal = value;
+                }
+                beta = Integer.min(beta, bestVal.score());
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+            System.out.println("return: (case3)");
+            System.out.println(bestVal);
+        }
+        return bestVal;
     }
 
     public Point compareGrids(Grid root, Grid leaf) {
