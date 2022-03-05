@@ -90,7 +90,7 @@ public final class Node implements Tree.TreePrintable {
     @Override
     public String toString() {
         return "Node[" +
-                "grid=" + grid + ", " +
+                "grid=" + grid.toString() + ", " +
                 "mark=" + mark + ", " +
                 "gameState=" + gameState + ", " +
                 "leaf=" + leaf + ", " +

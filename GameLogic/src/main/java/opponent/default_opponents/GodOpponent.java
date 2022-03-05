@@ -18,6 +18,7 @@ public class GodOpponent extends Opponent {
         generate(tree, Mark.opponent);
         System.out.println(tree);
         Node bestMove = minimax(tree, 0, Mark.opponent, Integer.MIN_VALUE, Integer.MAX_VALUE); //TODO: put in for-loop and call with root-childs
+        System.out.println("Aim Child from Root" + "\n" + bestMove.toString(""));
         return compareGrids(tree.getRoot().grid(), bestMove.grid());
     }
 
@@ -44,42 +45,64 @@ public class GodOpponent extends Opponent {
     }
 
     //TODO: test for GodOpponentTest.move2, with println's
+    /*
+    if isMaximizingPlayer :
+        bestVal = -INFINITY
+        for each child node :
+            value = minimax(node, depth+1, false, alpha, beta)
+            bestVal = max( bestVal, value)
+            alpha = max( alpha, bestVal)
+            if beta <= alpha:
+                break
+        return bestVal
+
+    else :
+        bestVal = +INFINITY
+        for each child node :
+            value = minimax(node, depth+1, true, alpha, beta)
+            bestVal = min( bestVal, value)
+            beta = min( beta, bestVal)
+            if beta <= alpha:
+                break
+        return bestVal
+     */
     private Node minimax(Tree<Node> tree, int depth, Mark actor, int alpha, int beta) {
+        System.out.println("Run minimax("+tree.getRoot().toString()+","+depth+","+actor+","+alpha+","+beta+")");
         if(tree.getRoot().leaf()) {
-            System.out.println("Current best aim node:");
+            System.out.println("return: (case1)");
             System.out.println(tree.getRoot().toString(""));
             return tree.getRoot();
         }
-        int bestScore;
         Node bestMove = null;
+        int bestVal;
         if(actor == Mark.opponent) {
-            bestScore = Integer.MIN_VALUE;
-            Collection<Tree<Node>> c = tree.getSubTrees();
-            for(Tree<Node> t : c) {
-                bestMove = minimax(t, depth+1, Mark.self, alpha, beta);
+            bestVal = Integer.MIN_VALUE;
+            for(Tree<Node> t : tree.getSubTrees()) {
+                Node value = minimax(t, depth+1, Mark.self, alpha, beta);
+                bestVal = Integer.max(bestVal, value.score());
+                alpha = Integer.max(alpha, bestVal);
+                bestMove = value;
+                bestMove.setScore(bestVal);
+                if(beta <= alpha) {
+                    break;
+                }
             }
-            bestScore = Integer.max(bestScore, bestMove.score());
-            alpha = Integer.max(alpha, bestScore);
-            if(beta <= alpha) {
-                bestMove.setScore(bestScore);
-            }
+            System.out.println("return: (case2)");
         } else {
-            bestScore = Integer.MAX_VALUE;
-            Collection<Tree<Node>> c = tree.getSubTrees();
-            for(Tree<Node> t : c) {
-                bestMove = minimax(t, depth+1, Mark.opponent, alpha, beta);
+            bestVal = Integer.MAX_VALUE;
+            for(Tree<Node> t : tree.getSubTrees()) {
+                Node value = minimax(t, depth + 1, Mark.opponent, alpha, beta);
+                bestVal = Integer.min(bestVal, value.score());
+                beta = Integer.min(beta, bestVal);
+                bestMove = value;
+                bestMove.setScore(bestVal);
+                if (beta <= alpha) {
+                    break;
+                }
             }
-            bestScore = Integer.min(bestScore, bestMove.score());
-            beta = Integer.min(beta, bestScore);
-            if(beta <= alpha) {
-                bestMove.setScore(bestScore);
-                System.out.println("Current best aim node:");
-                System.out.println(tree.getRoot().toString(""));
-                return bestMove;
-            }
+            System.out.println("return: (case3)");
         }
-        System.out.println("Current best aim node:");
-        System.out.println(tree.getRoot().toString(""));
+        System.out.println(bestMove.toString(""));
         return bestMove;
     }
 
