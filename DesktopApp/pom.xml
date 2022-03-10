@@ -46,7 +46,7 @@
         <dependency>
             <groupId>net.synedra</groupId>
             <artifactId>validatorfx</artifactId>
-            <version>0.1.13</version>
+            <version>0.3.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.openjfx</groupId>
