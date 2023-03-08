@@ -4,102 +4,100 @@ import controller.GameState;
 import domain.Grid;
 import domain.Mark;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 
-/**
- * This is a wrapper class used to safe grids and values in the tree
- */
-public class Node implements Tree.TreePrintable {
+public final class Node implements Tree.TreePrintable {
 
-    private Grid grid;
-    private final List<Integer> score = new ArrayList<>();
-    private Mark minimax;
-    private GameState gameState;
-    private int depth;
+    private final Grid grid;
+    private final Mark mark;
+    private final GameState gameState;
+    private boolean leaf;
+    private int score;
 
-    /**
-     * @param grid the grid itself
-     * @param minimax the actor of the grid
-     * @param gameState the current game state of the grid
-     * @param depth the depth of the node element in the tree
-     */
-    public Node(Grid grid, Mark minimax, GameState gameState , int depth) {
-        this.grid=grid;
-        this.minimax=minimax;
-        this.gameState=gameState;
-        this.depth=depth;
-    }
-
-    public Node(Grid grid) {
+    public Node(Grid grid, Mark mark, GameState gameState) {
         this.grid = grid;
-    }
-
-    public void setGrid(Grid grid) {
-        this.grid = grid;
-    }
-
-    public void addScore(int score) {
-        this.score.add(score);
-    }
-
-    public void setMinimaxStatus(Mark minimax) {
-        this.minimax = minimax;
-    }
-
-    public Grid getGrid() {
-        return grid;
-    }
-
-    public List<Integer> getScores() {
-        return score;
-    }
-
-    public Mark getMinimax() {
-        return minimax;
-    }
-
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    public int getDepth() {
-        return depth;
+        this.mark = mark;
+        this.gameState = gameState;
     }
 
     public void setScore(int score) {
-        this.score.removeAll(this.score); //TODO: find a better solution
-        //System.out.println(Arrays.toString(this.score.toArray()));
-        this.score.add(score);
+        this.score = score;
     }
 
-    /**
-     * @param padding the padding of the string
-     * @return all data of the node in a formatted way
-     */
-    @Override
+    public int score() {
+        return score;
+    }
+
+    public void calculateScore() {
+        final int i = this.grid.getAllMarkPositions(null).size();
+        if (mark.equals(Mark.opponent) || gameState.equals(GameState.lost)) {
+            score = i;
+        } else if(i == 0){
+            score = -1;
+        } else {
+            score = -i;
+        }
+    }
+
     public String toString(String padding) {
-
-        return padding +"Depth: " + depth
-                + "\n" + padding + "GameState: " + gameState + " => Scores: " + Arrays.toString(score.toArray())
-                + "\n" + padding +"MinimaxStatus: " + minimax
-                + "\n" + grid.toString(padding);
+        StringBuilder s = new StringBuilder();
+        s.append(padding);
+        s.append(grid.asString(padding));
+        s.append(padding);
+        s.append("mark = " + mark.toString()).append("\n");
+        s.append(padding);
+        s.append("GameState = " + gameState.toString()).append("\n");
+        s.append(padding);
+        s.append("score = " + score).append("\n");
+        s.append(padding);
+        s.append("isLeaf = " + leaf).append("\n");
+        return s.toString();
     }
 
-    /**
-     * @return all data of the node in one line
-     */
-    public String asString() {
-        return "Scores: " + Arrays.toString(score.toArray()) + " + "
-                +"MinimaxStatus: " + minimax + " + "
-                +"GameState: " + gameState + " + "
-                +"Depth: " +  getDepth() + " + "
-                +"Grid: " +  grid.asString();
+    public Grid grid() {
+        return grid;
     }
 
-    @SuppressWarnings("unused")
-    public Tree<Node> getParent(Tree<Node> tree) {
-        return tree.getParent();
+    public Mark mark() {
+        return mark;
+    }
+
+    public GameState gameState() {
+        return gameState;
+    }
+
+    public boolean leaf() {
+        return leaf;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (Node) obj;
+        return Objects.equals(this.grid, that.grid) &&
+                Objects.equals(this.mark, that.mark) &&
+                Objects.equals(this.gameState, that.gameState) &&
+                this.leaf == that.leaf &&
+                this.score == that.score;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(grid, mark, gameState, leaf, score);
+    }
+
+    @Override
+    public String toString() {
+        return "Node[" +
+                "grid=" + grid.toString() + ", " +
+                "mark=" + mark + ", " +
+                "gameState=" + gameState + ", " +
+                "leaf=" + leaf + ", " +
+                "score=" + score + ']';
+    }
+
+    public void setLeaf(boolean leaf) {
+        this.leaf = leaf;
     }
 }

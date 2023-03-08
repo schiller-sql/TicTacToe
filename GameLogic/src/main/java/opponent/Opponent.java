@@ -26,6 +26,7 @@ public abstract class Opponent {
                 new QuandaryOpponent(),
                 new RandomOpponent(),
                 new TonyRandomOpponent(),
+                new GodOpponent()
         };
     }
 
