@@ -157,8 +157,8 @@ public class MainSceneController {
 
     public void showInfo(ActionEvent actionEvent) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/popup/popup.fxml"));
-        Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        SceneController.submitPopup(loader, primaryStage, "This is a Sample Text from line 216 in MainSceneController.java");
+        Stage primaryStage = (Stage) itemAbout.getParentPopup().getOwnerWindow();
+        SceneController.submitPopup(loader, primaryStage, "This is a Sample Text");
     }
 
     private void showHistory(GameRecord gameRecord) {
